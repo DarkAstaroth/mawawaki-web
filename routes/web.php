@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,14 +26,22 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/login', function () {
+    return view('autenticacion.login');
+})->name('login');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return view('home');
     })->name('dashboard');
+
+
+    Route::get('/logout', [UsuarioController::class, 'logout']);
 });
 
 Route::get('auth/google', [GoogleController::class, 'signInwithGoogle']);

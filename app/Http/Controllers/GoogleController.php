@@ -13,29 +13,28 @@ class GoogleController extends Controller
     {
         return Socialite::driver('google')->redirect();
     }
+
     public function callbackToGoogle()
     {
         try {
+            $usuario = Socialite::driver('google')->user();
 
-            $user = Socialite::driver('google')->user();
+            $usuarioExistente = User::where('gauth_id', $usuario->id)->first();
 
-            $finduser = User::where('gauth_id', $user->id)->first();
-
-            if ($finduser) {
-
-                Auth::login($finduser);
+            if ($usuarioExistente) {
+                Auth::login($usuarioExistente);
 
                 return redirect('/dashboard');
             } else {
-                $newUser = User::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'gauth_id' => $user->id,
+                $nuevoUsuario = User::create([
+                    'name' => $usuario->name,
+                    'email' => $usuario->email,
+                    'gauth_id' => $usuario->id,
                     'gauth_type' => 'google',
                     'password' => encrypt('admin@123')
                 ]);
 
-                Auth::login($newUser);
+                Auth::login($nuevoUsuario);
 
                 return redirect('/dashboard');
             }
