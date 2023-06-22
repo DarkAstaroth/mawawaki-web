@@ -45,7 +45,7 @@
     </div>
     <!--end::App-->
     <!--layout-partial:partials/_drawers.html-->
-    @yield('contenido')
+  
     @include('complemento.tema')
     @include('complemento.scripts')
 </body>

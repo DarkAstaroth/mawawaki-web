@@ -40,6 +40,9 @@ Route::middleware([
         return view('home');
     })->name('dashboard');
 
+    Route::get('/roles', function () {
+        return view('configuraciones.roles.index');
+    })->name('roles');
 
     Route::get('/logout', [UsuarioController::class, 'logout']);
 });
