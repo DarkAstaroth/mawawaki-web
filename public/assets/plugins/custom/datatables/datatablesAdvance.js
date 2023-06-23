@@ -254,3 +254,5 @@ var KTDatatablesAdvanced = function () {
 KTUtil.onDOMContentLoaded(function () {
     KTDatatablesAdvanced.init();
 });
+
+
