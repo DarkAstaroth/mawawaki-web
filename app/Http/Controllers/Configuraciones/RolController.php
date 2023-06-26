@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Configuraciones;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Configuraciones\RolResource;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class RolController extends Controller
 {
@@ -12,8 +14,15 @@ class RolController extends Controller
      */
     public function index()
     {
-        //
+        return view('configuraciones.roles.index');
     }
+
+    public function obtenerRoles()
+    {
+        return RolResource::collection(Role::all());
+        // return view('configuraciones.roles.index', compact('roles'));
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -28,7 +37,10 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $nombreRol = $request->input('name');
+        $descripcionRol = $request->input('description');
+        $rol = Role::create(['name' => $nombreRol, "description" => $descripcionRol]);
+        return redirect()->route('roles.index')->with('success', 'El rol se creó correctamente');
     }
 
     /**
@@ -60,6 +72,11 @@ class RolController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        $rol = Role::findOrFail($id);
+        $rol->delete();
+        return response()->json([
+            'success' => 'El rol se eliminó correctamente'
+        ]);
     }
 }

@@ -50,7 +50,7 @@
 
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link active" href="/roles">
+                        <a class="menu-link active" href="{{ route('roles.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>

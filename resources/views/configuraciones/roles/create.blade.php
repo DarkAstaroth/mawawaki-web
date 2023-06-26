@@ -10,15 +10,16 @@
                 </div>
                 <!--end::Close-->
             </div>
+            <form action="{{ route('roles.store') }}" method="post">
+                <div class="modal-body">
+                    @include('configuraciones.roles.formularios.create')
+                </div>
 
-            <div class="modal-body">
-                @include('configuraciones.roles.formularios.create')
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success">Guardar</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

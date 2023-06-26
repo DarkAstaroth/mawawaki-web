@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Configuraciones\RolController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Foundation\Application;
@@ -17,14 +18,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/roles', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/login', function () {
     return view('autenticacion.login');
@@ -40,10 +41,7 @@ Route::middleware([
         return view('home');
     })->name('dashboard');
 
-    Route::get('/roles', function () {
-        return view('configuraciones.roles.index');
-    })->name('roles');
-
+    Route::resource('/roles', RolController::class);
     Route::get('/logout', [UsuarioController::class, 'logout']);
 });
 
