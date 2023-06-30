@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/roles', [RolController::class, 'obtenerRoles']);
+Route::post('/roles/agregar', [RolController::class, 'store']);

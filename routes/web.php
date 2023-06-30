@@ -18,14 +18,9 @@ use Inertia\Inertia;
 |
 */
 
-// Route::get('/roles', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+Route::get('/', function () {
+    return Inertia::render('configuraciones/roles/test');
+});
 
 Route::get('/login', function () {
     return view('autenticacion.login');
