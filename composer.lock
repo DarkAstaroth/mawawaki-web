@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fba72be917ad0b27815c8a6cc8edcd4a",
+    "content-hash": "da045d4f2ea670c4907d82fd2400c6f9",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -6492,6 +6492,50 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "yazan/laravel-datatable",
+            "version": "1.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yazan-alnugnugh/laravel-datatable.git",
+                "reference": "10e446c80a05cd76cc341b78575968d2f83883de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yazan-alnugnugh/laravel-datatable/zipball/10e446c80a05cd76cc341b78575968d2f83883de",
+                "reference": "10e446c80a05cd76cc341b78575968d2f83883de",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Yazan\\DataTable\\DataTableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Yazan\\DataTable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "yazan-alnughnugh",
+                    "email": "yazan-n100@hotmail.com"
+                }
+            ],
+            "description": "Laravel and Vue packages to create Data Table ",
+            "support": {
+                "issues": "https://github.com/yazan-alnugnugh/laravel-datatable/issues",
+                "source": "https://github.com/yazan-alnugnugh/laravel-datatable/tree/1.0.8"
+            },
+            "time": "2021-12-19T18:49:53+00:00"
         }
     ],
     "packages-dev": [
