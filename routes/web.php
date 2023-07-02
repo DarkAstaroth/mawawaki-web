@@ -26,6 +26,8 @@ Route::get('/login', function () {
     return view('autenticacion.login');
 })->name('login');
 
+Route::resource('/roles', RolController::class);
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -36,7 +38,6 @@ Route::middleware([
         return view('home');
     })->name('dashboard');
 
-    Route::resource('/roles', RolController::class);
     Route::get('/logout', [UsuarioController::class, 'logout']);
 });
 

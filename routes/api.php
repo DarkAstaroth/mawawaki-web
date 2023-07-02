@@ -20,4 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/roles', [RolController::class, 'obtenerRoles']);
+Route::get('/roles/{id}', [RolController::class, 'edit']);
 Route::post('/roles/agregar', [RolController::class, 'store']);
+Route::put('/roles/{id}', [RolController::class, 'update']);
+Route::delete('/roles/{id}', [RolController::class, 'destroy']);
