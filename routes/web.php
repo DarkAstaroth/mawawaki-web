@@ -19,12 +19,14 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('configuraciones/roles/test');
-});
+    return view('home');
+})->name('home');;
 
-Route::get('/login', function () {
-    return view('autenticacion.login');
-})->name('login');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return view('autenticacion.login');
+    })->name('login');
+});
 
 Route::resource('/roles', RolController::class);
 
@@ -35,7 +37,7 @@ Route::middleware([
 ])->group(function () {
 
     Route::get('/dashboard', function () {
-        return view('home');
+        return view('dashboard');
     })->name('dashboard');
 
     Route::get('/logout', [UsuarioController::class, 'logout']);
