@@ -61,6 +61,17 @@
 
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
+                        <a class="menu-link" href="{{ route('permisos.index') }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Permisos</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="menu-sub menu-sub-accordion">
+                    <div class="menu-item">
                         <a class="menu-link" href="{{ route('modulos.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
@@ -69,6 +80,9 @@
                         </a>
                     </div>
                 </div>
+
+
+
             </div>
         </div>
     </div>

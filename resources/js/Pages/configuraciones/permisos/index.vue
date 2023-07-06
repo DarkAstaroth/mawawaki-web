@@ -1,6 +1,6 @@
 <template>
   <div class="card-header">
-    <h3 class="card-title">Listado de módulos</h3>
+    <h3 class="card-title">Listado de permisos</h3>
     <div class="card-toolbar">
       <button
         type="button"
@@ -22,7 +22,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">
-              {{ modo === "crear" ? "Crear Permiso" : "Editar Permiso" }}
+              {{ modo === "crear" ? "Crear Rol" : "Editar Rol" }}
             </h3>
 
             <!--begin::Close-->
@@ -48,18 +48,18 @@
               <div class="form-group mb-5">
                 <input
                   type="text"
-                  v-model="nombre"
+                  v-model="name"
                   id=""
                   class="form-control"
-                  placeholder="Nombre modulo"
+                  placeholder="Nombre rol"
                   aria-describedby="helpId"
                 />
                 <div
-                  v-if="v$?.nombre.$error"
+                  v-if="v$?.name.$error"
                   class="m-2 fv-plugins-message-container invalid-feedback"
                 >
                   <div data-field="text_input" data-validator="notEmpty">
-                    El nombre de módulo es requerido
+                    El nombre de rol es requerido
                   </div>
                 </div>
               </div>
@@ -67,13 +67,13 @@
               <div class="form-group">
                 <textarea
                   class="form-control"
-                  v-model="descripcion"
+                  v-model="description"
                   id=""
                   rows="3"
                   placeholder="Descripción"
                 ></textarea>
                 <div
-                  v-if="v$?.descripcion.$error"
+                  v-if="v$?.description.$error"
                   class="m-2 fv-plugins-message-container invalid-feedback"
                 >
                   <div data-field="text_input" data-validator="notEmpty">
@@ -112,18 +112,20 @@
         <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
           <th>Nombre</th>
           <th>Descripción</th>
+          <th>Módulo</th>
           <th width="20%">Creado en</th>
           <th width="15%">Acciones</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr v-for="modulo in modulos" :key="modulo.id">
-          <td>{{ modulo.nombre }}</td>
-          <td>{{ modulo.descripcion }}</td>
+        <tr v-for="rol in roles" :key="rol.id">
+          <td>{{ rol.name }}</td>
+          <td>{{ rol.description }}</td>
+          <td>{{ rol.description }}</td>
           <td>
             {{
-              new Date(modulo.created_at).toLocaleString("es-ES", {
+              new Date(rol.created_at).toLocaleString("es-ES", {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
@@ -146,25 +148,25 @@
                 data-bs-target="#kt_modal_1"
                 @click="
                   modo = 'editar';
-                  editarRol(modulo.id);
+                  editarRol(rol.id);
                 "
                 ><i class="bi bi-pencil-square fs-4"></i
               ></a>
               <a
                 type="button"
-                class="btn btn-icon btn-active-light-danger eliminar-modulo"
+                class="btn btn-icon btn-active-light-danger eliminar-rol"
                 data-bs-toggle="tooltip"
                 data-bs-custom-class="tooltip-inverse"
                 data-bs-placement="bottom"
-                title="Eliminar modulo"
-                @click="eliminarRol(modulo.id)"
+                title="Eliminar rol"
+                @click="eliminarRol(rol.id)"
               >
                 <i class="bi bi-trash3-fill fs-4"></i>
               </a>
             </div>
           </td>
         </tr>
-        <tr v-if="modulos.length === 0">
+        <tr v-if="roles.length === 0">
           <td colspan="4" class="text-center">No hay datos</td>
         </tr>
       </tbody>
@@ -233,19 +235,19 @@
 
 <script>
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, email } from "@vuelidate/validators";
 
 export default {
-  name: "ModuloIndex",
+  name: "PermisosIndex",
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
     return {
-      moduloId: "",
-      nombre: "",
-      descripcion: "",
-      modulos: [],
+      PermisoId: "",
+      name: "",
+      description: "",
+      permisos: [],
       busqueda: "",
       paginacion: {
         total: 0,
@@ -261,44 +263,44 @@ export default {
   },
   validations() {
     return {
-      nombre: { required },
-      descripcion: { required },
+      name: { required },
+      description: { required },
     };
   },
   mounted() {
-    this.cargarModulos(1);
+    this.cargarPermisos(1);
   },
   methods: {
-    filtrarRoles() {
-      this.cargarModulos(1);
+    filtrarPermisos() {
+      this.cargarPermisos(1);
     },
-    cargarModulos(pagina) {
-      const url = "/api/modulos?page=" + pagina + "&busqueda=" + this.busqueda;
+    cargarPermisos(pagina) {
+      const url = "/api/permisos?page=" + pagina + "&busqueda=" + this.busqueda;
 
       axios
         .get(url)
         .then((response) => {
-          this.modulos = response.data.modulos;
+          this.permisos = response.data.permisos;
           this.paginacion = response.data.paginacion;
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    crearRol: function () {
+    crearPermiso: function () {
       this.v$.$touch();
 
       if (!this.v$.$error) {
         axios
-          .post("/api/modulos/agregar", {
-            nombre: this.nombre,
-            descripcion: this.descripcion,
+          .post("/api/permisos/agregar", {
+            name: this.name,
+            description: this.description,
           })
           .then((response) => {
-            this.modulos = response.data.data;
+            this.roles = response.data.data;
             Swal.fire({
               title: "Éxito",
-              text: "El modulo se creó correctamente",
+              text: "El permiso se creó correctamente",
               icon: "success",
               buttonsStyling: false,
               confirmButtonText: "Aceptar",
@@ -306,12 +308,12 @@ export default {
                 confirmButton: "btn btn-primary",
               },
             });
-            this.cargarModulos(1);
+            this.cargarPermisos(1);
           })
           .catch((error) => {
             Swal.fire({
               title: "Upss..",
-              text: "Hubo un error al crear el módulo",
+              text: "Hubo un error al crear el permiso",
               icon: "error",
               buttonsStyling: false,
               confirmButtonText: "Aceptar",
@@ -326,27 +328,26 @@ export default {
         console.log("error de formulario");
       }
     },
-    editarRol: function (moduloId) {
+    editarPermiso: function (permisoId) {
       axios
-        .get(`/api/modulos/${moduloId}`)
+        .get(`/api/permisos/${permisoId}`)
         .then((response) => {
-          this.moduloId = response.data.modulo.id;
-          this.nombre = response.data.modulo.nombre;
-          this.descripcion = response.data.modulo.descripcion;
+          this.permisoId = response.data.rol.id;
+          this.name = response.data.rol.name;
+          this.description = response.data.rol.description;
         })
         .catch((error) => {});
     },
-    actualizarRol: function () {
-      console.log("Actualizar módulo");
+    actualizarPermiso: function () {
       axios
-        .put(`/api/modulos/${this.moduloId}`, {
-          nombre: this.nombre,
-          descripcion: this.descripcion,
+        .put(`/api/permisos/${this.rolId}`, {
+          name: this.name,
+          description: this.description,
         })
         .then((response) => {
           Swal.fire({
             title: "Éxito",
-            text: "El módulo se modificó correctamente",
+            text: "El permiso se modificó correctamente",
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Aceptar",
@@ -355,14 +356,14 @@ export default {
             },
           });
           this.busqueda = "";
-          this.cargarModulos(1);
+          this.cargarPermisos(1);
         })
         .catch((error) => {});
     },
-    eliminarRol: function (rolId) {
+    eliminarPermiso: function (rolId) {
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "¡Esta acción eliminará el modulo!",
+        text: "¡Esta acción eliminará el permiso!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
@@ -372,11 +373,11 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`/api/roles/${rolId}`)
+            .delete(`/api/permisos/${rolId}`)
             .then((response) => {
               Swal.fire({
                 title: "Éxito",
-                text: "El módulo se eliminó correctamente",
+                text: "El permiso se eliminó correctamente",
                 icon: "success",
                 buttonsStyling: false,
                 confirmButtonText: "Aceptar",
@@ -392,8 +393,8 @@ export default {
       });
     },
     resetModalData: function () {
-      this.nombre = "";
-      this.descripcion = "";
+      this.name = "";
+      this.description = "";
     },
   },
 };

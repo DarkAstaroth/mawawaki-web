@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Configuraciones\RolController;
 use App\Http\Controllers\Configuraciones\ModuloController;
+use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Foundation\Application;
@@ -31,6 +32,8 @@ Route::middleware('guest')->group(function () {
 
 Route::resource('dashboard/roles', RolController::class);
 Route::resource('dashboard/modulos', ModuloController::class);
+Route::resource('dashboard/permisos', PermisoController::class);
+
 
 Route::middleware([
     'auth:sanctum',
