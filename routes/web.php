@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Configuraciones\RolController;
+use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Foundation\Application;
@@ -28,7 +29,8 @@ Route::middleware('guest')->group(function () {
     })->name('login');
 });
 
-Route::resource('/roles', RolController::class);
+Route::resource('dashboard/roles', RolController::class);
+Route::resource('dashboard/modulos', ModuloController::class);
 
 Route::middleware([
     'auth:sanctum',
