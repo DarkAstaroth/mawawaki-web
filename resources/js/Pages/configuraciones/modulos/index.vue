@@ -107,69 +107,70 @@
       placeholder="Buscar..."
     />
 
-    <table class="table table-striped table-sm table-bordered table-responsive">
-      <thead>
-        <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th width="20%">Creado en</th>
-          <th width="15%">Acciones</th>
-        </tr>
-      </thead>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr class="fw-semibold fs-6 border-bottom border-gray-200 py-4">
+            <th>Nombre</th>
+            <th class="min-w-100px">Descripción</th>
+            <th class="min-w-200px">Creado en</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr v-for="modulo in modulos" :key="modulo.id">
-          <td>{{ modulo.nombre }}</td>
-          <td>{{ modulo.descripcion }}</td>
-          <td>
-            {{
-              new Date(modulo.created_at).toLocaleString("es-ES", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-              })
-            }}
-          </td>
-          <td class="align-items-center">
-            <div class="d-flex">
-              <a href="#" class="btn btn-icon btn-active-light-primary"
-                ><i class="bi bi-eye-fill fs-4"></i
-              ></a>
-              <a
-                type="button"
-                class="btn btn-icon btn-active-light-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#kt_modal_1"
-                @click="
-                  modo = 'editar';
-                  editarRol(modulo.id);
-                "
-                ><i class="bi bi-pencil-square fs-4"></i
-              ></a>
-              <a
-                type="button"
-                class="btn btn-icon btn-active-light-danger eliminar-modulo"
-                data-bs-toggle="tooltip"
-                data-bs-custom-class="tooltip-inverse"
-                data-bs-placement="bottom"
-                title="Eliminar modulo"
-                @click="eliminarRol(modulo.id)"
-              >
-                <i class="bi bi-trash3-fill fs-4"></i>
-              </a>
-            </div>
-          </td>
-        </tr>
-        <tr v-if="modulos.length === 0">
-          <td colspan="4" class="text-center">No hay datos</td>
-        </tr>
-      </tbody>
-    </table>
-
+        <tbody>
+          <tr v-for="modulo in modulos" :key="modulo.id">
+            <td>{{ modulo.nombre }}</td>
+            <td>{{ modulo.descripcion }}</td>
+            <td>
+              {{
+                new Date(modulo.created_at).toLocaleString("es-ES", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                })
+              }}
+            </td>
+            <td class="align-items-center">
+              <div class="d-flex">
+                <a href="#" class="btn btn-icon btn-active-light-primary"
+                  ><i class="bi bi-eye-fill fs-4"></i
+                ></a>
+                <a
+                  type="button"
+                  class="btn btn-icon btn-active-light-warning"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_1"
+                  @click="
+                    modo = 'editar';
+                    editarRol(modulo.id);
+                  "
+                  ><i class="bi bi-pencil-square fs-4"></i
+                ></a>
+                <a
+                  type="button"
+                  class="btn btn-icon btn-active-light-danger eliminar-modulo"
+                  data-bs-toggle="tooltip"
+                  data-bs-custom-class="tooltip-inverse"
+                  data-bs-placement="bottom"
+                  title="Eliminar modulo"
+                  @click="eliminarRol(modulo.id)"
+                >
+                  <i class="bi bi-trash3-fill fs-4"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr v-if="modulos.length === 0">
+            <td colspan="4" class="text-center">No hay datos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <nav>
       <ul class="pagination">
         <li

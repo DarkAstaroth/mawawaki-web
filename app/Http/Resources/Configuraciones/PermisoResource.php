@@ -5,7 +5,7 @@ namespace App\Http\Resources\Configuraciones;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PermisoController extends JsonResource
+class PermisoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

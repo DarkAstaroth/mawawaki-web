@@ -22,7 +22,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">
-              {{ modo === "crear" ? "Crear Rol" : "Editar Rol" }}
+              {{ modo === "crear" ? "Crear Permiso" : "Editar Permiso" }}
             </h3>
 
             <!--begin::Close-->
@@ -41,7 +41,7 @@
           <form
             class="input-feild"
             v-on:submit.prevent="
-              modo === 'crear' ? crearRol() : actualizarRol()
+              modo === 'crear' ? crearPermiso() : actualizarPermiso()
             "
           >
             <div class="modal-body">
@@ -51,7 +51,7 @@
                   v-model="name"
                   id=""
                   class="form-control"
-                  placeholder="Nombre rol"
+                  placeholder="Nombre permiso"
                   aria-describedby="helpId"
                 />
                 <div
@@ -59,7 +59,32 @@
                   class="m-2 fv-plugins-message-container invalid-feedback"
                 >
                   <div data-field="text_input" data-validator="notEmpty">
-                    El nombre de rol es requerido
+                    El nombre de permiso es requerido
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group mb-5">
+                <select
+                  v-model="moduloId"
+                  class="form-select"
+                  aria-label="Selecciona módulo"
+                >
+                  <option value="">Selecciona un módulo</option>
+                  <option
+                    v-for="modulo in modulos"
+                    :value="modulo.id"
+                    :key="modulo.id"
+                  >
+                    {{ modulo.nombre }}
+                  </option>
+                </select>
+                <div
+                  v-if="v$?.moduloId.$error"
+                  class="m-2 fv-plugins-message-container invalid-feedback"
+                >
+                  <div data-field="text_input" data-validator="notEmpty">
+                    Debes seleccionar un módulo
                   </div>
                 </div>
               </div>
@@ -103,75 +128,76 @@
       class="form-control mb-5"
       type="text"
       v-model="busqueda"
-      @input="filtrarRoles"
+      @input="filtrarPermisos"
       placeholder="Buscar..."
     />
 
-    <table class="table table-striped table-sm table-bordered table-responsive">
-      <thead>
-        <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Módulo</th>
-          <th width="20%">Creado en</th>
-          <th width="15%">Acciones</th>
-        </tr>
-      </thead>
+    <div class="table-responsive">
+      <table class="table table-striped table-sm table-bordered">
+        <thead>
+          <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Módulo</th>
+            <th class="min-w-200px">Creado en</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr v-for="rol in roles" :key="rol.id">
-          <td>{{ rol.name }}</td>
-          <td>{{ rol.description }}</td>
-          <td>{{ rol.description }}</td>
-          <td>
-            {{
-              new Date(rol.created_at).toLocaleString("es-ES", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-              })
-            }}
-          </td>
-          <td class="align-items-center">
-            <div class="d-flex">
-              <a href="#" class="btn btn-icon btn-active-light-primary"
-                ><i class="bi bi-eye-fill fs-4"></i
-              ></a>
-              <a
-                type="button"
-                class="btn btn-icon btn-active-light-warning"
-                data-bs-toggle="modal"
-                data-bs-target="#kt_modal_1"
-                @click="
-                  modo = 'editar';
-                  editarRol(rol.id);
-                "
-                ><i class="bi bi-pencil-square fs-4"></i
-              ></a>
-              <a
-                type="button"
-                class="btn btn-icon btn-active-light-danger eliminar-rol"
-                data-bs-toggle="tooltip"
-                data-bs-custom-class="tooltip-inverse"
-                data-bs-placement="bottom"
-                title="Eliminar rol"
-                @click="eliminarRol(rol.id)"
-              >
-                <i class="bi bi-trash3-fill fs-4"></i>
-              </a>
-            </div>
-          </td>
-        </tr>
-        <tr v-if="roles.length === 0">
-          <td colspan="4" class="text-center">No hay datos</td>
-        </tr>
-      </tbody>
-    </table>
-
+        <tbody>
+          <tr v-for="permiso in permisos" :key="permiso.id">
+            <td>{{ permiso.name }}</td>
+            <td>{{ permiso.description }}</td>
+            <td>{{ permiso.description }}</td>
+            <td>
+              {{
+                new Date(permiso.created_at).toLocaleString("es-ES", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
+                })
+              }}
+            </td>
+            <td class="align-items-center">
+              <div class="d-flex">
+                <a href="#" class="btn btn-icon btn-active-light-primary"
+                  ><i class="bi bi-eye-fill fs-4"></i
+                ></a>
+                <a
+                  type="button"
+                  class="btn btn-icon btn-active-light-warning"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_modal_1"
+                  @click="
+                    modo = 'editar';
+                    editarPermiso(permiso.id);
+                  "
+                  ><i class="bi bi-pencil-square fs-4"></i
+                ></a>
+                <a
+                  type="button"
+                  class="btn btn-icon btn-active-light-danger eliminar-permiso"
+                  data-bs-toggle="tooltip"
+                  data-bs-custom-class="tooltip-inverse"
+                  data-bs-placement="bottom"
+                  title="Eliminar permiso"
+                  @click="eliminarRol(permiso.id)"
+                >
+                  <i class="bi bi-trash3-fill fs-4"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr v-if="permisos.length === 0">
+            <td colspan="5" class="text-center">No hay datos</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <nav>
       <ul class="pagination">
         <li
@@ -245,9 +271,11 @@ export default {
   data() {
     return {
       PermisoId: "",
+      moduloId: "",
       name: "",
       description: "",
       permisos: [],
+      modulos: [],
       busqueda: "",
       paginacion: {
         total: 0,
@@ -265,6 +293,7 @@ export default {
     return {
       name: { required },
       description: { required },
+      moduloId: { required },
     };
   },
   mounted() {
@@ -280,7 +309,9 @@ export default {
       axios
         .get(url)
         .then((response) => {
+          console.log(response);
           this.permisos = response.data.permisos;
+          this.modulos = response.data.modulos;
           this.paginacion = response.data.paginacion;
         })
         .catch((error) => {
@@ -295,6 +326,7 @@ export default {
           .post("/api/permisos/agregar", {
             name: this.name,
             description: this.description,
+            moduloId: this.moduloId,
           })
           .then((response) => {
             this.roles = response.data.data;
@@ -332,9 +364,9 @@ export default {
       axios
         .get(`/api/permisos/${permisoId}`)
         .then((response) => {
-          this.permisoId = response.data.rol.id;
-          this.name = response.data.rol.name;
-          this.description = response.data.rol.description;
+          this.permisoId = response.data.permiso.id;
+          this.name = response.data.permiso.name;
+          this.description = response.data.permiso.description;
         })
         .catch((error) => {});
     },

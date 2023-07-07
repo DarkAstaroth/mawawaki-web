@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Configuraciones\ModuloController;
+use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\Configuraciones\RolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,3 +33,10 @@ Route::get('modulos/{id}', [ModuloController::class, 'edit']);
 Route::post('modulos/agregar', [ModuloController::class, 'store']);
 Route::put('modulos/{id}', [ModuloController::class, 'update']);
 Route::delete('modulos/{id}', [ModuloController::class, 'destroy']);
+
+
+Route::get('permisos', [PermisoController::class, 'obtenerPermisos']);
+Route::get('permisos/{id}', [PermisoController::class, 'edit']);
+Route::post('permisos/agregar', [PermisoController::class, 'store']);
+Route::put('permisos/{id}', [PermisoController::class, 'update']);
+Route::delete('permisos/{id}', [PermisoController::class, 'destroy']);
