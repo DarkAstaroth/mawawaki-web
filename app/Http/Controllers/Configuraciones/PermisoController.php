@@ -26,7 +26,8 @@ class PermisoController extends Controller
         $pagina = $request->get('page', 1);
         $busqueda = $request->get('busqueda');
 
-        $permisosQuery = Permission::query();
+        $permisosQuery = Permission::select('permissions.*', 'modulos.nombre as modulo_nombre')
+            ->leftJoin('modulos', 'permissions.modulo_id', '=', 'modulos.id');
 
         if ($busqueda) {
             $busquedaSinEspacios = str_replace(' ', '', $busqueda);
@@ -99,7 +100,10 @@ class PermisoController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $permiso = Permission::findOrFail($id);
+        return response()->json([
+            'permiso' => $permiso
+        ]);
     }
 
     /**
@@ -107,7 +111,15 @@ class PermisoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $permiso = Permission::findOrFail($id);
+        $permiso->modulo_id = $request->input('modulo_id');
+        $permiso->name = $request->input('name');
+        $permiso->description = $request->input('description');
+        $permiso->save();
+
+        return response()->json([
+            'permiso' => $permiso
+        ]);
     }
 
     /**

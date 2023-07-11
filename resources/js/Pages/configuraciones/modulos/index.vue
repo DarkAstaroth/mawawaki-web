@@ -338,7 +338,6 @@ export default {
         .catch((error) => {});
     },
     actualizarRol: function () {
-      console.log("Actualizar módulo");
       axios
         .put(`/api/modulos/${this.moduloId}`, {
           nombre: this.nombre,
@@ -355,6 +354,7 @@ export default {
               confirmButton: "btn btn-primary",
             },
           });
+          $("#kt_modal_1").modal("hide");
           this.busqueda = "";
           this.cargarModulos(1);
         })

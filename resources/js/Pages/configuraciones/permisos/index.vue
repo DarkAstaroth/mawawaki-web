@@ -148,7 +148,7 @@
           <tr v-for="permiso in permisos" :key="permiso.id">
             <td>{{ permiso.name }}</td>
             <td>{{ permiso.description }}</td>
-            <td>{{ permiso.description }}</td>
+            <td>{{ permiso.modulo_nombre }}</td>
             <td>
               {{
                 new Date(permiso.created_at).toLocaleString("es-ES", {
@@ -365,6 +365,7 @@ export default {
         .get(`/api/permisos/${permisoId}`)
         .then((response) => {
           this.permisoId = response.data.permiso.id;
+          this.moduloId = response.data.permiso.modulo_id;
           this.name = response.data.permiso.name;
           this.description = response.data.permiso.description;
         })
@@ -372,7 +373,8 @@ export default {
     },
     actualizarPermiso: function () {
       axios
-        .put(`/api/permisos/${this.rolId}`, {
+        .put(`/api/permisos/${this.permisoId}`, {
+          modulo_id: this.moduloId,
           name: this.name,
           description: this.description,
         })
@@ -387,6 +389,7 @@ export default {
               confirmButton: "btn btn-primary",
             },
           });
+          $("#kt_modal_1").modal("hide");
           this.busqueda = "";
           this.cargarPermisos(1);
         })

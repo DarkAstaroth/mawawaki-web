@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion show">
                 <span class="menu-link">
                     <span class="menu-icon">
                         <i class="ki-duotone ki-setting-4">
@@ -50,7 +50,8 @@
 
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link" href="{{ route('roles.index') }}">
+                        <a class="menu-link {{ request()->segment(2) == 'roles' ? 'active' : '' }}"
+                            href="{{ route('roles.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
@@ -61,7 +62,8 @@
 
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link" href="{{ route('permisos.index') }}">
+                        <a class="menu-link {{ request()->segment(2) == 'permisos' ? 'active' : '' }}"
+                            href="{{ route('permisos.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
@@ -72,7 +74,8 @@
 
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link" href="{{ route('modulos.index') }}">
+                        <a class="menu-link {{ request()->segment(2) == 'modulos' ? 'active' : '' }}"
+                            href="{{ route('modulos.index') }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>

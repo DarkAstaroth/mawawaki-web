@@ -12,6 +12,7 @@
     @vite(['resources/js/app.js', 'resources/js/Pages/configuraciones/roles/index.vue']) --}}
     {{-- @inertiaHead --}}
 
+
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true"
@@ -52,8 +53,10 @@
     <!--layout-partial:partials/_drawers.html-->
     @vite(['resources/js/app.js'])
     {{-- <script src="{{ asset('build/assets/app-9a281880.js') }}" defer></script> --}}
+ 
     @include('complemento.tema')
     @include('complemento.scripts')
+
 </body>
 
 </html>
