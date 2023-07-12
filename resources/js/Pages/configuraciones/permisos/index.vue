@@ -139,8 +139,8 @@
             <th>Nombre</th>
             <th>Descripción</th>
             <th>Módulo</th>
-            <th class="min-w-200px">Creado en</th>
-            <th>Acciones</th>
+            <th class="min-w-150px">Creado en</th>
+            <th class="min-w-150px">Acciones</th>
           </tr>
         </thead>
 
@@ -164,31 +164,49 @@
             </td>
             <td class="align-items-center">
               <div class="d-flex">
-                <a href="#" class="btn btn-icon btn-active-light-primary"
-                  ><i class="bi bi-eye-fill fs-4"></i
-                ></a>
-                <a
-                  type="button"
-                  class="btn btn-icon btn-active-light-warning"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kt_modal_1"
-                  @click="
-                    modo = 'editar';
-                    editarPermiso(permiso.id);
-                  "
-                  ><i class="bi bi-pencil-square fs-4"></i
-                ></a>
-                <a
-                  type="button"
-                  class="btn btn-icon btn-active-light-danger eliminar-permiso"
-                  data-bs-toggle="tooltip"
-                  data-bs-custom-class="tooltip-inverse"
-                  data-bs-placement="bottom"
-                  title="Eliminar permiso"
-                  @click="eliminarRol(permiso.id)"
-                >
-                  <i class="bi bi-trash3-fill fs-4"></i>
-                </a>
+                <div class="dropdown">
+                  <button
+                    class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    data-boundary="viewport"
+                  >
+                    Acciones
+                  </button>
+                  <ul
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton1"
+                  >
+                    <li><a class="dropdown-item" href="#">Ver</a></li>
+                    <li>
+                      <a
+                        href="#"
+                        class="dropdown-item"
+                        data-bs-toggle="modal"
+                        data-bs-target="#kt_modal_1"
+                        @click="
+                          modo = 'editar';
+                          editarPermiso(permiso.id);
+                        "
+                        >Editar</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        class="dropdown-item"
+                        data-bs-toggle="tooltip"
+                        data-bs-custom-class="tooltip-inverse"
+                        data-bs-placement="bottom"
+                        title="Eliminar permiso"
+                        @click="eliminarPermiso(permiso.id)"
+                        >Eliminar</a
+                      >
+                    </li>
+                  </ul>
+                </div>
               </div>
             </td>
           </tr>

@@ -106,14 +106,14 @@
       @input="filtrarRoles"
       placeholder="Buscar..."
     />
-    <div class="">
+    <div class="table-responsive">
       <table class="table table-striped table-sm table-bordered">
         <thead>
           <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
-            <th>Nombre</th>
+            <th class="min-w-150px">Nombre</th>
             <th>Descripción</th>
-            <th width="20%">Creado en</th>
-            <th width="15%">Acciones</th>
+            <th class="min-w-150px">Creado en</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
@@ -143,6 +143,7 @@
                     id="dropdownMenuButton1"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
+                    data-boundary="viewport"
                   >
                     Acciones
                   </button>

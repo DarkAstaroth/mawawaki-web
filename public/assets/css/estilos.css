@@ -1,0 +1,9 @@
+/* === BEGIN === */
+/* control de dropdown para table-responsive */
+@media (min-width: 768px) {
+    .table-responsive {
+        overflow: inherit;
+    }
+}
+
+/* ===  END === */
