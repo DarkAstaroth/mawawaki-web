@@ -1,6 +1,6 @@
 <template>
   <div class="card-header">
-    <h3 class="card-title">Listado de roles</h3>
+    <h3 class="card-title">Listado de permisos</h3>
     <div class="card-toolbar">
       <button
         type="button"
@@ -22,7 +22,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">
-              {{ modo === "crear" ? "Crear Rol" : "Editar Rol" }}
+              {{ modo === "crear" ? "Crear Permiso" : "Editar Permiso" }}
             </h3>
 
             <!--begin::Close-->
@@ -41,7 +41,7 @@
           <form
             class="input-feild"
             v-on:submit.prevent="
-              modo === 'crear' ? crearRol() : actualizarRol()
+              modo === 'crear' ? crearPermiso() : actualizarPermiso()
             "
           >
             <div class="modal-body">
@@ -51,7 +51,7 @@
                   v-model="name"
                   id=""
                   class="form-control"
-                  placeholder="Nombre rol"
+                  placeholder="Nombre permiso"
                   aria-describedby="helpId"
                 />
                 <div
@@ -59,7 +59,32 @@
                   class="m-2 fv-plugins-message-container invalid-feedback"
                 >
                   <div data-field="text_input" data-validator="notEmpty">
-                    El nombre de rol es requerido
+                    El nombre de permiso es requerido
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group mb-5">
+                <select
+                  v-model="moduloId"
+                  class="form-select"
+                  aria-label="Selecciona módulo"
+                >
+                  <option value="">Selecciona un módulo</option>
+                  <option
+                    v-for="modulo in modulos"
+                    :value="modulo.id"
+                    :key="modulo.id"
+                  >
+                    {{ modulo.nombre }}
+                  </option>
+                </select>
+                <div
+                  v-if="v$?.moduloId.$error"
+                  class="m-2 fv-plugins-message-container invalid-feedback"
+                >
+                  <div data-field="text_input" data-validator="notEmpty">
+                    Debes seleccionar un módulo
                   </div>
                 </div>
               </div>
@@ -103,27 +128,30 @@
       class="form-control mb-5"
       type="text"
       v-model="busqueda"
-      @input="filtrarRoles"
+      @input="filtrarPermisos"
       placeholder="Buscar..."
     />
+
     <div class="table-responsive">
       <table class="table table-striped table-sm table-bordered">
         <thead>
           <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
-            <th class="min-w-150px">Nombre</th>
+            <th>Nombre</th>
             <th>Descripción</th>
+            <th>Módulo</th>
             <th class="min-w-150px">Creado en</th>
-            <th>Acciones</th>
+            <th class="min-w-150px">Acciones</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="rol in roles" :key="rol.id">
-            <td>{{ rol.name }}</td>
-            <td>{{ rol.description }}</td>
+          <tr v-for="permiso in permisos" :key="permiso.id">
+            <td>{{ permiso.name }}</td>
+            <td>{{ permiso.description }}</td>
+            <td>{{ permiso.modulo_nombre }}</td>
             <td>
               {{
-                new Date(rol.created_at).toLocaleString("es-ES", {
+                new Date(permiso.created_at).toLocaleString("es-ES", {
                   weekday: "long",
                   day: "numeric",
                   month: "long",
@@ -164,11 +192,9 @@
                         data-bs-target="#kt_modal_1"
                         @click="
                           modo = 'editar';
-                          editarRol(rol.id);
+                          editarPermiso(permiso.id);
                         "
-                        ><i class="bi bi-pencil-square fs-4"></i>
-
-                        Editar</a
+                        ><i class="bi bi-pencil-square fs-4"></i> Editar</a
                       >
                     </li>
                     <li>
@@ -178,20 +204,9 @@
                         data-bs-toggle="tooltip"
                         data-bs-custom-class="tooltip-inverse"
                         data-bs-placement="bottom"
-                        title="Eliminar rol"
-                        @click="eliminarRol(rol.id)"
+                        title="Eliminar permiso"
+                        @click="eliminarPermiso(permiso.id)"
                         ><i class="bi bi-trash3-fill fs-4"></i> Eliminar</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        :href="
-                          route('permiso.rol', {
-                            id: rol.id,
-                          })
-                        "
-                        ><i class="bi bi-key-fill fs-4"></i> Permisos</a
                       >
                     </li>
                   </ul>
@@ -199,8 +214,8 @@
               </div>
             </td>
           </tr>
-          <tr v-if="roles.length === 0">
-            <td colspan="4" class="text-center">No hay datos</td>
+          <tr v-if="permisos.length === 0">
+            <td colspan="5" class="text-center">No hay datos</td>
           </tr>
         </tbody>
       </table>
@@ -271,16 +286,18 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email } from "@vuelidate/validators";
 
 export default {
-  name: "RolIndex",
+  name: "PermisosIndex",
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
     return {
-      rolId: "",
+      PermisoId: "",
+      moduloId: "",
       name: "",
       description: "",
-      roles: [],
+      permisos: [],
+      modulos: [],
       busqueda: "",
       paginacion: {
         total: 0,
@@ -298,42 +315,46 @@ export default {
     return {
       name: { required },
       description: { required },
+      moduloId: { required },
     };
   },
   mounted() {
-    this.cargarRoles(1);
+    this.cargarPermisos(1);
   },
   methods: {
-    filtrarRoles() {
-      this.cargarRoles(1);
+    filtrarPermisos() {
+      this.cargarPermisos(1);
     },
-    cargarRoles(pagina) {
-      const url = "/api/roles?page=" + pagina + "&busqueda=" + this.busqueda;
+    cargarPermisos(pagina) {
+      const url = "/api/permisos?page=" + pagina + "&busqueda=" + this.busqueda;
 
       axios
         .get(url)
         .then((response) => {
-          this.roles = response.data.roles;
+          console.log(response);
+          this.permisos = response.data.permisos;
+          this.modulos = response.data.modulos;
           this.paginacion = response.data.paginacion;
         })
         .catch((error) => {
           console.error(error);
         });
     },
-    crearRol: function () {
+    crearPermiso: function () {
       this.v$.$touch();
 
       if (!this.v$.$error) {
         axios
-          .post("/api/roles/agregar", {
+          .post("/api/permisos/agregar", {
             name: this.name,
             description: this.description,
+            moduloId: this.moduloId,
           })
           .then((response) => {
             this.roles = response.data.data;
             Swal.fire({
               title: "Éxito",
-              text: "El rol se creó correctamente",
+              text: "El permiso se creó correctamente",
               icon: "success",
               buttonsStyling: false,
               confirmButtonText: "Aceptar",
@@ -341,12 +362,12 @@ export default {
                 confirmButton: "btn btn-primary",
               },
             });
-            this.cargarRoles(1);
+            this.cargarPermisos(1);
           })
           .catch((error) => {
             Swal.fire({
               title: "Upss..",
-              text: "Hubo un error al crear el rol",
+              text: "Hubo un error al crear el permiso",
               icon: "error",
               buttonsStyling: false,
               confirmButtonText: "Aceptar",
@@ -361,26 +382,28 @@ export default {
         console.log("error de formulario");
       }
     },
-    editarRol: function (rolId) {
+    editarPermiso: function (permisoId) {
       axios
-        .get(`/api/roles/${rolId}`)
+        .get(`/api/permisos/${permisoId}`)
         .then((response) => {
-          this.rolId = response.data.rol.id;
-          this.name = response.data.rol.name;
-          this.description = response.data.rol.description;
+          this.permisoId = response.data.permiso.id;
+          this.moduloId = response.data.permiso.modulo_id;
+          this.name = response.data.permiso.name;
+          this.description = response.data.permiso.description;
         })
         .catch((error) => {});
     },
-    actualizarRol: function () {
+    actualizarPermiso: function () {
       axios
-        .put(`/api/roles/${this.rolId}`, {
+        .put(`/api/permisos/${this.permisoId}`, {
+          modulo_id: this.moduloId,
           name: this.name,
           description: this.description,
         })
         .then((response) => {
           Swal.fire({
             title: "Éxito",
-            text: "El rol se modificó correctamente",
+            text: "El permiso se modificó correctamente",
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Aceptar",
@@ -390,14 +413,14 @@ export default {
           });
           $("#kt_modal_1").modal("hide");
           this.busqueda = "";
-          this.cargarRoles(1);
+          this.cargarPermisos(1);
         })
         .catch((error) => {});
     },
-    eliminarRol: function (rolId) {
+    eliminarPermiso: function (permisoId) {
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "¡Esta acción eliminará el rol!",
+        text: "¡Esta acción eliminará el permiso!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
@@ -407,11 +430,11 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`/api/roles/${rolId}`)
+            .delete(`/api/permisos/${permisoId}`)
             .then((response) => {
               Swal.fire({
                 title: "Éxito",
-                text: "El rol se eliminó correctamente",
+                text: "El permiso se eliminó correctamente",
                 icon: "success",
                 buttonsStyling: false,
                 confirmButtonText: "Aceptar",
@@ -420,7 +443,7 @@ export default {
                 },
               });
               this.busqueda = "";
-              this.cargarRoles(1);
+              this.cargarPermisos(1);
             })
             .catch((error) => {});
         }

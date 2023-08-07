@@ -2,8 +2,12 @@
 <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
     <!--begin::Logo image-->
     <a href="?page=index">
-        <img alt="Logo" src="assets/media/logos/logo-scallia.png" class="h-35px app-sidebar-logo-default" />
-        <img alt="Logo" src="assets/media/logos/scallia-min.png" class="h-30px app-sidebar-logo-minimize" />
+        <img alt="Logo" src="{{ asset('assets/media/logos/logo-scallia.png') }}"
+            class="h-35px
+            app-sidebar-logo-default" />
+        <img alt="Logo" src="{{ asset('assets/media/logos/scallia-min.png') }}"
+            class="h-30px
+            app-sidebar-logo-minimize" />
     </a>
     <!--end::Logo image-->
     <!--begin::Sidebar toggle-->

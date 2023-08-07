@@ -1,11 +1,9 @@
-import { createApp } from "vue/dist/vue.esm-bundler";
-import RolesIndex from "./Pages/configuraciones/roles/index.vue";
-import RolesCrear from "./Pages/configuraciones/roles/crear.vue";
+import { rolesComponent } from "./app/configuraciones/roles";
+import { modulosComponent } from "./app/configuraciones/modulos";
+import { permisosComponent } from "./app/configuraciones/permisos";
 
-const rolesComponent = createApp({
-    components: {
-        "roles-index": RolesIndex,
-        "roles-crear": RolesCrear,
-    },
-});
+
+
 rolesComponent.mount("#roles-component");
+modulosComponent.mount("#modulos-component");
+permisosComponent.mount("#permisos-component");

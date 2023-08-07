@@ -1,6 +1,6 @@
 <template>
   <div class="card-header">
-    <h3 class="card-title">Listado de roles</h3>
+    <h3 class="card-title">Listado de módulos</h3>
     <div class="card-toolbar">
       <button
         type="button"
@@ -22,7 +22,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">
-              {{ modo === "crear" ? "Crear Rol" : "Editar Rol" }}
+              {{ modo === "crear" ? "Crear Módulo" : "Editar Módulo" }}
             </h3>
 
             <!--begin::Close-->
@@ -48,18 +48,18 @@
               <div class="form-group mb-5">
                 <input
                   type="text"
-                  v-model="name"
+                  v-model="nombre"
                   id=""
                   class="form-control"
-                  placeholder="Nombre rol"
+                  placeholder="Nombre módulo"
                   aria-describedby="helpId"
                 />
                 <div
-                  v-if="v$?.name.$error"
+                  v-if="v$?.nombre.$error"
                   class="m-2 fv-plugins-message-container invalid-feedback"
                 >
                   <div data-field="text_input" data-validator="notEmpty">
-                    El nombre de rol es requerido
+                    El nombre de módulo es requerido
                   </div>
                 </div>
               </div>
@@ -67,13 +67,13 @@
               <div class="form-group">
                 <textarea
                   class="form-control"
-                  v-model="description"
+                  v-model="descripcion"
                   id=""
                   rows="3"
                   placeholder="Descripción"
                 ></textarea>
                 <div
-                  v-if="v$?.description.$error"
+                  v-if="v$?.descripcion.$error"
                   class="m-2 fv-plugins-message-container invalid-feedback"
                 >
                   <div data-field="text_input" data-validator="notEmpty">
@@ -106,24 +106,25 @@
       @input="filtrarRoles"
       placeholder="Buscar..."
     />
+
     <div class="table-responsive">
-      <table class="table table-striped table-sm table-bordered">
+      <table class="table table-bordered">
         <thead>
-          <tr class="fw-semibold fs-7 border-bottom border-gray-200 py-4">
-            <th class="min-w-150px">Nombre</th>
-            <th>Descripción</th>
-            <th class="min-w-150px">Creado en</th>
+          <tr class="fw-semibold fs-6 border-bottom border-gray-200 py-4">
+            <th>Nombre</th>
+            <th class="min-w-100px">Descripción</th>
+            <th class="min-w-200px">Creado en</th>
             <th>Acciones</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="rol in roles" :key="rol.id">
-            <td>{{ rol.name }}</td>
-            <td>{{ rol.description }}</td>
+          <tr v-for="modulo in modulos" :key="modulo.id">
+            <td>{{ modulo.nombre }}</td>
+            <td>{{ modulo.descripcion }}</td>
             <td>
               {{
-                new Date(rol.created_at).toLocaleString("es-ES", {
+                new Date(modulo.created_at).toLocaleString("es-ES", {
                   weekday: "long",
                   day: "numeric",
                   month: "long",
@@ -164,11 +165,9 @@
                         data-bs-target="#kt_modal_1"
                         @click="
                           modo = 'editar';
-                          editarRol(rol.id);
+                          editarModulo(modulo.id);
                         "
-                        ><i class="bi bi-pencil-square fs-4"></i>
-
-                        Editar</a
+                        ><i class="bi bi-pencil-square fs-4"></i> Editar</a
                       >
                     </li>
                     <li>
@@ -178,20 +177,9 @@
                         data-bs-toggle="tooltip"
                         data-bs-custom-class="tooltip-inverse"
                         data-bs-placement="bottom"
-                        title="Eliminar rol"
-                        @click="eliminarRol(rol.id)"
+                        title="Eliminar permiso"
+                        @click="eliminarModulo(modulo.id)"
                         ><i class="bi bi-trash3-fill fs-4"></i> Eliminar</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        :href="
-                          route('permiso.rol', {
-                            id: rol.id,
-                          })
-                        "
-                        ><i class="bi bi-key-fill fs-4"></i> Permisos</a
                       >
                     </li>
                   </ul>
@@ -199,7 +187,7 @@
               </div>
             </td>
           </tr>
-          <tr v-if="roles.length === 0">
+          <tr v-if="modulos.length === 0">
             <td colspan="4" class="text-center">No hay datos</td>
           </tr>
         </tbody>
@@ -211,7 +199,7 @@
           class="page-item"
           :class="{ disabled: paginacion.paginaActual === 1 }"
         >
-          <a class="page-link" href="#" @click="cargarRoles(1)">Primera</a>
+          <a class="page-link" href="#" @click="cargarModulos(1)">Primera</a>
         </li>
         <li
           class="page-item"
@@ -220,7 +208,7 @@
           <a
             class="page-link"
             href="#"
-            @click="cargarRoles(paginacion.paginaActual - 1)"
+            @click="cargarModulos(paginacion.paginaActual - 1)"
             >Anterior</a
           >
         </li>
@@ -230,7 +218,7 @@
           :key="page"
           :class="{ active: paginacion.paginaActual === page }"
         >
-          <a class="page-link" href="#" @click="cargarRoles(page)">{{
+          <a class="page-link" href="#" @click="cargarModulos(page)">{{
             page
           }}</a>
         </li>
@@ -243,7 +231,7 @@
           <a
             class="page-link"
             href="#"
-            @click="cargarRoles(paginacion.paginaActual + 1)"
+            @click="cargarModulos(paginacion.paginaActual + 1)"
             >Siguiente</a
           >
         </li>
@@ -256,7 +244,7 @@
           <a
             class="page-link"
             href="#"
-            @click="cargarRoles(paginacion.ultimaPagina)"
+            @click="cargarModulos(paginacion.ultimaPagina)"
             >Última</a
           >
         </li>
@@ -268,19 +256,19 @@
 
 <script>
 import { useVuelidate } from "@vuelidate/core";
-import { required, email } from "@vuelidate/validators";
+import { required } from "@vuelidate/validators";
 
 export default {
-  name: "RolIndex",
+  name: "ModuloIndex",
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
     return {
-      rolId: "",
-      name: "",
-      description: "",
-      roles: [],
+      moduloId: "",
+      nombre: "",
+      descripcion: "",
+      modulos: [],
       busqueda: "",
       paginacion: {
         total: 0,
@@ -296,24 +284,24 @@ export default {
   },
   validations() {
     return {
-      name: { required },
-      description: { required },
+      nombre: { required },
+      descripcion: { required },
     };
   },
   mounted() {
-    this.cargarRoles(1);
+    this.cargarModulos(1);
   },
   methods: {
     filtrarRoles() {
-      this.cargarRoles(1);
+      this.cargarModulos(1);
     },
-    cargarRoles(pagina) {
-      const url = "/api/roles?page=" + pagina + "&busqueda=" + this.busqueda;
+    cargarModulos(pagina) {
+      const url = "/api/modulos?page=" + pagina + "&busqueda=" + this.busqueda;
 
       axios
         .get(url)
         .then((response) => {
-          this.roles = response.data.roles;
+          this.modulos = response.data.modulos;
           this.paginacion = response.data.paginacion;
         })
         .catch((error) => {
@@ -325,15 +313,15 @@ export default {
 
       if (!this.v$.$error) {
         axios
-          .post("/api/roles/agregar", {
-            name: this.name,
-            description: this.description,
+          .post("/api/modulos/agregar", {
+            nombre: this.nombre,
+            descripcion: this.descripcion,
           })
           .then((response) => {
-            this.roles = response.data.data;
+            this.modulos = response.data.data;
             Swal.fire({
               title: "Éxito",
-              text: "El rol se creó correctamente",
+              text: "El modulo se creó correctamente",
               icon: "success",
               buttonsStyling: false,
               confirmButtonText: "Aceptar",
@@ -341,12 +329,12 @@ export default {
                 confirmButton: "btn btn-primary",
               },
             });
-            this.cargarRoles(1);
+            this.cargarModulos(1);
           })
           .catch((error) => {
             Swal.fire({
               title: "Upss..",
-              text: "Hubo un error al crear el rol",
+              text: "Hubo un error al crear el módulo",
               icon: "error",
               buttonsStyling: false,
               confirmButtonText: "Aceptar",
@@ -361,26 +349,26 @@ export default {
         console.log("error de formulario");
       }
     },
-    editarRol: function (rolId) {
+    editarModulo: function (moduloId) {
       axios
-        .get(`/api/roles/${rolId}`)
+        .get(`/api/modulos/${moduloId}`)
         .then((response) => {
-          this.rolId = response.data.rol.id;
-          this.name = response.data.rol.name;
-          this.description = response.data.rol.description;
+          this.moduloId = response.data.modulo.id;
+          this.nombre = response.data.modulo.nombre;
+          this.descripcion = response.data.modulo.descripcion;
         })
         .catch((error) => {});
     },
     actualizarRol: function () {
       axios
-        .put(`/api/roles/${this.rolId}`, {
-          name: this.name,
-          description: this.description,
+        .put(`/api/modulos/${this.moduloId}`, {
+          nombre: this.nombre,
+          descripcion: this.descripcion,
         })
         .then((response) => {
           Swal.fire({
             title: "Éxito",
-            text: "El rol se modificó correctamente",
+            text: "El módulo se modificó correctamente",
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Aceptar",
@@ -390,14 +378,14 @@ export default {
           });
           $("#kt_modal_1").modal("hide");
           this.busqueda = "";
-          this.cargarRoles(1);
+          this.cargarModulos(1);
         })
         .catch((error) => {});
     },
-    eliminarRol: function (rolId) {
+    eliminarModulo: function (moduloId) {
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "¡Esta acción eliminará el rol!",
+        text: "¡Esta acción eliminará el módulo!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
@@ -407,11 +395,11 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`/api/roles/${rolId}`)
+            .delete(`/api/modulos/${moduloId}`)
             .then((response) => {
               Swal.fire({
                 title: "Éxito",
-                text: "El rol se eliminó correctamente",
+                text: "El módulo se eliminó correctamente",
                 icon: "success",
                 buttonsStyling: false,
                 confirmButtonText: "Aceptar",
@@ -420,15 +408,15 @@ export default {
                 },
               });
               this.busqueda = "";
-              this.cargarRoles(1);
+              this.cargarModulos(1);
             })
             .catch((error) => {});
         }
       });
     },
     resetModalData: function () {
-      this.name = "";
-      this.description = "";
+      this.nombre = "";
+      this.descripcion = "";
     },
   },
 };

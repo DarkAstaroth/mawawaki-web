@@ -8,9 +8,12 @@
     <title>Inicio</title>
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
 
+    @routes
+    @vite(['resources/js/app.js'])
     {{-- @routes
     @vite(['resources/js/app.js', 'resources/js/Pages/configuraciones/roles/index.vue']) --}}
     {{-- @inertiaHead --}}
+
 
 </head>
 
@@ -51,9 +54,11 @@
     <!--end::App-->
     <!--layout-partial:partials/_drawers.html-->
     @vite(['resources/js/app.js'])
-    {{-- <script src="{{ asset('build/assets/app-9a281880.js') }}" defer></script> --}}
+    {{-- <script src="{{ asset('build/assets/app-06903fe8.js')}}" defer></script> --}}
+
     @include('complemento.tema')
     @include('complemento.scripts')
+
 </body>
 
 </html>
