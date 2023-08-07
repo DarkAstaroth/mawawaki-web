@@ -32,8 +32,8 @@ class PermisoController extends Controller
         if ($busqueda) {
             $busquedaSinEspacios = str_replace(' ', '', $busqueda);
             $permisosQuery->where(function ($query) use ($busquedaSinEspacios) {
-                $query->whereRaw("REPLACE(nombre, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
-                    ->orWhereRaw("REPLACE(descripcion, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
+                $query->whereRaw("REPLACE(name, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+                    ->orWhereRaw("REPLACE(description, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
             });
         }
 
@@ -127,6 +127,10 @@ class PermisoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $permiso = Permission::findOrFail($id);
+        $permiso->delete();
+        return response()->json([
+            'success' => 'El permiso se eliminó correctamente'
+        ]);
     }
 }

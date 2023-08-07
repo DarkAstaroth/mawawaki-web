@@ -31,6 +31,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::resource('dashboard/roles', RolController::class);
+Route::get('dashboard/permiso/rol/{id}', [RolController::class, 'PermisoRol'])->name('permiso.rol');
+
 Route::resource('dashboard/modulos', ModuloController::class);
 Route::resource('dashboard/permisos', PermisoController::class);
 

@@ -138,7 +138,7 @@
               <div class="d-flex">
                 <div class="dropdown">
                   <button
-                    class="btn btn-secondary dropdown-toggle"
+                    class="btn btn-secondary dropdown-toggle btn-sm"
                     type="button"
                     id="dropdownMenuButton1"
                     data-bs-toggle="dropdown"
@@ -151,7 +151,11 @@
                     class="dropdown-menu"
                     aria-labelledby="dropdownMenuButton1"
                   >
-                    <li><a class="dropdown-item" href="#">Ver</a></li>
+                    <li>
+                      <a class="dropdown-item" href="#"
+                        ><i class="bi bi-eye-fill fs-4"></i> Ver</a
+                      >
+                    </li>
                     <li>
                       <a
                         href="#"
@@ -162,7 +166,9 @@
                           modo = 'editar';
                           editarRol(rol.id);
                         "
-                        >Editar</a
+                        ><i class="bi bi-pencil-square fs-4"></i>
+
+                        Editar</a
                       >
                     </li>
                     <li>
@@ -174,7 +180,18 @@
                         data-bs-placement="bottom"
                         title="Eliminar rol"
                         @click="eliminarRol(rol.id)"
-                        >Eliminar</a
+                        ><i class="bi bi-trash3-fill fs-4"></i> Eliminar</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        :href="
+                          route('permiso.rol', {
+                            id: rol.id,
+                          })
+                        "
+                        ><i class="bi bi-key-fill fs-4"></i> Permisos</a
                       >
                     </li>
                   </ul>
@@ -296,7 +313,6 @@ export default {
       axios
         .get(url)
         .then((response) => {
-          console.log(response);
           this.roles = response.data.roles;
           this.paginacion = response.data.paginacion;
         })
@@ -356,7 +372,6 @@ export default {
         .catch((error) => {});
     },
     actualizarRol: function () {
-      console.log("Actualizar rol");
       axios
         .put(`/api/roles/${this.rolId}`, {
           name: this.name,

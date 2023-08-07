@@ -22,7 +22,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title">
-              {{ modo === "crear" ? "Crear Permiso" : "Editar Permiso" }}
+              {{ modo === "crear" ? "Crear Módulo" : "Editar Módulo" }}
             </h3>
 
             <!--begin::Close-->
@@ -51,7 +51,7 @@
                   v-model="nombre"
                   id=""
                   class="form-control"
-                  placeholder="Nombre modulo"
+                  placeholder="Nombre módulo"
                   aria-describedby="helpId"
                 />
                 <div
@@ -137,31 +137,53 @@
             </td>
             <td class="align-items-center">
               <div class="d-flex">
-                <a href="#" class="btn btn-icon btn-active-light-primary"
-                  ><i class="bi bi-eye-fill fs-4"></i
-                ></a>
-                <a
-                  type="button"
-                  class="btn btn-icon btn-active-light-warning"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kt_modal_1"
-                  @click="
-                    modo = 'editar';
-                    editarRol(modulo.id);
-                  "
-                  ><i class="bi bi-pencil-square fs-4"></i
-                ></a>
-                <a
-                  type="button"
-                  class="btn btn-icon btn-active-light-danger eliminar-modulo"
-                  data-bs-toggle="tooltip"
-                  data-bs-custom-class="tooltip-inverse"
-                  data-bs-placement="bottom"
-                  title="Eliminar modulo"
-                  @click="eliminarRol(modulo.id)"
-                >
-                  <i class="bi bi-trash3-fill fs-4"></i>
-                </a>
+                <div class="dropdown">
+                  <button
+                    class="btn btn-secondary dropdown-toggle btn-sm"
+                    type="button"
+                    id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    data-boundary="viewport"
+                  >
+                    Acciones
+                  </button>
+                  <ul
+                    class="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton1"
+                  >
+                    <li>
+                      <a class="dropdown-item" href="#"
+                        ><i class="bi bi-eye-fill fs-4"></i> Ver</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        class="dropdown-item"
+                        data-bs-toggle="modal"
+                        data-bs-target="#kt_modal_1"
+                        @click="
+                          modo = 'editar';
+                          editarModulo(modulo.id);
+                        "
+                        ><i class="bi bi-pencil-square fs-4"></i> Editar</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="#"
+                        class="dropdown-item"
+                        data-bs-toggle="tooltip"
+                        data-bs-custom-class="tooltip-inverse"
+                        data-bs-placement="bottom"
+                        title="Eliminar permiso"
+                        @click="eliminarModulo(modulo.id)"
+                        ><i class="bi bi-trash3-fill fs-4"></i> Eliminar</a
+                      >
+                    </li>
+                  </ul>
+                </div>
               </div>
             </td>
           </tr>
@@ -177,7 +199,7 @@
           class="page-item"
           :class="{ disabled: paginacion.paginaActual === 1 }"
         >
-          <a class="page-link" href="#" @click="cargarRoles(1)">Primera</a>
+          <a class="page-link" href="#" @click="cargarModulos(1)">Primera</a>
         </li>
         <li
           class="page-item"
@@ -186,7 +208,7 @@
           <a
             class="page-link"
             href="#"
-            @click="cargarRoles(paginacion.paginaActual - 1)"
+            @click="cargarModulos(paginacion.paginaActual - 1)"
             >Anterior</a
           >
         </li>
@@ -196,7 +218,7 @@
           :key="page"
           :class="{ active: paginacion.paginaActual === page }"
         >
-          <a class="page-link" href="#" @click="cargarRoles(page)">{{
+          <a class="page-link" href="#" @click="cargarModulos(page)">{{
             page
           }}</a>
         </li>
@@ -209,7 +231,7 @@
           <a
             class="page-link"
             href="#"
-            @click="cargarRoles(paginacion.paginaActual + 1)"
+            @click="cargarModulos(paginacion.paginaActual + 1)"
             >Siguiente</a
           >
         </li>
@@ -222,7 +244,7 @@
           <a
             class="page-link"
             href="#"
-            @click="cargarRoles(paginacion.ultimaPagina)"
+            @click="cargarModulos(paginacion.ultimaPagina)"
             >Última</a
           >
         </li>
@@ -327,7 +349,7 @@ export default {
         console.log("error de formulario");
       }
     },
-    editarRol: function (moduloId) {
+    editarModulo: function (moduloId) {
       axios
         .get(`/api/modulos/${moduloId}`)
         .then((response) => {
@@ -360,10 +382,10 @@ export default {
         })
         .catch((error) => {});
     },
-    eliminarRol: function (rolId) {
+    eliminarModulo: function (moduloId) {
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "¡Esta acción eliminará el modulo!",
+        text: "¡Esta acción eliminará el módulo!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
@@ -373,7 +395,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`/api/roles/${rolId}`)
+            .delete(`/api/modulos/${moduloId}`)
             .then((response) => {
               Swal.fire({
                 title: "Éxito",
@@ -386,7 +408,7 @@ export default {
                 },
               });
               this.busqueda = "";
-              this.cargarRoles(1);
+              this.cargarModulos(1);
             })
             .catch((error) => {});
         }

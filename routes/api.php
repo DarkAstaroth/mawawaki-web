@@ -34,9 +34,16 @@ Route::post('modulos/agregar', [ModuloController::class, 'store']);
 Route::put('modulos/{id}', [ModuloController::class, 'update']);
 Route::delete('modulos/{id}', [ModuloController::class, 'destroy']);
 
+// Lista de modulos con sus respectivos permisos
+Route::get('modulo/permisos', [ModuloController::class, 'modulosPermisos']);
+
 
 Route::get('permisos', [PermisoController::class, 'obtenerPermisos']);
 Route::get('permisos/{id}', [PermisoController::class, 'edit']);
 Route::post('permisos/agregar', [PermisoController::class, 'store']);
 Route::put('permisos/{id}', [PermisoController::class, 'update']);
 Route::delete('permisos/{id}', [PermisoController::class, 'destroy']);
+
+
+// asignacion de permisos
+Route::post('asignar/permisos/rol/{rolId}',[RolController::class,'asignarPermisos']);

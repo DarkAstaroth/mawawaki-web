@@ -166,7 +166,7 @@
               <div class="d-flex">
                 <div class="dropdown">
                   <button
-                    class="btn btn-secondary dropdown-toggle"
+                    class="btn btn-secondary dropdown-toggle btn-sm"
                     type="button"
                     id="dropdownMenuButton1"
                     data-bs-toggle="dropdown"
@@ -179,7 +179,11 @@
                     class="dropdown-menu"
                     aria-labelledby="dropdownMenuButton1"
                   >
-                    <li><a class="dropdown-item" href="#">Ver</a></li>
+                    <li>
+                      <a class="dropdown-item" href="#"
+                        ><i class="bi bi-eye-fill fs-4"></i> Ver</a
+                      >
+                    </li>
                     <li>
                       <a
                         href="#"
@@ -190,7 +194,7 @@
                           modo = 'editar';
                           editarPermiso(permiso.id);
                         "
-                        >Editar</a
+                        ><i class="bi bi-pencil-square fs-4"></i> Editar</a
                       >
                     </li>
                     <li>
@@ -202,7 +206,7 @@
                         data-bs-placement="bottom"
                         title="Eliminar permiso"
                         @click="eliminarPermiso(permiso.id)"
-                        >Eliminar</a
+                        ><i class="bi bi-trash3-fill fs-4"></i> Eliminar</a
                       >
                     </li>
                   </ul>
@@ -413,7 +417,7 @@ export default {
         })
         .catch((error) => {});
     },
-    eliminarPermiso: function (rolId) {
+    eliminarPermiso: function (permisoId) {
       Swal.fire({
         title: "¿Estás seguro?",
         text: "¡Esta acción eliminará el permiso!",
@@ -426,7 +430,7 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`/api/permisos/${rolId}`)
+            .delete(`/api/permisos/${permisoId}`)
             .then((response) => {
               Swal.fire({
                 title: "Éxito",
@@ -439,7 +443,7 @@ export default {
                 },
               });
               this.busqueda = "";
-              this.cargarRoles(1);
+              this.cargarPermisos(1);
             })
             .catch((error) => {});
         }

@@ -6,7 +6,8 @@
     </h1>
     <!--end::Title-->
     <!--begin::Breadcrumb-->
-    <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+    @yield('bread')
+    {{-- <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
         <!--begin::Item-->
         <li class="breadcrumb-item text-muted">
             <a href="?page=index" class="text-muted text-hover-primary">
@@ -22,7 +23,7 @@
         <li class="breadcrumb-item text-muted">
             Dashboards </li>
         <!--end::Item-->
-    </ul>
+    </ul> --}}
     <!--end::Breadcrumb-->
 </div>
 <!--end::Page title-->

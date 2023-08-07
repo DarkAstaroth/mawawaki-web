@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Configuraciones;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Configuraciones\RolResource;
+use App\Models\Configuraciones\Modulo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RolController extends Controller
@@ -56,6 +58,8 @@ class RolController extends Controller
     }
 
 
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -69,9 +73,10 @@ class RolController extends Controller
      */
     public function store(Request $request)
     {
+        $id = $request->input('id');
         $nombreRol = $request->input('name');
         $descripcionRol = $request->input('description');
-        $rol = Role::create(['name' => $nombreRol, "description" => $descripcionRol]);
+        $rol = Role::create(['id' => $id, 'name' => $nombreRol, "description" => $descripcionRol]);
 
         $response = [
             'message' => 'Rol creado exitosamente',
@@ -125,5 +130,22 @@ class RolController extends Controller
         return response()->json([
             'success' => 'El rol se eliminó correctamente'
         ]);
+    }
+
+    public function PermisoRol(string $id)
+    {
+        $rol = Role::findOrFail($id);
+        $permisosRol = $rol->permissions->pluck('id');
+
+        return view('configuraciones.roles.pages.permisoRol', compact('rol', 'permisosRol'));
+    }
+
+    public function asignarPermisos(Request $request, $rolId)
+    {
+        $rol = Role::findOrFail($rolId);
+        $permisos = Permission::whereIn('id', $request->permisos)->get();
+        $rol->syncPermissions($permisos);
+
+        return response()->json(['mensaje' => 'Permisos asignados correctamente', 'estado' => true], 200);
     }
 }

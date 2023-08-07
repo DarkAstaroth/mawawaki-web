@@ -119,6 +119,16 @@ class ModuloController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $permiso = Modulo::findOrFail($id);
+        $permiso->delete();
+        return response()->json([
+            'success' => 'El módulo se eliminó correctamente'
+        ]);
+    }
+
+    public function modulosPermisos()
+    {
+        $modulos = Modulo::with('permisos')->get();
+        return response()->json($modulos);
     }
 }

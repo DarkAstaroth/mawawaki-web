@@ -8,7 +8,10 @@
 <script src="{{ asset('assets/js/custom/utilities/modals/new-target.js') }}"></script>
 <script src="{{ asset('assets/js/custom/utilities/modals/users-search.js') }}"></script>
 <script src="{{ asset('assets/js/custom/authentication/sign-in/general.js') }}"></script> --}}
-<script>
+
+
+
+{{-- <script>
     $('.dropdown').on('show.bs.dropdown', function() {
         $('body').append($('.dropdown').css({
             position: 'absolute',
@@ -16,4 +19,4 @@
             top: $('.dropdown').offset().top
         }).detach());
     });
-</script>
+</script> --}}
