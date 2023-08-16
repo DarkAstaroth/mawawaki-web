@@ -19,3 +19,10 @@ Breadcrumbs::for('roles.permisos', function (BreadcrumbTrail $trail, Role $rol) 
     $trail->push('Asignar permisos');
     $trail->push($rol->name, route('roles.index', $rol));
 });
+
+
+// Usuarios
+Breadcrumbs::for('usuarios', function (BreadcrumbTrail $trail) {
+    $trail->push('Todos los Usuarios', route('usuarios.index'));
+});
+

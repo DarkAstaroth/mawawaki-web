@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\core;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class UsuarioController extends Controller
 {
@@ -13,6 +13,12 @@ class UsuarioController extends Controller
     public function index()
     {
         //
+        return view('core.usuarios.index');
+    }
+
+    public function obtenerUsuarios()
+    {
+
     }
 
     /**

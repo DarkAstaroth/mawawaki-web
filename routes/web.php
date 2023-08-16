@@ -1,48 +1,20 @@
 <?php
 
-use App\Http\Controllers\Configuraciones\RolController;
-use App\Http\Controllers\Configuraciones\ModuloController;
-use App\Http\Controllers\Configuraciones\PermisoController;
-use App\Http\Controllers\GoogleController;
-use App\Http\Controllers\UsuarioController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\core\UsuarioController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+use App\Http\Controllers\GoogleController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
+// Rutas públicas
 Route::get('/', function () {
     return view('home');
-})->name('home');;
+})->name('home');
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', function () {
-        return view('autenticacion.login');
-    })->name('login');
-});
-
-Route::resource('dashboard/roles', RolController::class);
-Route::get('dashboard/permiso/rol/{id}', [RolController::class, 'PermisoRol'])->name('permiso.rol');
-
-Route::resource('dashboard/modulos', ModuloController::class);
-Route::resource('dashboard/permisos', PermisoController::class);
-
-
+// Rutas de autenticación requerida
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -50,5 +22,14 @@ Route::middleware([
     Route::get('/logout', [UsuarioController::class, 'logout']);
 });
 
+// Rutas de autenticación (pero no requieren sesión verificada)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return view('autenticacion.login');
+    })->name('login');
+});
+
+// Rutas de Google
 Route::get('auth/google', [GoogleController::class, 'signInwithGoogle']);
 Route::get('callback/google', [GoogleController::class, 'callbackToGoogle']);
+
