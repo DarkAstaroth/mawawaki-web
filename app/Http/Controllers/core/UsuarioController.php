@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\core;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\core\UsuarioResource;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class UsuarioController extends Controller
 {
@@ -12,13 +15,44 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        //
         return view('core.usuarios.index');
     }
 
-    public function obtenerUsuarios()
+    public function obtenerUsuarios(Request $request)
     {
+        $porPagina = $request->get('porPagina', 10);
+        $pagina = $request->get('page', 1);
+        $busqueda = $request->get('busqueda');
 
+        $usuariosQuery = User::query();
+
+        if ($busqueda) {
+
+            $busquedaSinEspacios = str_replace(' ', '', $busqueda);
+            $usuariosQuery->where(function ($query) use ($busquedaSinEspacios) {
+                $query->whereRaw("REPLACE(name, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+                    ->orWhereRaw("REPLACE(email, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
+            });
+        }
+
+        $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
+        $usuariosCollection = new Collection($usuarios->items());
+        $usuariosResource = UsuarioResource::collection($usuariosCollection);
+
+
+        $resultadoBusqueda = $usuariosResource->isEmpty() ? [] : $usuariosResource;
+
+        return response()->json([
+            'usuarios' => $resultadoBusqueda,
+            'paginacion' => [
+                'total' => $usuarios->total(),
+                'porPagina' => $usuarios->perPage(),
+                'paginaActual' => $usuarios->currentPage(),
+                'ultimaPagina' => $usuarios->lastPage(),
+                'desde' => $usuarios->firstItem(),
+                'hasta' => $usuarios->lastItem()
+            ]
+        ]);
     }
 
     /**
