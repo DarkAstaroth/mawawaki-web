@@ -15,10 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $role =   Role::findOrCreate('admin');
-        $permission = Permission::findOrCreate('crear roles');
-        $role->givePermissionTo('crear roles');
-        $permission->assignRole($role);
+
+        Role::findOrCreate('invitado');
+
+        /* $role =   Role::findOrCreate('admin'); */
+        /* $permission = Permission::findOrCreate('crear roles'); */
+        /* $role->givePermissionTo('crear roles'); */
+        /* $permission->assignRole($role); */
 
         // $this->call(RoleSeeder::class);
         // $this->call(PermisosSeeder::class);

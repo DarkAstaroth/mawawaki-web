@@ -36,10 +36,15 @@ class UsuarioController extends Controller
         }
 
         $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
-        $usuariosCollection = new Collection($usuarios->items());
-        $usuariosResource = UsuarioResource::collection($usuariosCollection);
+        $usuariosIds = $usuarios->pluck('id')->toArray();
+        $usuariosConRoles = User::with('roles')->whereIn('id', $usuariosIds)->get();
 
+         $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
+            $usuario->nuevo_campo = "Valor del nuevo campo para este usuario";
+            return $usuario;
+        });
 
+        $usuariosResource = UsuarioResource::collection($usuariosConCamposAdicionales);
         $resultadoBusqueda = $usuariosResource->isEmpty() ? [] : $usuariosResource;
 
         return response()->json([

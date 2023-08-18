@@ -25,9 +25,9 @@
                             class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
                         >
                             <th class="min-w-150px">Nombre</th>
-                            <th class="min-w-150px">Email</th>
-                            <th class="min-w-150px">Creado en</th>
-                            <th>Acciones</th>
+                            <th class="min-w-150px">Rol</th>
+                            <th class="max-w-100px">Creado en</th>
+                            <th class="min-w-150px">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,20 +40,27 @@
                                         class="p-1 rounded-pill"
                                         width="50"
                                     />
-                                    <div
-                                        class="px-2 d-flex flex-column bd-highlight"
-                                    >
-                                        <div class="bd-highlight">
+                                    <div class="px-2 d-flex flex-column">
+                                        <div>
                                             {{ usuario.name }}
                                         </div>
                                         <div class="py-1 bd-highlight">
-                                            <small>{{ usuario.email }}</small>
+                                            <small>
+                                                {{ usuario.email }}
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="align-middle">
-                                {{ usuario.email }}
+                                <div
+                                    v-for="urol in usuario.roles"
+                                    :key="urol.id"
+                                >
+                                    <span class="badge badge-secondary">{{
+                                        urol.name
+                                    }}</span>
+                                </div>
                             </td>
                             <td class="align-middle">
                                 {{

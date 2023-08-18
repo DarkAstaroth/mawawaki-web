@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\core\InvitadoController;
 use App\Http\Controllers\core\UsuarioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
@@ -27,6 +28,12 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
         return view('autenticacion.login');
     })->name('login');
+});
+
+
+
+Route::group(['middleware' => ['role:invitado']], function () {
+    Route::resource('setup/invitado', InvitadoController::class);
 });
 
 // Rutas de Google
