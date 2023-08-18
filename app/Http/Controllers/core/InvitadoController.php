@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\core;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class UsuarioController extends Controller
+class InvitadoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,6 +13,8 @@ class UsuarioController extends Controller
     public function index()
     {
         //
+         $html = '<div>SetUp Invitado</div>';
+        return response($html);
     }
 
     /**
@@ -61,11 +63,5 @@ class UsuarioController extends Controller
     public function destroy(string $id)
     {
         //
-    }
-
-    public function logout(Request $request)
-    {
-        auth()->guard('web')->logout();
-        return redirect('/');
     }
 }

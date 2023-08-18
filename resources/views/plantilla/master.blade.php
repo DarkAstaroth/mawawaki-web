@@ -26,11 +26,11 @@
     <!--begin::App-->
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
         <!--begin::Page-->
-        <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
+        <div class="app-page flex-column flex-column-fluid " id="kt_app_page">
             <!--layout-partial:layout/partials/_header.html-->
             @include('plantilla.secciones.header')
             <!--begin::Wrapper-->
-            <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
+            <div class="app-wrapper flex-column flex-row-fluid " id="kt_app_wrapper">
                 <!--layout-partial:layout/partials/_sidebar.html-->
                 @include('plantilla.secciones.sidebar')
                 <!--begin::Main-->

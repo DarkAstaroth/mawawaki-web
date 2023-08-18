@@ -37,6 +37,8 @@ class RolController extends Controller
             });
         }
 
+        $rolesQuery->where('name', '<>', 'invitado');
+
         $roles = $rolesQuery->paginate($porPagina, ['*'], 'page', $pagina);
 
         $rolesCollection = new Collection($roles->items());

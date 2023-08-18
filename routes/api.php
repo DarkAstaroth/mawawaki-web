@@ -3,6 +3,7 @@
 use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\Configuraciones\RolController;
+use App\Http\Controllers\core\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,3 +48,7 @@ Route::delete('permisos/{id}', [PermisoController::class, 'destroy']);
 
 // asignacion de permisos
 Route::post('asignar/permisos/rol/{rolId}',[RolController::class,'asignarPermisos']);
+
+
+// Api para usuarios
+Route::get('usuarios',[UsuarioController::class,'obtenerUsuarios']);
