@@ -15,7 +15,7 @@
                 class="mb-5 form-control"
                 type="text"
                 v-model="busqueda"
-                @input="filtrarRoles"
+                @input="filtrarUsuarios"
                 placeholder="Buscar..."
             />
             <div class="table-responsive">
@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="usuario in usuarios" :key="usuario.id">
-                            <td>
+                            <td class="align-middle">
                                 <div class="d-flex align-items-center">
                                     <img
                                         :src="usuario.profile_photo_url"
@@ -52,9 +52,31 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>{{ usuario.email }}</td>
-                            <td>{{ usuario.created_at }}</td>
-                            <td>Acciones</td>
+                            <td class="align-middle">
+                                {{ usuario.email }}
+                            </td>
+                            <td class="align-middle">
+                                {{
+                                    new Date(usuario.created_at).toLocaleString(
+                                        "es-ES",
+                                        {
+                                            weekday: "long",
+                                            day: "numeric",
+                                            month: "long",
+                                            year: "numeric",
+                                            hour: "numeric",
+                                            minute: "numeric",
+                                            second: "numeric",
+                                        }
+                                    )
+                                }}
+                            </td>
+                            <td class="align-middle">Acciones</td>
+                        </tr>
+                        <tr v-if="usuarios.length === 0">
+                            <td colspan="4" class="text-center">
+                                No hay datos
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -86,6 +108,9 @@ export default {
         this.cargarUsuarios(1);
     },
     methods: {
+        filtrarUsuarios() {
+            this.cargarUsuarios(1);
+        },
         cargarUsuarios(pagina) {
             const url =
                 "/api/usuarios?page=" + pagina + "&busqueda=" + this.busqueda;

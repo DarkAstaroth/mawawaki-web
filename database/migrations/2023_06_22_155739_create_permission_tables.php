@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\PermissionRegistrar;
 
 class CreatePermissionTables extends Migration
@@ -27,10 +26,12 @@ class CreatePermissionTables extends Migration
         }
 
         Schema::create('modulos', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            // $table->uuid('id')->primary()->default(DB::raw('UUID()'));
+            $table->uuid('id')->primary()->unique();
             $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->timestamps();
+                $table->softDeletes();
         });
 
         Schema::create('permissions', function (Blueprint $table) {
@@ -43,6 +44,7 @@ class CreatePermissionTables extends Migration
 
             $table->foreign('modulo_id')->references('id')->on('modulos')->onDelete('cascade');
             $table->unique(['name', 'guard_name']);
+            $table->softDeletes();
         });
 
 
@@ -62,6 +64,7 @@ class CreatePermissionTables extends Migration
             } else {
                 $table->unique(['name', 'guard_name']);
             }
+            $table->softDeletes();
         });
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames, $teams) {
