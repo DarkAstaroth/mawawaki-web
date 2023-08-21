@@ -12,9 +12,7 @@ class InvitadoController extends Controller
      */
     public function index()
     {
-        //
-         $html = '<div>SetUp Invitado</div>';
-        return response($html);
+       return view('autenticacion.setup');
     }
 
     /**

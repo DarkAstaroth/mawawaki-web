@@ -42,7 +42,8 @@ class User extends Authenticatable
         'email',
         'password',
         'gauth_id',
-        'gauth_type'
+        'gauth_type',
+        'profile_photo_path'
     ];
 
     /**
@@ -63,7 +64,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'id'=> 'string', 
+        'id' => 'string',
         'email_verified_at' => 'datetime',
     ];
 

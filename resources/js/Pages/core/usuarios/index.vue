@@ -35,7 +35,7 @@
                             <td class="align-middle">
                                 <div class="d-flex align-items-center">
                                     <img
-                                        :src="usuario.profile_photo_url"
+                                        :src="usuario.profile_photo_path"
                                         alt="foto"
                                         class="p-1 rounded-pill"
                                         width="50"
@@ -124,6 +124,7 @@ export default {
             axios
                 .get(url)
                 .then((response) => {
+                    console.log(response);
                     this.usuarios = response.data.usuarios;
                 })
                 .catch((error) => {

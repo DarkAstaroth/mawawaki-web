@@ -40,3 +40,12 @@ Route::group(['middleware' => ['role:invitado']], function () {
 Route::get('auth/google', [GoogleController::class, 'signInwithGoogle']);
 Route::get('callback/google', [GoogleController::class, 'callbackToGoogle']);
 
+
+Route::get('/imagenes/{nombreImagen}', function ($nombreImagen) {
+    $rutaImagen = public_path('imagenes/' . $nombreImagen);
+    if (file_exists($rutaImagen)) {
+        return response()->file($rutaImagen);
+    } else {
+        abort(404);
+    }
+})->name('imagen.usuario');

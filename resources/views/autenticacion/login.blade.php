@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="separator separator-content my-14">
-                                <span class="w-125px text-gray-500 fw-semibold fs-7">o con tu correo</span>
+                                <span class="w-125px text-gray-500 fw-semibold fs-7">con tu correo</span>
                             </div>
 
 
