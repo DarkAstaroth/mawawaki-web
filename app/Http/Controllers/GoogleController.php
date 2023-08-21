@@ -23,7 +23,7 @@ class GoogleController extends Controller
             if ($usuarioExistente) {
                 session()->flush();
                 Auth::login($usuarioExistente);
-                if ($usuarioExistente->hasRole('invitado')) {
+                if ($usuarioExistente->hasRole('invitado') && $usuarioExistente->solicitud !== 1) {
                     return redirect('/setup/invitado');
                 }
                 return redirect('/dashboard');

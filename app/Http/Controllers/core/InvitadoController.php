@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\core;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class InvitadoController extends Controller
@@ -12,7 +13,7 @@ class InvitadoController extends Controller
      */
     public function index()
     {
-       return view('autenticacion.setup');
+        return view('autenticacion.setup');
     }
 
     /**
@@ -28,7 +29,6 @@ class InvitadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -52,7 +52,21 @@ class InvitadoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+
+        if ($user) {
+            $user->update([
+                'nombres' => $request->input('nombres'),
+                'paterno' => $request->input('paterno'),
+                'materno' => $request->input('materno'),
+                'solicitud' => 1,
+                'password' => bcrypt($request->input('password')),
+            ]);
+
+            return redirect()->route('dashboard')->with('success', 'Usuario actualizado correctamente');
+        }
+
+        return redirect()->route('dashboard')->with('error', 'Usuario no encontrado');
     }
 
     /**

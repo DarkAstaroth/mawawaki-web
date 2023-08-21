@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('nombres')->unique()->nullable();
             $table->string('paterno')->unique()->nullable();
-            $table->string('materno')->unique()->nullable();;
-            $table->string('estado')->default(0);
-            $table->string('verificada')->default(0);;
+            $table->string('materno')->unique()->nullable();
+            $table->boolean('estado')->default(0);
+            $table->boolean('verificada')->default(0);
+            $table->boolean('solicitud')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -13,7 +13,7 @@
             <div class="d-flex flex-column">
                 <div class="fw-bold d-flex align-items-center fs-5">
                     @if (auth()->check())
-                        {{ auth()->user()->name }}
+                        {{ auth()->user()->nombres }} {{ auth()->user()->paterno }} {{ auth()->user()->materno }}
                     @endif
                     <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
                 </div>
