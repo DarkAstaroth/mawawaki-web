@@ -4,6 +4,8 @@ use App\Http\Controllers\core\InvitadoController;
 use App\Http\Controllers\core\UsuarioController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 
 // Rutas públicas
 Route::get('/', function () {
@@ -15,11 +17,12 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'check.solicitud',
+    'check.verificacion'
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
     Route::get('/logout', [UsuarioController::class, 'logout']);
 });
 
@@ -31,9 +34,14 @@ Route::middleware('guest')->group(function () {
 });
 
 
-
-Route::group(['middleware' => ['role:invitado']], function () {
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'role:invitado', // Agregar el middleware de rol aquí
+])->group(function () {
     Route::resource('setup/invitado', InvitadoController::class);
+    Route::get('verificar/cuenta', [UsuarioController::class, 'verificarCuenta'])->name('verificar.cuenta');
 });
 
 // Rutas de Google
@@ -49,3 +57,17 @@ Route::get('/imagenes/{nombreImagen}', function ($nombreImagen) {
         abort(404);
     }
 })->name('imagen.usuario');
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', 'verification-link-sent');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect('/dashboard');
+})->middleware(['auth', 'signed'])->name('verification.verify');

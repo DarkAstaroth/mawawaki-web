@@ -114,4 +114,8 @@ class UsuarioController extends Controller
         auth()->guard('web')->logout();
         return redirect('/');
     }
+
+    public function verificarCuenta (){
+        return view('autenticacion.cuenta');
+    }
 }
