@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Exception;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class GoogleController extends Controller
 {
@@ -49,8 +50,11 @@ class GoogleController extends Controller
 
                 return redirect('/setup/invitado');
             }
-        } catch (Exception $e) {
-            dd($e->getMessage());
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return redirect()->route('login')->with('error', 'El correo electrónico ya está en uso. Por favor, utiliza otro correo.');
+            }
+            return redirect()->route('login')->with('error', 'Ha ocurrido un error en el proceso de registro. Por favor, inténtalo de nuevo.');
         }
     }
 }

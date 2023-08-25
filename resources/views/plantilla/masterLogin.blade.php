@@ -21,3 +21,23 @@
 </body>
 
 </html>
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Upsss..',
+            text: '{{ session('error') }}'
+        });
+    </script>
+@endif
+
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: '¡Operación Exitosa!',
+            text: '{{ session('success') }}'
+        });
+    </script>
+@endif

@@ -23,7 +23,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    Route::get('/logout', [UsuarioController::class, 'logout']);
 });
 
 // Rutas de autenticación (pero no requieren sesión verificada)
@@ -31,18 +30,22 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
         return view('autenticacion.login');
     })->name('login');
+    Route::get('/registro', [InvitadoController::class, 'registroEmail'])->name('login.registro');
+    Route::post('/crear-cuenta', [InvitadoController::class, 'crearUsuarioEmail'])->name('usuario.crear');
 });
 
+Route::get('/logout', [UsuarioController::class, 'logout']);
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    'role:invitado', // Agregar el middleware de rol aquí
+    'role:invitado',
 ])->group(function () {
     Route::resource('setup/invitado', InvitadoController::class);
     Route::get('verificar/cuenta', [UsuarioController::class, 'verificarCuenta'])->name('verificar.cuenta');
 });
+
 
 // Rutas de Google
 Route::get('auth/google', [GoogleController::class, 'signInwithGoogle']);

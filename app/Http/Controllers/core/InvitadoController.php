@@ -5,6 +5,8 @@ namespace App\Http\Controllers\core;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class InvitadoController extends Controller
 {
@@ -63,7 +65,7 @@ class InvitadoController extends Controller
                 'password' => bcrypt($request->input('password')),
             ]);
 
-            return redirect()->route('dashboard')->with('success', 'Usuario actualizado correctamente');
+            return redirect()->route('login')->with('success', 'Usuario actualizado correctamente');
         }
 
         return redirect()->route('dashboard')->with('error', 'Usuario no encontrado');
@@ -75,5 +77,28 @@ class InvitadoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function registroEmail()
+    {
+        return view('autenticacion.registro');
+    }
+
+    public function crearUsuarioEmail(Request $request)
+    {
+
+        $nuevoUsuario = User::create([
+            'nombres' => $request->nombres,
+            'paterno' => $request->paterno,
+            'materno' => $request->materno,
+            'email' => $request->email,
+            'gauth_type' => 'email',
+            'solicitud' => 1,
+            'password' => bcrypt($request->input('password')),
+        ]);
+        $nuevoUsuario->assignRole('invitado');
+        Auth::login($nuevoUsuario);
+
+        return redirect()->route('dashboard')->with('success', 'Registro guardado con éxito');
     }
 }

@@ -70,9 +70,8 @@
                             </div>
 
 
-                            <div class="text-gray-500 text-center fw-semibold fs-6">No tienes cuenta?
-                                <a href="../../demo1/dist/authentication/layouts/corporate/sign-up.html"
-                                    class="link-primary">Registrate</a>
+                            <div class="text-gray-500 text-center fw-semibold fs-6">¿No tienes cuenta?
+                                <a href="{{ route('login.registro') }}" class="link-primary">Registrate</a>
                             </div>
 
                         </form>
