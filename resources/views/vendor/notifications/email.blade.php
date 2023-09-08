@@ -6,7 +6,7 @@
 @if ($level === 'error')
 # @lang('Whoops!')
 @else
-# @lang('Hello!')
+# @lang('Hola!')
 @endif
 @endif
 
@@ -25,7 +25,7 @@
     };
 ?>
 <x-mail::button :url="$actionUrl" :color="$color">
-{{ $actionText }}
+Verificar Correo
 </x-mail::button>
 @endisset
 
@@ -39,7 +39,7 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-@lang('Regards'),<br>
+@lang('Saludos'),<br>
 {{ config('app.name') }}
 @endif
 
@@ -47,8 +47,8 @@
 @isset($actionText)
 <x-slot:subcopy>
 @lang(
-    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\n".
-    'into your web browser:',
+    "Si tiene problemas para hacer clic en el botón para verificar su correo, copie y pegue la siguiente URL\n".
+    'en su navegador web:',
     [
         'actionText' => $actionText,
     ]

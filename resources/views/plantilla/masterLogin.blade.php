@@ -35,7 +35,7 @@
 @if (session('success'))
     <script>
         Swal.fire({
-            icon: 'error',
+            icon: 'success',
             title: '¡Operación Exitosa!',
             text: '{{ session('success') }}'
         });

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Rutas públicas
 Route::get('/', function () {
@@ -70,7 +71,8 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request,$id) {
+    Auth::loginUsingId($id);
     $request->fulfill();
-    return redirect('/dashboard');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+    return redirect()->route('invitado.index')->with('success', 'Email verificado correctamente');
+})->name('verification.verify');
