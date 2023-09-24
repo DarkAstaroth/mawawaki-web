@@ -39,7 +39,8 @@ class UsuarioController extends Controller
         $usuariosIds = $usuarios->pluck('id')->toArray();
         $usuariosConRoles = User::with('roles')->whereIn('id', $usuariosIds)->get();
 
-         $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
+        $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
+            $usuario->profile_photo_path = env('APP_URL') . '/' . $usuario->profile_photo_path;
             $usuario->nuevo_campo = "Valor del nuevo campo para este usuario";
             return $usuario;
         });
@@ -112,5 +113,9 @@ class UsuarioController extends Controller
     {
         auth()->guard('web')->logout();
         return redirect('/');
+    }
+
+    public function verificarCuenta (){
+        return view('autenticacion.cuenta');
     }
 }

@@ -54,7 +54,7 @@
     <!--end::App-->
     <!--layout-partial:partials/_drawers.html-->
     @vite(['resources/js/app.js'])
-    {{-- <script src="{{ asset('build/assets/app-06903fe8.js')}}" defer></script> --}}
+    {{-- <script src="{{ asset('build/assets/app-9f559481.js')}}" defer></script> --}}
 
     @include('complemento.tema')
     @include('complemento.scripts')

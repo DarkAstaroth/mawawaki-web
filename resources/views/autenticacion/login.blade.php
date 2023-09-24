@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="separator separator-content my-14">
-                                <span class="w-125px text-gray-500 fw-semibold fs-7">o con tu correo</span>
+                                <span class="w-125px text-gray-500 fw-semibold fs-7">con tu correo</span>
                             </div>
 
 
@@ -70,9 +70,8 @@
                             </div>
 
 
-                            <div class="text-gray-500 text-center fw-semibold fs-6">No tienes cuenta?
-                                <a href="../../demo1/dist/authentication/layouts/corporate/sign-up.html"
-                                    class="link-primary">Registrate</a>
+                            <div class="text-gray-500 text-center fw-semibold fs-6">¿No tienes cuenta?
+                                <a href="{{ route('login.registro') }}" class="link-primary">Registrate</a>
                             </div>
 
                         </form>

@@ -14,8 +14,9 @@ use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
+    use Notifiable;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -40,9 +41,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'nombres',
+        'paterno',
+        'materno',
+        'solicitud',
         'password',
         'gauth_id',
-        'gauth_type'
+        'gauth_type',
+        'profile_photo_path'
     ];
 
     /**
@@ -63,7 +69,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'id'=> 'string', 
+        'id' => 'string',
         'email_verified_at' => 'datetime',
     ];
 
