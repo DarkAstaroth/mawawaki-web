@@ -56,19 +56,20 @@ class InvitadoController extends Controller
     {
         $user = User::find($id);
 
-        if ($user) {
-            $user->update([
-                'nombres' => $request->input('nombres'),
-                'paterno' => $request->input('paterno'),
-                'materno' => $request->input('materno'),
-                'solicitud' => 1,
-                'password' => bcrypt($request->input('password')),
-            ]);
-
-            return redirect()->route('login')->with('success', 'Usuario actualizado correctamente');
+        if (!$user) {
+            return redirect()->route('verificar.cuenta')->with('error', 'Usuario no encontrado');
         }
 
-        return redirect()->route('dashboard')->with('error', 'Usuario no encontrado');
+        $user->update([
+            'nombres' => $request->nombres,
+            'paterno' => $request->paterno,
+            'materno' => $request->materno,
+            'solicitud' => 1,
+        ]);
+
+        if (auth()->check()) {
+            return redirect()->route('verificar.cuenta')->with('success', 'Solicitud enviada con éxito');
+        }
     }
 
     /**
