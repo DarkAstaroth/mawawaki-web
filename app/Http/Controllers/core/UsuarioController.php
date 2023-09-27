@@ -7,6 +7,8 @@ use App\Http\Resources\core\UsuarioResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+
 
 class UsuarioController extends Controller
 {
@@ -109,13 +111,34 @@ class UsuarioController extends Controller
         //
     }
 
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        $user = User::where('email', $credentials['email'])->first();
+
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'El correo electrónico proporcionado no existe.');
+        }
+
+        if (Auth::attempt($credentials)) {
+            return redirect('/dashboard');
+        } else {
+
+            return redirect()->route('login')->with('error', 'La contraseña proporcionada es incorrecta.');
+        }
+    }
+
     public function logout(Request $request)
     {
         auth()->guard('web')->logout();
+        session()->flush();
         return redirect('/');
     }
 
-    public function verificarCuenta (){
+    public function verificarCuenta()
+    {
         return view('autenticacion.cuenta');
     }
 }

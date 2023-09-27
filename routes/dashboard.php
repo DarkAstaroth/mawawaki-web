@@ -6,6 +6,21 @@ use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\core\UsuarioController;
 
+
+// Rutas de autenticación requerida
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion'
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
+
+
 // Rutas de roles
 Route::middleware([
     'auth:sanctum',
@@ -43,5 +58,3 @@ Route::middleware([
 ])->group(function () {
     Route::resource('dashboard/usuarios', UsuarioController::class);
 });
-
-

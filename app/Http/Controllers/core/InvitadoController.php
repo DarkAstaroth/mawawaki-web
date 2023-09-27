@@ -87,19 +87,20 @@ class InvitadoController extends Controller
 
     public function crearUsuarioEmail(Request $request)
     {
-
         $nuevoUsuario = User::create([
             'nombres' => $request->nombres,
             'paterno' => $request->paterno,
             'materno' => $request->materno,
             'email' => $request->email,
             'gauth_type' => 'email',
-            'solicitud' => 1,
             'password' => bcrypt($request->input('password')),
         ]);
         $nuevoUsuario->assignRole('invitado');
-        Auth::login($nuevoUsuario);
+        return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
+    }
 
-        return redirect()->route('dashboard')->with('success', 'Registro guardado con éxito');
+    public function resetPass()
+    {
+        return view('autenticacion.forgot');
     }
 }

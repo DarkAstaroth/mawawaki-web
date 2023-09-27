@@ -27,7 +27,7 @@
                                 </div>
                             </span>
                         </div>
-                        
+
                         <div class="mb-1 d-flex justify-content-center ">
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
@@ -45,66 +45,26 @@
 
                             <div class="mb-8 fv-row">
                                 <input type="text" placeholder="Nombres" name="nombres" autocomplete="off"
-                                    class="bg-transparent form-control" />
+                                    class="bg-transparent form-control" value="{{ auth()->user()->nombres }}" />
                             </div>
 
                             <div class="mb-8 fv-row">
                                 <input type="text" placeholder="Apellido paterno" name="paterno" autocomplete="off"
-                                    class="bg-transparent form-control" />
+                                    class="bg-transparent form-control" value="{{ auth()->user()->paterno }}" />
                             </div>
 
                             <div class="mb-8 fv-row">
                                 <input type="text" placeholder="Apellido materno" name="materno" autocomplete="off"
-                                    class="bg-transparent form-control" />
+                                    class="bg-transparent form-control" value="{{ auth()->user()->materno }}" />
                             </div>
 
-
-                            <div class="mb-8 fv-row" data-kt-password-meter="true">
-
-                                <div class="mb-1">
-
-                                    <div class="mb-3 position-relative">
-                                        <input class="bg-transparent form-control" type="password" placeholder="Contraseña"
-                                            name="password" autocomplete="off" />
-                                        <span
-                                            class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
-                                            data-kt-password-meter-control="visibility">
-                                            <i class="ki-duotone ki-eye-slash fs-2"></i>
-                                            <i class="ki-duotone ki-eye fs-2 d-none"></i>
-                                        </span>
-                                    </div>
-
-
-                                    <div class="mb-3 d-flex align-items-center" data-kt-password-meter-control="highlight">
-                                        <div class="rounded flex-grow-1 bg-secondary bg-active-success h-5px me-2"></div>
-                                        <div class="rounded flex-grow-1 bg-secondary bg-active-success h-5px me-2"></div>
-                                        <div class="rounded flex-grow-1 bg-secondary bg-active-success h-5px me-2"></div>
-                                        <div class="rounded flex-grow-1 bg-secondary bg-active-success h-5px"></div>
-                                    </div>
-
-                                </div>
-
-
-                                <div class="text-muted">
-                                    Utilice 8 o más caracteres con una combinación de letras, números y símbolos.
-                                </div>
-
-                            </div>
-
-
-                            <div class="mb-8 fv-row">
-
-                                <input placeholder="Repite la contraseña" name="confirm-password" type="password"
-                                    autocomplete="off" class="bg-transparent form-control" />
-
-                            </div>
 
 
                             <div class="mb-8 fv-row">
                                 <label class="form-check form-check-inline">
                                     <input class="form-check-input" type="checkbox" name="toc" value="1" />
-                                    <span class="text-gray-700 form-check-label fw-semibold fs-base ms-1">I Accept the
-                                        <a href="#" class="ms-1 link-primary">Terms</a></span>
+                                    <span class="text-gray-700 form-check-label fw-semibold fs-base ms-1">Acepto los
+                                        <a href="#" class="ms-1 link-primary">Terminos y Condiciones</a></span>
                                 </label>
                             </div>
 
@@ -118,12 +78,9 @@
                                 </button>
                             </div>
 
-
-                            <div class="text-center text-gray-500 fw-semibold fs-6">Already have an Account?
-                                <a href="../../demo1/dist/authentication/layouts/corporate/sign-in.html"
-                                    class="link-primary fw-semibold">Sign in</a>
+                            <div class="text-center text-gray-500 fw-semibold fs-6">¿Ya tienes una cuenta?
+                                <a href="{{ route('login') }}" class="link-primary fw-semibold">Ingresar</a>
                             </div>
-
                         </form>
 
                     </div>
