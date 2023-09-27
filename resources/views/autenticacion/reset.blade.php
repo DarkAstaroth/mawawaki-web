@@ -1,51 +1,42 @@
 @extends('plantilla.masterLogin')
 @section('contenido')
     <div class="d-flex flex-column flex-root" id="kt_app_root">
+
         <div class="d-flex flex-column flex-lg-row flex-column-fluid">
-            <div class="order-2 p-10 d-flex flex-column flex-lg-row-fluid w-lg-50 order-lg-1">
+
+            <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
+
                 <div class="d-flex flex-center flex-column flex-lg-row-fluid">
-                    <div class="p-10 w-lg-500px">
 
+                    <div class="w-lg-500px p-10">
 
-                        <div class="mb-5 text-center">
-                            <h1 class="mb-3 text-dark fw-bolder">Crear Nueva cuenta</h1>
-                        </div>
-
-                        <div class="mb-5 text-center">
-                            <div class="text-gray-500 fw-bold fs-6">Completa tu registro</div>
-                        </div>
-                        <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" method="POST"
-                            action="{{ route('usuario.crear') }}">
+                        <form class="form w-100" id="kt_new_password_form" action="{{ route('password.update') }}"
+                            method="POST">
                             @csrf
+                            @method('PATCH')
+                            <div class="text-center mb-10">
 
-                            <div class="mb-8 fv-row">
-                                <input type="text" placeholder="Nombres" name="nombres" autocomplete="off"
-                                    class="bg-transparent form-control" />
+                                <h1 class="text-dark fw-bolder mb-3">Cambiar contraseña</h1>
+
+
+                                <div class="text-gray-500 fw-semibold fs-6">Ingresa una nueva contraseña</div>
                             </div>
 
-                            <div class="mb-8 fv-row">
-                                <input type="text" placeholder="Apellido paterno" name="paterno" autocomplete="off"
-                                    class="bg-transparent form-control" />
-                            </div>
 
-                            <div class="mb-8 fv-row">
-                                <input type="text" placeholder="Apellido materno" name="materno" autocomplete="off"
-                                    class="bg-transparent form-control" />
-                            </div>
+                            <div class="fv-row mb-8">
+                                <input type="hidden" name="token" value="{{ $token }}">
+                                <input type="text" placeholder="Email" name="email" autocomplete="off"
+                                    class="form-control bg-transparent" value="{{ request()->email }}" readonly />
 
-                            <div class="mb-8 fv-row">
-                                <input type="email" placeholder="Correo electrónico" name="email" autocomplete="off"
-                                    class="bg-transparent form-control" />
                             </div>
-
 
                             <div class="mb-8 fv-row" data-kt-password-meter="true">
 
                                 <div class="mb-1">
 
                                     <div class="mb-3 position-relative">
-                                        <input class="bg-transparent form-control" type="password" placeholder="Contraseña"
-                                            name="password" autocomplete="off" />
+                                        <input class="bg-transparent form-control" type="password"
+                                            placeholder="Nueva contraseña" name="password" autocomplete="off" />
                                         <span
                                             class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
                                             data-kt-password-meter-control="visibility">
@@ -79,20 +70,11 @@
 
                             </div>
 
+                            <div class="d-flex flex-wrap justify-content-center pb-lg-0">
+                                <button type="submit" id="kt_password_reset_submit" class="btn btn-primary me-4">
 
-                            <div class="mb-8 fv-row">
-                                <label class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" name="toc" value="1" />
-                                    <span class="text-gray-700 form-check-label fw-semibold fs-base ms-1">Acepto los
-                                        <a href="#" class="ms-1 link-primary">Terminos y Condiciones</a></span>
-                                </label>
-                            </div>
-
-
-                            <div class="mb-10 d-grid">
-                                <button type="submit" class="btn btn-primary">
                                     <div class="d-flex justify-content-center align-items-center">
-                                        <span class="indicator-label">Enviar solicitud</span>
+                                        <span class="indicator-label">Enviar</span>
                                         <span id="loading" style="display: none;"
                                             class="spinner-border spinner-border-sm align-middle ms-2">
                                         </span>
@@ -100,11 +82,7 @@
                                     </div>
 
                                 </button>
-                            </div>
-
-
-                            <div class="text-center text-gray-500 fw-semibold fs-6">¿Ya tienes una cuenta?
-                                <a href="{{ route('login') }}" class="link-primary fw-semibold">Ingresar</a>
+                                <a href="{{ route('login') }}" class="btn btn-light">Cancelar</a>
                             </div>
 
                         </form>
@@ -112,7 +90,11 @@
                     </div>
 
                 </div>
+
+
+
             </div>
+
 
 
             <div class="order-1 d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-lg-2"

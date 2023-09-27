@@ -39,11 +39,10 @@ class GoogleController extends Controller
                 $nuevoUsuario = User::create([
                     'name' => $usuario->name,
                     'email' => $usuario->email,
-                    // 'profile_photo_path' => $usuario->avatar,
                     'profile_photo_path' => 'assets/imagenes/' . $nombreImagen,
                     'gauth_id' => $usuario->id,
                     'gauth_type' => 'google',
-                    'password' => encrypt('fhccfnxdy24!')
+                    'password' => bcrypt('fhccfnxdy24!')
                 ]);
                 $nuevoUsuario->assignRole('invitado');
                 Auth::login($nuevoUsuario);

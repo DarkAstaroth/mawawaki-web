@@ -18,6 +18,11 @@
     @yield('contenido')
     @include('complemento.tema')
     @include('complemento.scripts')
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('loading').style.display = 'block';
+        });
+    </script>
 </body>
 
 </html>
