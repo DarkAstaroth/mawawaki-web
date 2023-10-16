@@ -34,6 +34,7 @@
                 </div>
             </div>
 
+            @role('admin')
             <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                 <span class="menu-link">
                     <span class="menu-icon">
@@ -45,6 +46,7 @@
                     </span>
 
                     <span class="menu-title">Usuarios</span><span class="menu-arrow"></span>
+
                 </span>
 
                 <div class="menu-sub menu-sub-accordion">
@@ -54,11 +56,16 @@
                                 <span class="bullet bullet-dot"></span>
                             </span>
                             <span class="menu-title">Todos los usuarios</span>
+                            <span class="menu-badge">
+                                <span class="badge badge-success">3</span>
+                            </span>
                         </a>
                     </div>
                 </div>
             </div>
-
+            @endrole
+            
+            @role('admin')
             <div data-kt-menu-trigger="click" class="menu-item here menu-accordion show">
                 <span class="menu-link">
                     <span class="menu-icon">
@@ -110,6 +117,7 @@
                 </div>
 
             </div>
+            @endrole
         </div>
     </div>
 </div>

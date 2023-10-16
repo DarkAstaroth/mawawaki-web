@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-
+use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 
 class UsuarioController extends Controller
 {
@@ -25,11 +25,50 @@ class UsuarioController extends Controller
         $porPagina = $request->get('porPagina', 10);
         $pagina = $request->get('page', 1);
         $busqueda = $request->get('busqueda');
+        $parametro = $request->get('parametro');
 
-        $usuariosQuery = User::query();
+        if ($parametro === 'todos') {
+            $usuariosQuery = User::query();
+        }
+
+        if ($parametro === 'activos') {
+            $usuariosQuery = User::query()
+                ->where('estado', 1)
+                ->where('solicitud', 1)
+                ->where('verificada', 1)
+                ->whereNotNull('email_verified_at');
+        }
+
+        if ($parametro === 'inactivos') {
+            $usuariosQuery = User::query()
+                ->where('estado', 0)
+                ->where('solicitud', 1)
+                ->where('verificada', 1)
+                ->whereNotNull('email_verified_at');
+        }
+
+        if ($parametro === 'solicitudes') {
+            $usuariosQuery = User::query()
+                ->where('estado', 0)
+                ->where('solicitud', 1)
+                ->where('verificada', 0)
+                ->whereNotNull('email_verified_at');
+        }
+
+        if ($parametro === 'verificados') {
+            $usuariosQuery = User::query()
+                ->whereNotNull('email_verified_at');
+        }
+
+        if ($parametro === 'porVerificar') {
+            $usuariosQuery = User::query()
+                ->where('estado', 0)
+                ->where('solicitud', 0)
+                ->where('verificada', 0)
+                ->whereNull('email_verified_at');
+        }
 
         if ($busqueda) {
-
             $busquedaSinEspacios = str_replace(' ', '', $busqueda);
             $usuariosQuery->where(function ($query) use ($busquedaSinEspacios) {
                 $query->whereRaw("REPLACE(name, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
@@ -140,5 +179,88 @@ class UsuarioController extends Controller
     public function verificarCuenta()
     {
         return view('autenticacion.cuenta');
+    }
+
+    public function fichasUsuarios()
+    {
+        $response = [];
+
+        // Usuarios activos (estado = 1)
+        $activos = User::where('estado', 1)
+            ->where('solicitud', 1)
+            ->where('verificada', 1)
+            ->whereNotNull('email_verified_at')
+            ->count();
+        $response['activos'] = $activos;
+
+        $no_activos = User::where('estado', 0)
+            ->where('solicitud', 1)
+            ->where('verificada', 1)
+            ->whereNotNull('email_verified_at')
+            ->count();
+        $response['no_activos'] = $no_activos;
+
+        // Usuarios con solicitudes (estado = 0, solicitud = 1, verificado = 1)
+        $solicitudes = User::where('estado', 0)
+            ->where('solicitud', 1)
+            ->where('verificada', 0)
+            ->whereNotNull('email_verified_at')
+            ->count();
+        $response['solicitudes'] = $solicitudes;
+
+        // Usuarios verificados (email_verified_at no es null)
+        $verificados = User::whereNotNull('email_verified_at')->count();
+        $response['verificados'] = $verificados;
+
+        $porVerificados = User::where('estado', 0)
+            ->where('solicitud', 0)
+            ->where('verificada', 0)
+            ->whereNull('email_verified_at')
+            ->count();
+        $response['por_verificar'] = $porVerificados;
+
+        return response()->json($response);
+    }
+
+
+
+    public function PerfilUsuario(string $id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->load('roles', 'permissions');
+        return view('core.usuarios.perfil', compact('usuario'));
+    }
+
+    public function verificarUsuario(string $id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->verificada = 1;
+        $usuario->estado = 1;
+        $usuario->save();
+
+        return response()->json([
+            'success' => 'El usuario fue verificado correctamente',
+            'usuario' => $usuario
+        ]);
+    }
+
+    public function cambiarEstado(Request $request, string $id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->estado = !$request->estado;
+        $usuario->save();
+
+        return response()->json([
+            'success' => 'Estado actualizado correctamente',
+            'usuario' => $usuario
+        ]);
+    }
+    public function sincronizarRoles(Request $request, string $id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->syncRoles($request->roles);
+        return response()->json([
+            'success' => 'Roles actualizados con exito',
+        ]);
     }
 }

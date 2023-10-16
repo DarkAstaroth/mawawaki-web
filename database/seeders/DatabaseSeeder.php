@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'solicitud'=>1,
             'verificada'=>1,
             'estado'=>1,
-            'profile_photo_path'=>'assets/imagenes/user-default.jpg',
+            'profile_photo_path'=>'/assets/imagenes/user-default.jpg',
             'password' => bcrypt('fhccfnxdy2'),
         ]);
         $user->assignRole($role);
