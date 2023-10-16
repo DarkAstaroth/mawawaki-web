@@ -13,6 +13,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use LaravelAndVueJS\Traits\LaravelPermissionToVueJS;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -23,9 +24,11 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasTeams;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use LaravelPermissionToVueJS;
     use HasRoles;
     use HasUuids;
     use SoftDeletes;
+
 
     protected $primaryKey = 'id';
     protected $keyType = 'string';

@@ -82,6 +82,21 @@
                                     class="path1"></span><span class="path2"></span><span class="path3"></span></i>
                         </div>
 
+
+                        <div
+                            class="alert {{ auth()->user()->estado ? 'alert-success' : 'alert-danger' }} d-flex align-items-center p-5 mb-5 text-start">
+                            <i
+                                class="ki-duotone {{ auth()->user()->estado ? 'ki-lock-3' : 'ki-lock-3' }} fs-2hx  {{ auth()->user()->estado ? 'text-success' : 'text-danger' }} me-4"><span
+                                    class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+
+                            <h4 class="flex-grow-1 mb-1 {{ auth()->user()->estado ? 'text-success' : 'text-danger' }}">
+                                {{ auth()->user()->estado ? 'Cuenta activa' : 'Cuenta Inactivada' }}</h4>
+                            <i class="ki-duotone {{ auth()->user()->estado ? 'ki-verify' : 'ki-question' }} fs-2hx  {{ auth()->user()->estado ? 'text-success' : 'text-danger' }} me-4"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="{{ auth()->user()->estado ? 'La cuenta esta activa' : 'La cuenta ha sido inactivada' }}"><span
+                                    class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                        </div>
+
                         <div class="">
                             <a href="#" class="btn btn-icon-primary btn-text-primary">
                                 <i class="ki-duotone ki-home fs-1"><span class="path1"></span><span

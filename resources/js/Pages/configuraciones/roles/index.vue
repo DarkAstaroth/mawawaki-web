@@ -2,16 +2,10 @@
     <div class="card-header">
         <h3 class="card-title">Listado de roles</h3>
         <div class="card-toolbar">
-            <button
-                type="button"
-                class="btn btn-sm btn-success"
-                data-bs-toggle="modal"
-                data-bs-target="#kt_modal_1"
-                @click="
-                    modo = 'crear';
-                    resetModalData();
-                "
-            >
+            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1" @click="
+                modo = 'crear';
+            resetModalData();
+            ">
                 <i class="text-white far fa-plus"></i>
                 Nuevo
             </button>
@@ -26,64 +20,33 @@
                         </h3>
 
                         <!--begin::Close-->
-                        <div
-                            class="btn btn-icon btn-sm btn-active-light-primary ms-2"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                        >
-                            <i class="ki-duotone ki-cross fs-1"
-                                ><span class="path1"></span
-                                ><span class="path2"></span
-                            ></i>
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                            aria-label="Close">
+                            <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
                         </div>
                         <!--end::Close-->
                     </div>
                     <!-- <form action=""> -->
-                    <form
-                        class="input-feild"
-                        v-on:submit.prevent="
-                            modo === 'crear' ? crearRol() : actualizarRol()
-                        "
-                    >
+                    <form class="input-feild" v-on:submit.prevent="
+                        modo === 'crear' ? crearRol() : actualizarRol()
+                        ">
                         <div class="modal-body">
                             <div class="mb-5 form-group">
-                                <input
-                                    type="text"
-                                    v-model="name"
-                                    id=""
-                                    class="form-control"
-                                    placeholder="Nombre rol"
-                                    aria-describedby="helpId"
-                                />
-                                <div
-                                    v-if="v$?.name.$error"
-                                    class="m-2 fv-plugins-message-container invalid-feedback"
-                                >
-                                    <div
-                                        data-field="text_input"
-                                        data-validator="notEmpty"
-                                    >
+                                <input type="text" v-model="name" id="" class="form-control" placeholder="Nombre rol"
+                                    aria-describedby="helpId" />
+                                <div v-if="v$?.name.$error" class="m-2 fv-plugins-message-container invalid-feedback">
+                                    <div data-field="text_input" data-validator="notEmpty">
                                         El nombre de rol es requerido
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <textarea
-                                    class="form-control"
-                                    v-model="description"
-                                    id=""
-                                    rows="3"
-                                    placeholder="Descripción"
-                                ></textarea>
-                                <div
-                                    v-if="v$?.description.$error"
-                                    class="m-2 fv-plugins-message-container invalid-feedback"
-                                >
-                                    <div
-                                        data-field="text_input"
-                                        data-validator="notEmpty"
-                                    >
+                                <textarea class="form-control" v-model="description" id="" rows="3"
+                                    placeholder="Descripción"></textarea>
+                                <div v-if="v$?.description.$error"
+                                    class="m-2 fv-plugins-message-container invalid-feedback">
+                                    <div data-field="text_input" data-validator="notEmpty">
                                         La descripcion es requerida
                                     </div>
                                 </div>
@@ -91,11 +54,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button
-                                type="button"
-                                class="btn btn-light"
-                                data-bs-dismiss="modal"
-                            >
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
                                 Cerrar
                             </button>
                             <button type="submit" class="btn btn-success">
@@ -108,19 +67,11 @@
         </div>
     </div>
     <div class="card-body">
-        <input
-            class="mb-5 form-control"
-            type="text"
-            v-model="busqueda"
-            @input="filtrarRoles"
-            placeholder="Buscar..."
-        />
+        <input class="mb-5 form-control" type="text" v-model="busqueda" @input="filtrarRoles" placeholder="Buscar..." />
         <div class="table-responsive">
             <table class="table table-striped table-sm table-bordered">
                 <thead>
-                    <tr
-                        class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
-                    >
+                    <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
                         <th class="min-w-150px">Nombre</th>
                         <th>Descripción</th>
                         <th class="min-w-150px">Creado en</th>
@@ -151,73 +102,38 @@
                         <td class="align-items-center">
                             <div class="d-flex">
                                 <div class="dropdown">
-                                    <button
-                                        class="btn btn-secondary dropdown-toggle btn-sm"
-                                        type="button"
-                                        id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                        data-boundary="viewport"
-                                    >
+                                    <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                                        data-boundary="viewport">
                                         Acciones
                                     </button>
-                                    <ul
-                                        class="dropdown-menu"
-                                        aria-labelledby="dropdownMenuButton1"
-                                    >
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li>
-                                            <a class="dropdown-item" href="#"
-                                                ><i
-                                                    class="bi bi-eye-fill fs-4"
-                                                ></i>
-                                                Ver</a
-                                            >
+                                            <a class="dropdown-item" href="#"><i class="bi bi-eye-fill fs-4"></i>
+                                                Ver</a>
                                         </li>
                                         <li>
-                                            <a
-                                                href="#"
-                                                class="dropdown-item"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#kt_modal_1"
-                                                @click="
-                                                    modo = 'editar';
-                                                    editarRol(rol.id);
-                                                "
-                                                ><i
-                                                    class="bi bi-pencil-square fs-4"
-                                                ></i>
+                                            <a href="#" class="dropdown-item" data-bs-toggle="modal"
+                                                data-bs-target="#kt_modal_1" @click="
+                                                modo = 'editar';
+                                                editarRol(rol.id);
+                                                "><i class="bi bi-pencil-square fs-4"></i>
 
-                                                Editar</a
-                                            >
+                                                Editar</a>
                                         </li>
                                         <li>
-                                            <a
-                                                href="#"
-                                                class="dropdown-item"
-                                                data-bs-toggle="tooltip"
-                                                data-bs-custom-class="tooltip-inverse"
-                                                data-bs-placement="bottom"
-                                                title="Eliminar rol"
-                                                @click="eliminarRol(rol.id)"
-                                                ><i
-                                                    class="bi bi-trash3-fill fs-4"
-                                                ></i>
-                                                Eliminar</a
-                                            >
+                                            <a href="#" class="dropdown-item" data-bs-toggle="tooltip"
+                                                data-bs-custom-class="tooltip-inverse" data-bs-placement="bottom"
+                                                title="Eliminar rol" @click="eliminarRol(rol.id)"><i
+                                                    class="bi bi-trash3-fill fs-4"></i>
+                                                Eliminar</a>
                                         </li>
                                         <li>
-                                            <a
-                                                class="dropdown-item"
-                                                :href="
-                                                    route('permiso.rol', {
-                                                        id: rol.id,
-                                                    })
-                                                "
-                                                ><i
-                                                    class="bi bi-key-fill fs-4"
-                                                ></i>
-                                                Permisos</a
-                                            >
+                                            <a class="dropdown-item" :href="route('permiso.rol', {
+                                                id: rol.id,
+                                            })
+                                                "><i class="bi bi-key-fill fs-4"></i>
+                                                Permisos</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -232,62 +148,29 @@
         </div>
         <nav>
             <ul class="pagination">
-                <li
-                    class="page-item"
-                    :class="{ disabled: paginacion.paginaActual === 1 }"
-                >
-                    <a class="page-link" href="#" @click="cargarRoles(1)"
-                        >Primera</a
-                    >
+                <li class="page-item" :class="{ disabled: paginacion.paginaActual === 1 }">
+                    <a class="page-link" href="#" @click="cargarRoles(1)">Primera</a>
                 </li>
-                <li
-                    class="page-item"
-                    :class="{ disabled: paginacion.paginaActual === 1 }"
-                >
-                    <a
-                        class="page-link"
-                        href="#"
-                        @click="cargarRoles(paginacion.paginaActual - 1)"
-                        >Anterior</a
-                    >
+                <li class="page-item" :class="{ disabled: paginacion.paginaActual === 1 }">
+                    <a class="page-link" href="#" @click="cargarRoles(paginacion.paginaActual - 1)">Anterior</a>
                 </li>
-                <li
-                    class="page-item"
-                    v-for="page in paginacion.ultimaPagina"
-                    :key="page"
-                    :class="{ active: paginacion.paginaActual === page }"
-                >
+                <li class="page-item" v-for="page in paginacion.ultimaPagina" :key="page"
+                    :class="{ active: paginacion.paginaActual === page }">
                     <a class="page-link" href="#" @click="cargarRoles(page)">{{
                         page
                     }}</a>
                 </li>
-                <li
-                    class="page-item"
-                    :class="{
-                        disabled:
-                            paginacion.paginaActual === paginacion.ultimaPagina,
-                    }"
-                >
-                    <a
-                        class="page-link"
-                        href="#"
-                        @click="cargarRoles(paginacion.paginaActual + 1)"
-                        >Siguiente</a
-                    >
+                <li class="page-item" :class="{
+                    disabled:
+                        paginacion.paginaActual === paginacion.ultimaPagina,
+                }">
+                    <a class="page-link" href="#" @click="cargarRoles(paginacion.paginaActual + 1)">Siguiente</a>
                 </li>
-                <li
-                    class="page-item"
-                    :class="{
-                        disabled:
-                            paginacion.paginaActual === paginacion.ultimaPagina,
-                    }"
-                >
-                    <a
-                        class="page-link"
-                        href="#"
-                        @click="cargarRoles(paginacion.ultimaPagina)"
-                        >Última</a
-                    >
+                <li class="page-item" :class="{
+                    disabled:
+                        paginacion.paginaActual === paginacion.ultimaPagina,
+                }">
+                    <a class="page-link" href="#" @click="cargarRoles(paginacion.ultimaPagina)">Última</a>
                 </li>
             </ul>
         </nav>
@@ -399,7 +282,7 @@ export default {
                     this.name = response.data.rol.name;
                     this.description = response.data.rol.description;
                 })
-                .catch((error) => {});
+                .catch((error) => { });
         },
         actualizarRol: function () {
             axios
@@ -422,7 +305,7 @@ export default {
                     this.busqueda = "";
                     this.cargarRoles(1);
                 })
-                .catch((error) => {});
+                .catch((error) => { });
         },
         eliminarRol: function (rolId) {
             Swal.fire({
@@ -452,7 +335,7 @@ export default {
                             this.busqueda = "";
                             this.cargarRoles(1);
                         })
-                        .catch((error) => {});
+                        .catch((error) => { });
                 }
             });
         },

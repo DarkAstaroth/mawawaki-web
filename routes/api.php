@@ -47,8 +47,12 @@ Route::delete('permisos/{id}', [PermisoController::class, 'destroy']);
 
 
 // asignacion de permisos
-Route::post('asignar/permisos/rol/{rolId}',[RolController::class,'asignarPermisos']);
+Route::post('asignar/permisos/rol/{rolId}', [RolController::class, 'asignarPermisos']);
 
 
 // Api para usuarios
-Route::get('usuarios',[UsuarioController::class,'obtenerUsuarios']);
+Route::get('usuarios', [UsuarioController::class, 'obtenerUsuarios']);
+Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);
+Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
+Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
+Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);

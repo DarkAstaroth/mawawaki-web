@@ -13,7 +13,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
     'check.solicitud',
-    'check.verificacion'
+    'check.verificacion',
+    'check.estado'
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -26,6 +27,9 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
 ])->group(function () {
     Route::resource('dashboard/roles', RolController::class);
     Route::get('dashboard/permiso/rol/{id}', [RolController::class, 'PermisoRol'])->name('permiso.rol');
@@ -36,6 +40,9 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
 ])->group(function () {
     Route::resource('dashboard/modulos', ModuloController::class);
 });
@@ -45,6 +52,9 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
 ])->group(function () {
     Route::resource('dashboard/permisos', PermisoController::class);
 });
@@ -55,6 +65,10 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
 ])->group(function () {
     Route::resource('dashboard/usuarios', UsuarioController::class);
+    Route::get('dashboard/usuario/perfil/{id}', [UsuarioController::class, 'PerfilUsuario'])->name('usuario.perfil');
 });
