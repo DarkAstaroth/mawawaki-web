@@ -4,6 +4,7 @@ use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\Configuraciones\RolController;
 use App\Http\Controllers\core\UsuarioController;
+use App\Http\Controllers\Gestion\CaballosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -56,3 +57,9 @@ Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
 Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);
+
+// Api para caballos
+Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);
+Route::post('caballo/agregar', [CaballosController::class, 'agregarCaballo']);
+Route::patch('caballo/{id}', [CaballosController::class, 'editarCaballo']);
+Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
