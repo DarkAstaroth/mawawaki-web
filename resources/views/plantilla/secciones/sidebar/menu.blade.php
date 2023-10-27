@@ -35,88 +35,111 @@
             </div>
 
             @role('admin')
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-user-square fs-1">
-                            <i class="path1"></i>
-                            <i class="path2"></i>
-                            <i class="path3"></i>
-                        </i>
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-user-square fs-1">
+                                <i class="path1"></i>
+                                <i class="path2"></i>
+                                <i class="path3"></i>
+                            </i>
+                        </span>
+
+                        <span class="menu-title">Usuarios</span><span class="menu-arrow"></span>
+
                     </span>
 
-                    <span class="menu-title">Usuarios</span><span class="menu-arrow"></span>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link active" href="{{ route('usuarios.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todos los usuarios</span>
+                                <span class="menu-badge">
+                                    <span class="badge badge-success">3</span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
 
-                </span>
 
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link active" href="{{ route('usuarios.index') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Todos los usuarios</span>
-                            <span class="menu-badge">
-                                <span class="badge badge-success">3</span>
-                            </span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('eventos.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Eventos</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('eventos.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Asistencias</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endrole
-            
+
             @role('admin')
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion show">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-setting-4 fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                            <span class="path3"></span>
-                            <span class="path4"></span>
-                        </i>
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion show">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-setting-4 fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Configuraciones</span>
+                        <span class="menu-arrow"></span>
                     </span>
-                    <span class="menu-title">Configuraciones</span>
-                    <span class="menu-arrow"></span>
-                </span>
 
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link {{ request()->segment(2) == 'roles' ? 'active' : '' }}"
-                            href="{{ route('roles.index') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Roles</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->segment(2) == 'roles' ? 'active' : '' }}"
+                                href="{{ route('roles.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Roles</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link {{ request()->segment(2) == 'permisos' ? 'active' : '' }}"
-                            href="{{ route('permisos.index') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Permisos</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->segment(2) == 'permisos' ? 'active' : '' }}"
+                                href="{{ route('permisos.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Permisos</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link {{ request()->segment(2) == 'modulos' ? 'active' : '' }}"
-                            href="{{ route('modulos.index') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Módulos</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->segment(2) == 'modulos' ? 'active' : '' }}"
+                                href="{{ route('modulos.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Módulos</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-            </div>
+                </div>
             @endrole
         </div>
     </div>
