@@ -4,6 +4,7 @@ use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\Configuraciones\RolController;
 use App\Http\Controllers\core\UsuarioController;
+use App\Http\Controllers\Gestion\AsistenciasController;
 use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\QRcontroller;
 use Illuminate\Http\Request;
@@ -55,6 +56,8 @@ Route::post('asignar/permisos/rol/{rolId}', [RolController::class, 'asignarPermi
 // Api para usuarios
 Route::get('usuarios', [UsuarioController::class, 'obtenerUsuarios']);
 Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);
+Route::post('/asistencias/usuario/{id}', [AsistenciasController::class, 'obtenerAsistencias']);
+
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
 Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);
@@ -63,10 +66,9 @@ Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincroniz
 // Api para eventos
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);
 Route::post('evento', [EventosController::class, 'store']);
+Route::get('eventos/usuario/{id}', [EventosController::class, 'obtenerEventosUsuario']);
 
 
 // Api para gestion de QRs
 Route::post('qr/generar', [QRcontroller::class, 'generarQR']);
 Route::get('qr/evento/{id}', [QRcontroller::class, 'cargarQRS']);
-
-

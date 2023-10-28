@@ -32,8 +32,8 @@
     <!--end::Menu separator-->
     <!--begin::Menu item-->
     <div class="menu-item px-5">
-        <a href="?page=account/overview" class="menu-link px-5">
-            My Profile
+        <a href="{{ route('usuario.perfil', auth()->user()->id) }}" class="menu-link px-5">
+            Mi Perfíl
         </a>
     </div>
     <!--end::Menu item-->
