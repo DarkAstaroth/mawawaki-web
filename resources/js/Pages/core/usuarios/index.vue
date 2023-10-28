@@ -223,7 +223,7 @@
                                                 <a class="dropdown-item" data-bs-toggle="tooltip"
                                                     data-bs-custom-class="tooltip-inverse" data-bs-placement="bottom"
                                                     title="Ver perfil"
-                                                    :href="route('usuario.perfil', { id: usuario.id })"><i
+                                                    :href="route('usuario.control', { id: usuario.id })"><i
                                                         class="bi bi-eye-fill fs-4"></i>
                                                     Ver Perfil</a>
                                             </li>

@@ -6,6 +6,8 @@ use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
+use App\Http\Controllers\Gestion\AsistenciasController;
+use App\Http\Controllers\Gestion\EventosController;
 
 // Rutas de autenticación requerida
 Route::middleware([
@@ -70,6 +72,7 @@ Route::middleware([
     'check.estado'
 ])->group(function () {
     Route::resource('dashboard/usuarios', UsuarioController::class);
+    Route::get('dashboard/usuario/control/{id}', [UsuarioController::class, 'UsuarioControl'])->name('usuario.control');
     Route::get('dashboard/usuario/perfil/{id}', [UsuarioController::class, 'PerfilUsuario'])->name('usuario.perfil');
 });
 
@@ -85,4 +88,30 @@ Route::middleware([
     Route::resource('dashboard/caballos', CaballosController::class);
     Route::get('dashboard/caballo/nuevo', [CaballosController::class, 'create'])->name('caballo.nuevo');
     Route::get('dashboard/caballo/{id}', [CaballosController::class, 'show'])->name('caballo.detalle');
+});
+
+// Rutas de eventos
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::resource('dashboard/eventos', EventosController::class);
+    Route::get('dashboard/evento/{id}', [EventosController::class, 'DetalleEvento'])->name('evento.detalle');
+});
+
+//Ruta para asistencias
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::get('asistencia/{id}', [AsistenciasController::class, 'registrarAsistencia'])->name('registrar.aistencia');
+    Route::post('asistencia/registrars', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
 });

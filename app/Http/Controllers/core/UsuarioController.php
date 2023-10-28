@@ -231,6 +231,13 @@ class UsuarioController extends Controller
         return view('core.usuarios.perfil', compact('usuario'));
     }
 
+    public function UsuarioControl(string $id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->load('roles', 'permissions');
+        return view('core.usuarios.control', compact('usuario'));
+    }
+
     public function verificarUsuario(string $id)
     {
         $usuario = User::findOrFail($id);
@@ -255,6 +262,7 @@ class UsuarioController extends Controller
             'usuario' => $usuario
         ]);
     }
+
     public function sincronizarRoles(Request $request, string $id)
     {
         $usuario = User::findOrFail($id);

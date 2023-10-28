@@ -34,6 +34,29 @@
                 </div>
             </div>
 
+
+            @role('admin')
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-horse fa-2xl"></i>
+                        </span>
+                        <span class="menu-title">Caballos</span><span class="menu-arrow"></span>
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link active" href="{{ route('caballos.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todos los caballos</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endrole
+
             @role('admin')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
@@ -62,37 +85,31 @@
                             </a>
                         </div>
                     </div>
-                </div>
-            @endrole
 
-
-            @role('admin')
-                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-horse fa-2xl"></i>
-                        </span>
-
-                        <span class="menu-title">Caballos</span><span class="menu-arrow"></span>
-
-                    </span>
 
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
-                            <a class="menu-link active" href="{{ route('caballos.index') }}">
+                            <a class="menu-link" href="{{ route('eventos.index') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title">Todos los caballos</span>
-                                <span class="menu-badge">
-                                    <span class="badge badge-success">1</span>
+                                <span class="menu-title">Eventos</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link" href="{{ route('eventos.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
                                 </span>
+                                <span class="menu-title">Asistencias</span>
                             </a>
                         </div>
                     </div>
                 </div>
             @endrole
-
 
             @role('admin')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion show">
