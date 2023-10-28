@@ -108,8 +108,25 @@ class EventosController extends Controller
         //
     }
 
-    public function DetalleEvento(string $id){
+    public function DetalleEvento(string $id)
+    {
         $evento = Evento::findOrFail($id);
-        return view('gestion.eventos.detalle',compact('evento'));
+        return view('gestion.eventos.detalle', compact('evento'));
+    }
+
+    public function obtenerEventosUsuario(string $id)
+    {
+        $eventos = Evento::whereHas('asistencias', function ($query) use ($id) {
+            $query->where('UsuarioID', $id);
+        })->select('id', 'nombre')->get();
+
+        $result = $eventos->map(function ($evento) {
+            return [
+                'value' => $evento->id,
+                'name' => $evento->nombre,
+            ];
+        });
+
+        return response()->json($result);
     }
 }

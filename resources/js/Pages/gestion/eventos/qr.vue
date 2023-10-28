@@ -267,7 +267,7 @@ export default {
                 });
         },
         actualizarURL(codigo) {
-            this.valorQR = "http://192.168.0.20:8000/asistencia/" + codigo
+            this.valorQR = "http://localhost:8000/asistencia/" + codigo
         },
         fechaHoraLegible(fecha) {
             return dayjs.unix(fecha).format('D [de] MMMM [-] H:mm');

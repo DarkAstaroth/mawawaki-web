@@ -71,7 +71,6 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    'role:invitado',
 ])->group(function () {
     Route::resource('setup/invitado', InvitadoController::class);
     Route::get('verificar/cuenta', [UsuarioController::class, 'verificarCuenta'])->name('verificar.cuenta');
