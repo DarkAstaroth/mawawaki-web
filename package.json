@@ -31,6 +31,7 @@
         "datatables.net-vue3": "^2.1.1",
         "dayjs": "^1.11.10",
         "laravel-permission-to-vuejs": "^3.0.1",
+        "primevue": "^3.37.0",
         "qrcode.vue": "^3.4.1",
         "uuid": "^9.0.0",
         "vue-loader": "^17.0.1",

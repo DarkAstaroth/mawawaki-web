@@ -14,7 +14,6 @@
     @vite(['resources/js/app.js', 'resources/js/Pages/configuraciones/roles/index.vue']) --}}
     {{-- @inertiaHead --}}
 
-
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true"
@@ -66,6 +65,26 @@
                 ?->jsPermissions() !!}
         }
     </script>
+
+    {{-- estilos de componentes vue --}}
+    <style>
+        .dp__input {
+            font-family: 'Inter';
+            font-weight: 500;
+            font-size: 14px;
+            height: 100%;
+        }
+
+        .multiselect__placeholder {
+            font-family: 'Inter';
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .multiselect__single {
+            font-size: 13px;
+        }
+    </style>
 
 </body>
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Configuraciones\RolController;
 use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\core\UsuarioController;
+use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
 use App\Http\Controllers\Gestion\EventosController;
 
@@ -73,6 +74,20 @@ Route::middleware([
     Route::resource('dashboard/usuarios', UsuarioController::class);
     Route::get('dashboard/usuario/control/{id}', [UsuarioController::class, 'UsuarioControl'])->name('usuario.control');
     Route::get('dashboard/usuario/perfil/{id}', [UsuarioController::class, 'PerfilUsuario'])->name('usuario.perfil');
+});
+
+// Rutas de caballos (requiere autenticación)
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::resource('dashboard/caballos', CaballosController::class);
+    Route::get('dashboard/caballo/nuevo', [CaballosController::class, 'create'])->name('caballo.nuevo');
+    Route::get('dashboard/caballo/{id}', [CaballosController::class, 'show'])->name('caballo.detalle');
 });
 
 // Rutas de eventos

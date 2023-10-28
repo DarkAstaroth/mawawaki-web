@@ -4,6 +4,7 @@ use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\Configuraciones\RolController;
 use App\Http\Controllers\core\UsuarioController;
+use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
 use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\QRcontroller;
@@ -62,6 +63,11 @@ Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuari
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
 Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);
 
+// Api para caballos
+Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);
+Route::post('caballo/agregar', [CaballosController::class, 'agregarCaballo']);
+Route::patch('caballo/{id}', [CaballosController::class, 'editarCaballo']);
+Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
 
 // Api para eventos
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);

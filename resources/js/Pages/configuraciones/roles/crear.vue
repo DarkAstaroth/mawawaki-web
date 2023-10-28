@@ -18,9 +18,7 @@ export default {
             RolIndex.methods.cargarRoles();
         },
         crearRol: function () {
-            console.log("creando rol");
-            console.log(this.name);
-            console.log(this.description);
+
             axios
                 .post("/api/roles/agregar", {
                     name: this.name,
