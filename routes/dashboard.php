@@ -8,6 +8,9 @@ use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
 use App\Http\Controllers\Gestion\EventosController;
+use App\Http\Controllers\Gestion\PacientesController;
+use App\Http\Controllers\Gestion\ReportesController;
+use App\Http\Controllers\Gestion\TerapiasController;
 
 // Rutas de autenticación requerida
 Route::middleware([
@@ -113,5 +116,41 @@ Route::middleware([
     'check.estado'
 ])->group(function () {
     Route::get('asistencia/{id}', [AsistenciasController::class, 'registrarAsistencia'])->name('registrar.aistencia');
-    Route::post('asistencia/registrars', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
+    Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
+});
+
+//Ruta para asistencias
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::resource('dashboard/pacientes', PacientesController::class);
+});
+
+//Ruta para terapias
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::resource('dashboard/terapias', TerapiasController::class);
+});
+
+//Ruta para reportes
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::resource('dashboard/reportes', ReportesController::class);
 });
