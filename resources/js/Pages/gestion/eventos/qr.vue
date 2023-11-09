@@ -3,60 +3,63 @@
         <div class="card-header">
             <h3 class="card-title">Listado de QR's asignados</h3>
             <div class="div card-toolbar">
-                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"
-                    @click="
-                        modo = 'crear';
-                    resetModalData();
-                    ">
+                <button type="button" class="btn btn-sm btn-success" @click="
+                    modo = 'crear';
+                resetModalData();
+                ">
                     <i class="text-white far fa-plus"></i>
                     Nuevo
                 </button>
             </div>
         </div>
 
-        <div class="modal fade" tabindex="-1" id="kt_modal_1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">
-                            {{
-                                modo === "crear"
-                                ? "Crear QR"
-                                : "Editar Evento"
-                            }}
-                        </h3>
 
-                        <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                        </div>
-                        <!--end::Close-->
-                    </div>
-                    <!-- <form action=""> -->
-                    <form class="input-feild" v-on:submit.prevent="
-                    modo === 'crear'
-                        ? generarQR()
-                        : actualizarEvento()
-                        ">
-                        <div class="modal-body">
-                            <div class="form-group mb-5">
-                                <VueDatePicker v-model="fecha_expiracion"></VueDatePicker>
+        <Dialog v-model:visible="modalCrearQR" modal header="generar QR" position="top" :style="{ width: '50rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+            <form class="input-feild" v-on:submit.prevent="
+                modo === 'crear'
+                    ? generarQR()
+                    : actualizarEvento()
+                ">
+                <div class="py-5">
+                    <div class="form-group mb-5">
+                        <div class="row">
+                            <div class="col col-md-6">
+                                <div class="d-flex flex-column gap-2">
+                                    <label for="username">Fecha de expiración</label>
+                                    <Calendar class="w-100" id="calendar-12h" v-model="fecha_expiracion" showTime
+                                        hourFormat="12" />
+                                </div>
+                            </div>
+                            <div class="col col-md-6">
+                                <div class="d-flex flex-column gap-2">
+                                    <label for="username">Cantidad de usos</label>
+                                    <InputText id="username"  type="number" v-model="value" aria-describedby="username-help" />
+                                </div>
                             </div>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                Cerrar
-                            </button>
-                            <button type="submit" class="btn btn-success">
-                                Generar
-                            </button>
+                        <div class="row mt-5">
+                            <div class="col">
+                                <button class="btn btn-sm btn-success">Generar</button>
+                            </div>
                         </div>
-                    </form>
+
+
+
+                        <!-- <VueDatePicker class="startDate" v-model="fecha_expiracion" placeholder="Fecha de vencimiento"
+                            format="yyyy/MM/dd">
+                        </VueDatePicker> -->
+                    </div>
                 </div>
-            </div>
-        </div>
+
+
+            </form>
+        </Dialog>
+
+
+
+
 
         <div class="card-body">
             <input class="mb-5 form-control" type="text" v-model="busqueda" @input="filtrarEventos"
@@ -132,42 +135,38 @@
                                 </div>
                             </td>
 
-                            <div class="modal fade" tabindex="-1" :id="qr.CodigoQR">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h3 class="modal-title">
-                                                Generar QR
-                                            </h3>
 
-                                            <!--begin::Close-->
-                                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2"
-                                                data-bs-dismiss="modal" aria-label="Close">
-                                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span
-                                                        class="path2"></span></i>
-                                            </div>
-                                            <!--end::Close-->
+                            <Dialog v-model:visible="modalQR" modal header="QR Generado" :style="{ width: '50rem' }"
+                                :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="d-flex w-100 px-10">
+                                        <qrcode-vue :value="valorQR" :size="200" level="Q"
+                                            :ref="`codigoQR${qr.CodigoQR}`" />
+                                        <div class="mx-10">
+                                            <table class="table table-bordered">
+
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">Evento</th>
+                                                        <td>{{ nombreEvento }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Fecha limite</th>
+                                                        <td>Jacob</td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
                                         </div>
-                                        <!-- <form action=""> -->
-
-                                        <div class="modal-body">
-                                            <div class="d-flex justify-content-center">
-                                                <qrcode-vue :value="valorQR" :size="size" level="Q" />
-                                            </div>
-                                        </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                                Cerrar
-                                            </button>
-                                            <button type="submit" class="btn btn-success">
-                                                Imprimir
-                                            </button>
-                                        </div>
-
+                                    </div>
+                                    <div class="d-flex justify-content-end w-100 mt-2">
+                                        <button type="submit" class="btn btn-success" @click="generarPDF(qr.CodigoQR)">
+                                            Descargar
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
+                            </Dialog>
                         </tr>
                         <tr v-if="qrs.length === 0">
                             <td colspan="4" class="text-center">
@@ -183,26 +182,38 @@
 
 
 <script>
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import QrcodeVue from 'qrcode.vue'
 import dayjs from 'dayjs';
 import 'dayjs/locale/es'
 import axios from "axios";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import VueQrcode from '@chenfengyuan/vue-qrcode';
+import Calendar from 'primevue/calendar';
+import InputText from 'primevue/inputtext';
+
+
 dayjs.locale('es')
 
 
 export default {
     name: "EventoDetalle",
     props: ['evento'],
+    components: { VueDatePicker, QrcodeVue, Dialog, VueQrcode, Button, Calendar, InputText },
     setup() { },
     data() {
         return {
+            imageData: null, newData: null,
             qrs: [],
             fecha_expiracion: null,
-            valorQR: null,
+            valorQR: "",
             size: 200,
             idEvento: this.evento.id,
+            nombreEvento: this.evento.nombre,
             busqueda: "",
             paginacion: {
                 total: 0,
@@ -214,10 +225,12 @@ export default {
             },
             modo: "detalle",
             enviado: false,
+            modalQR: false,
+            modalCrearQR: false,
         };
     },
     template: '<qrcode-vue :value="value"></qrcode-vue>',
-    components: { VueDatePicker, QrcodeVue },
+
     validations() { },
     mounted() {
         this.cargarQRS(1);
@@ -266,13 +279,29 @@ export default {
                     });
                 });
         },
+        async generarPDF(id) {
+            const doc = new jsPDF();
+            const variable = `codigoQR${id}`
+            const qrData = this.$refs[variable][0];
+            const qrContainer = qrData.$el;
+            this.valorQR = qrData.value;
+            this.size = qrData.size;
+            const canvas = await html2canvas(qrContainer);
+            const qrImage = canvas.toDataURL("image/jpeg");
+            doc.addImage(qrImage, "JPEG", 10, 10, 50, 50);
+
+            // Guarda o muestra el documento PDF
+            doc.save("codigoQR.pdf");
+        },
         actualizarURL(codigo) {
+            this.modalQR = true
             this.valorQR = "http://localhost:8000/asistencia/" + codigo
         },
         fechaHoraLegible(fecha) {
             return dayjs.unix(fecha).format('D [de] MMMM [-] H:mm');
         },
         resetModalData: function () {
+            this.modalCrearQR = true
             this.nombre = "";
             this.description = "";
         },

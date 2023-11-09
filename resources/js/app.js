@@ -8,12 +8,20 @@ import { pacientesComponent } from "./app/gestion/pacientes";
 import { terapiasComponent } from "./app/gestion/terapias";
 import { reportesComponent } from "./app/gestion/reportes";
 
-rolesComponent.mount("#roles-component");
-modulosComponent.mount("#modulos-component");
-permisosComponent.mount("#permisos-component");
-usuariosComponent.mount("#usuarios-component");
-caballosComponent.mount("#caballos-component");
-eventosComponent.mount("#eventos-component");
-pacientesComponent.mount("#pacientes-component");
-terapiasComponent.mount("#terapias-component");
-reportesComponent.mount("#reportes-component");
+function mountComponent(component, elementId) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        component.mount(`#${elementId}`);
+    }
+}
+
+// Monta componentes solo si los elementos HTML existen en la página
+mountComponent(rolesComponent, "roles-component");
+mountComponent(modulosComponent, "modulos-component");
+mountComponent(permisosComponent, "permisos-component");
+mountComponent(usuariosComponent, "usuarios-component");
+mountComponent(caballosComponent, "caballos-component");
+mountComponent(eventosComponent, "eventos-component");
+mountComponent(pacientesComponent, "pacientes-component");
+mountComponent(terapiasComponent, "terapias-component");
+mountComponent(reportesComponent, "reportes-component");

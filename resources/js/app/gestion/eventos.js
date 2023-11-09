@@ -6,6 +6,9 @@ import LaravelPermissionToVueJS from "laravel-permission-to-vuejs";
 import EventosIndex from "../../Pages/gestion/eventos/index.vue";
 import EventoDetalle from "../../Pages/gestion/eventos/detalle.vue";
 import EventoQR from "../../Pages/gestion/eventos/qr.vue";
+import PrimeVue from "primevue/config";
+import "primevue/resources/themes/lara-light-teal/theme.css";
+
 
 export const eventosComponent = createApp({
     components: {
@@ -15,5 +18,6 @@ export const eventosComponent = createApp({
     },
 })
     .use(Ziggy)
+    .use(PrimeVue)
     .use(LaravelPermissionToVueJS)
     .mixin({ methods: { route } });

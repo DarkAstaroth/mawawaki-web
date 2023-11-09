@@ -158,16 +158,21 @@ class UsuarioController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user) {
-            return redirect()->route('login')->with('error', 'El correo electrónico proporcionado no existe.');
+            return redirect()->intended(route('login'))->with('error', 'El correo electrónico proporcionado no existe.');
         }
 
         if (Auth::attempt($credentials)) {
-            return redirect('/dashboard');
+            if (session()->has('url.intended')) {
+                return redirect()->intended();
+            } else {
+                return redirect()->route('dashboard');
+            }
         } else {
-
-            return redirect()->route('login')->with('error', 'La contraseña proporcionada es incorrecta.');
+            return redirect()->intended(route('login'))->with('error', 'La contraseña proporcionada es incorrecta.');
         }
     }
+
+
 
     public function logout(Request $request)
     {

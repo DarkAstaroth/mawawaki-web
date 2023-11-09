@@ -94,47 +94,47 @@ var KTSignupGeneral = (function () {
                         }),
                     },
                 })),
-                t.addEventListener("click", function (s) {
-                    s.preventDefault(),
-                        a.revalidateField("password"),
-                        a.validate().then(function (a) {
-                            "Valid" == a
-                                ? (t.setAttribute("data-kt-indicator", "on"),
-                                  (t.disabled = !0),
-                                  setTimeout(function () {
-                                      t.removeAttribute("data-kt-indicator"),
-                                          (t.disabled = !1),
-                                          Swal.fire({
-                                              text: "Ha restablecido su contraseña con éxito",
-                                              icon: "success",
-                                              buttonsStyling: !1,
-                                              confirmButtonText:
-                                                  "Ok, entendido",
-                                              customClass: {
-                                                  confirmButton:
-                                                      "btn btn-primary",
-                                              },
-                                          }).then(function (t) {
-                                              if (t.isConfirmed) {
-                                                  e.reset(), r.reset();
-                                                  var a = e.getAttribute(
-                                                      "data-kt-redirect-url"
-                                                  );
-                                                  a && (location.href = a);
-                                              }
-                                          });
-                                  }, 1500))
-                                : Swal.fire({
-                                      text: "Lo sentimos, parece que se detectaron algunos errores, por favor, inténtelo de nuevo.",
-                                      icon: "error",
-                                      buttonsStyling: !1,
-                                      confirmButtonText: "Ok, entendido",
-                                      customClass: {
-                                          confirmButton: "btn btn-primary",
-                                      },
-                                  });
-                        });
-                }),
+                // t.addEventListener("click", function (s) {
+                //     s.preventDefault(),
+                //         a.revalidateField("password"),
+                //         a.validate().then(function (a) {
+                //             "Valid" == a
+                //                 ? (t.setAttribute("data-kt-indicator", "on"),
+                //                   (t.disabled = !0),
+                //                   setTimeout(function () {
+                //                       t.removeAttribute("data-kt-indicator"),
+                //                           (t.disabled = !1),
+                //                           Swal.fire({
+                //                               text: "Ha restablecido su contraseña con éxito",
+                //                               icon: "success",
+                //                               buttonsStyling: !1,
+                //                               confirmButtonText:
+                //                                   "Ok, entendido",
+                //                               customClass: {
+                //                                   confirmButton:
+                //                                       "btn btn-primary",
+                //                               },
+                //                           }).then(function (t) {
+                //                               if (t.isConfirmed) {
+                //                                   e.reset(), r.reset();
+                //                                   var a = e.getAttribute(
+                //                                       "data-kt-redirect-url"
+                //                                   );
+                //                                   a && (location.href = a);
+                //                               }
+                //                           });
+                //                   }, 1500))
+                //                 : Swal.fire({
+                //                       text: "Lo sentimos, parece que se detectaron algunos errores, por favor, inténtelo de nuevo.",
+                //                       icon: "error",
+                //                       buttonsStyling: !1,
+                //                       confirmButtonText: "Ok, entendido",
+                //                       customClass: {
+                //                           confirmButton: "btn btn-primary",
+                //                       },
+                //                   });
+                //         });
+                // }),
                 e
                     .querySelector('input[name="password"]')
                     .addEventListener("input", function () {

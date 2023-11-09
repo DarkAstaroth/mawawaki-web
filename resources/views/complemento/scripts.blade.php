@@ -1,9 +1,18 @@
 <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
-<script src="{{ asset('assets/js/custom/authentication/sign-in/general.js') }}"></script>
-<script src="{{ asset('assets/js/custom/authentication/sign-up/general.js') }}"></script>
-<script src="{{ asset('assets/js/custom/authentication/reset-password/new-password.js') }}"></script>
-<script src="{{ asset('assets/js/custom/authentication/reset-password/reset-password.js') }}"></script>
+@if (Route::currentRouteName() === 'login')
+    <script src="{{ asset('assets/js/custom/authentication/sign-in/general.js') }}"></script>
+@endif
+
+@if (Route::currentRouteName() === 'login.registro')
+    <script src="{{ asset('assets/js/custom/authentication/sign-up/general.js') }}"></script>
+@endif
+
+@if (Route::currentRouteName() === 'password.reset')
+    <script src="{{ asset('assets/js/custom/authentication/reset-password/new-password.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/authentication/reset-password/reset-password.js') }}"></script>
+@endif
+
 
 {{-- <script src="{{ asset('assets/js/widgets.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
