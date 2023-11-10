@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'check.solicitud' => \App\Http\Middleware\CheckSolicitudMiddleware::class,
         'check.verificacion' => \App\Http\Middleware\CheckVerificacionMiddleware::class,
-        'check.estado' => \App\Http\Middleware\CheckEstadoMiddleware::class
+        'check.estado' => \App\Http\Middleware\CheckEstadoMiddleware::class,
+        'check.auth' => \App\Http\Middleware\CheckAuth::class,
     ];
 }

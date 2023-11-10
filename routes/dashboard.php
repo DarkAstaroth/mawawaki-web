@@ -108,12 +108,7 @@ Route::middleware([
 
 //Ruta para asistencias
 Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-    'check.solicitud',
-    'check.verificacion',
-    'check.estado'
+    'check.auth',
 ])->group(function () {
     Route::get('asistencia/{id}', [AsistenciasController::class, 'registrarAsistencia'])->name('registrar.aistencia');
     Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');

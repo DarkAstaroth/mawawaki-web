@@ -22,6 +22,12 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        // Agregar claves foráneas a eventos y usuarios (ajusta según tus necesidades)
+        Schema::table('asistencias', function (Blueprint $table) {
+            $table->foreign('EventoID')->references('id')->on('eventos');
+            $table->foreign('UsuarioID')->references('id')->on('users');
+        });
     }
 
     /**

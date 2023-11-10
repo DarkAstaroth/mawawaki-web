@@ -7,6 +7,8 @@ import RolesCrear from "../../Pages/configuraciones/roles/crear.vue";
 import PermisoRol from "../../Pages/configuraciones/roles/permiso-rol.vue";
 import LaravelPermissionToVueJS from "laravel-permission-to-vuejs";
 
+// Vue.config.productionTip = false;
+
 export const rolesComponent = createApp({
     components: {
         "roles-index": RolesIndex,
