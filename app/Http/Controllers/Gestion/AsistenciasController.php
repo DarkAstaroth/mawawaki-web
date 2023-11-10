@@ -92,6 +92,14 @@ class AsistenciasController extends Controller
         $usuarioId = $request->usuario;
         $eventoId = $request->evento;
         $codigoQR = $request->qr;
+        $detalleQR = QR::findOrFail($request->qr);
+
+        // Obtener la fecha y hora actual en formato UNIX timestamp
+        $fechaHoraActual = now()->timestamp;
+        if ($detalleQR->fecha_vencimiento !== null && $detalleQR->fecha_vencimiento - $fechaHoraActual   < 0) {
+            return redirect()->route('dashboard')->with('error', 'QR vencido');
+        };
+
 
         $asistencia = Asistencia::where('UsuarioID', $usuarioId)
             ->where('EventoID', $eventoId)
@@ -99,8 +107,6 @@ class AsistenciasController extends Controller
             ->latest()
             ->first();
 
-        // Obtener la fecha y hora actual en formato UNIX timestamp
-        $fechaHoraActual = now()->timestamp;
 
         if ($asistencia) {
             // Verificar si la fecha de entrada de la asistencia es la misma que la fecha actual
@@ -128,6 +134,17 @@ class AsistenciasController extends Controller
                 'global' => false, // Puedes configurar esto según tus necesidades
                 'CodigoQR' => $codigoQR,
             ]);
+
+            if ($detalleQR->cantidad_usos === 0) {
+                return redirect()->route('dashboard')->with('error', 'Limite de usos superado');
+            }
+
+            if ($detalleQR->cantidad_usos !== 0 && $detalleQR->cantidad_usos > 0) {
+                if ($detalleQR->cantidad_usos !== -1) {
+                    $detalleQR->cantidad_usos -= 1;
+                }
+                $detalleQR->save();
+            }
         }
 
         return redirect()->route('dashboard')->with('success', 'Marcado registrado correctamente');

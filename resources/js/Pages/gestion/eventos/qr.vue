@@ -3,10 +3,7 @@
         <div class="card-header">
             <h3 class="card-title">Listado de QR's asignados</h3>
             <div class="div card-toolbar">
-                <button type="button" class="btn btn-sm btn-success" @click="
-                    modo = 'crear';
-                resetModalData();
-                ">
+                <button type="button" class="btn btn-sm btn-success" @click="resetModalData(true)">
                     <i class="text-white far fa-plus"></i>
                     Nuevo
                 </button>
@@ -16,25 +13,39 @@
 
         <Dialog v-model:visible="modalCrearQR" modal header="generar QR" position="top" :style="{ width: '50rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
-            <form class="input-feild" v-on:submit.prevent="
-                modo === 'crear'
-                    ? generarQR()
-                    : actualizarEvento()
-                ">
+            <form class="input-feild" v-on:submit.prevent="generarQR">
                 <div class="py-5">
                     <div class="form-group mb-5">
                         <div class="row">
-                            <div class="col col-md-6">
+                            <div class="col-12 col-md-6">
                                 <div class="d-flex flex-column gap-2">
                                     <label for="username">Fecha de expiración</label>
-                                    <Calendar class="w-100" id="calendar-12h" v-model="fecha_expiracion" showTime
-                                        hourFormat="12" />
+                                    <Calendar class="w-100" id="calendar-12h" v-model="fecha_vencimiento" showTime
+                                        hourFormat="12" :disabled="controlFecha" />
                                 </div>
                             </div>
-                            <div class="col col-md-6">
+                            <div class="col-12 col-md-6">
                                 <div class="d-flex flex-column gap-2">
                                     <label for="username">Cantidad de usos</label>
-                                    <InputText id="username"  type="number" v-model="value" aria-describedby="username-help" />
+                                    <InputText id="username" type="number" v-model="cantidad_usos"
+                                        aria-describedby="username-help" :disabled="controlLimite"
+                                        :value="cantidadUsosDisplay" />
+                                </div>
+                            </div>
+
+                            <div class="col col-md-12 mt-5">
+                                <div class="d-flex  gap-2">
+
+                                    <div class="flex align-items-center">
+                                        <Checkbox v-model="limiteUsos" inputId="fecha" name="AjustesQR" value="-1"
+                                            @click="desactivarFecha" />
+                                        <label for="fecha" class="mx-2"> Sin fecha de expiración </label>
+                                    </div>
+                                    <div class="flex align-items-center">
+                                        <Checkbox v-model="limiteUsos" inputId="uso" name="AjustesQR" value="-2"
+                                            @click="desactivarLimite" />
+                                        <label for="uso" class="mx-2"> Sin limite de usos </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -45,11 +56,6 @@
                             </div>
                         </div>
 
-
-
-                        <!-- <VueDatePicker class="startDate" v-model="fecha_expiracion" placeholder="Fecha de vencimiento"
-                            format="yyyy/MM/dd">
-                        </VueDatePicker> -->
                     </div>
                 </div>
 
@@ -91,9 +97,9 @@
                                 <div class="d-flex align-items-center">
                                     <div class="px-2 d-flex flex-column">
                                         <div>
-                                            hoy
+                                            {{ qr.fecha_vencimiento === null ? 'Sin fecha de expiración' :
+                                                fechaHoraLegible(qr.fecha_vencimiento) }}
                                         </div>
-
                                     </div>
                                 </div>
                             </td>
@@ -102,13 +108,11 @@
                                 <div class="d-flex align-items-center">
                                     <div class="px-2 d-flex flex-column">
                                         <div>
-                                            10
+                                            {{ qr.cantidad_usos === -1 ? 'Sin límite' : qr.cantidad_usos }}
                                         </div>
-
                                     </div>
                                 </div>
                             </td>
-
 
 
                             <td class="align-items-center">
@@ -136,7 +140,7 @@
                             </td>
 
 
-                            <Dialog v-model:visible="modalQR" modal header="QR Generado" :style="{ width: '50rem' }"
+                            <Dialog v-model:visible="modalQR" modal header="QR Generado" :style="{ width: '60rem' }"
                                 :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
                                 <div class="d-flex flex-column align-items-center">
                                     <div class="d-flex w-100 px-10">
@@ -151,8 +155,9 @@
                                                         <td>{{ nombreEvento }}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th scope="row">Fecha limite</th>
-                                                        <td>Jacob</td>
+                                                        <th scope="row">Fecha de vencimiento</th>
+                                                        <td> {{ qr.fecha_vencimiento === null ? 'Sin fecha de expiración' :
+                                                            fechaHoraLegible(qr.fecha_vencimiento) }}</td>
 
                                                     </tr>
 
@@ -195,6 +200,9 @@ import Button from 'primevue/button';
 import VueQrcode from '@chenfengyuan/vue-qrcode';
 import Calendar from 'primevue/calendar';
 import InputText from 'primevue/inputtext';
+import Checkbox from 'primevue/checkbox';
+import.meta.env.VITE_APP_BASE_URL
+
 
 
 dayjs.locale('es')
@@ -203,13 +211,17 @@ dayjs.locale('es')
 export default {
     name: "EventoDetalle",
     props: ['evento'],
-    components: { VueDatePicker, QrcodeVue, Dialog, VueQrcode, Button, Calendar, InputText },
+    components: { VueDatePicker, QrcodeVue, Dialog, VueQrcode, Button, Calendar, InputText, Checkbox },
     setup() { },
     data() {
         return {
             imageData: null, newData: null,
             qrs: [],
-            fecha_expiracion: null,
+            fecha_vencimiento: null,
+            cantidad_usos: 10,
+            limiteUsos: null,
+            controlLimite: false,
+            controlFecha: false,
             valorQR: "",
             size: 200,
             idEvento: this.evento.id,
@@ -235,6 +247,11 @@ export default {
     mounted() {
         this.cargarQRS(1);
     },
+    computed: {
+        cantidadUsosDisplay() {
+            return this.cantidad_usos === -1 ? 'Sin límite' : this.cantidad_usos;
+        }
+    },
     methods: {
         cargarQRS(pagina) {
             axios
@@ -251,6 +268,8 @@ export default {
             axios
                 .post("/api/qr/generar", {
                     idEvento: this.idEvento,
+                    fechaVencimiento: this.fecha_vencimiento,
+                    cantidadUsos: this.cantidad_usos
                 })
                 .then((response) => {
                     Swal.fire({
@@ -278,6 +297,8 @@ export default {
                         },
                     });
                 });
+
+            this.resetModalData(false)
         },
         async generarPDF(id) {
             const doc = new jsPDF();
@@ -294,17 +315,32 @@ export default {
             doc.save("codigoQR.pdf");
         },
         actualizarURL(codigo) {
-            this.modalQR = true
-            this.valorQR = "http://localhost:8000/asistencia/" + codigo
+            this.modalQR = true;
+            this.valorQR = `${import.meta.env.VITE_APP_BASE_URL}/asistencia/${codigo}`;
         },
         fechaHoraLegible(fecha) {
             return dayjs.unix(fecha).format('D [de] MMMM [-] H:mm');
         },
-        resetModalData: function () {
-            this.modalCrearQR = true
-            this.nombre = "";
-            this.description = "";
+        resetModalData: function (estado) {
+            this.modalCrearQR = estado
+            this.fecha_vencimiento = null
+            this.cantidad_usos = 0
         },
+        fechaHoraLegible(fecha) {
+            return dayjs.unix(fecha).format('D [de] MMMM [-] H:mm');
+        },
+        desactivarFecha() {
+            this.controlFecha = !this.controlFecha
+            if (this.controlFecha) {
+                this.fecha_vencimiento = null
+            }
+        },
+        desactivarLimite() {
+            this.controlLimite = !this.controlLimite
+            if (this.controlLimite) {
+                this.cantidad_usos = -1
+            }
+        }
     },
 };
 </script>

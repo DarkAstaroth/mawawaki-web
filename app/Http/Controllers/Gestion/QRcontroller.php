@@ -115,10 +115,13 @@ class QRcontroller extends Controller
 
     public function generarQR(Request $request)
     {
-        $nuevoEvento = new QR();
-        $nuevoEvento->EventoID = $request->input('idEvento');
-        $nuevoEvento->CodigoQR = (string) Str::uuid();
-        $nuevoEvento->save();
+        $nuevoQr = new QR();
+        $nuevoQr->EventoID = $request->input('idEvento');
+        $nuevoQr->CodigoQR = (string) Str::uuid();
+        $nuevoQr->fecha_vencimiento = $request->input('fechaVencimiento') === null ? null : strtotime($request->input('fechaVencimiento'));
+        $nuevoQr->cantidad_usos = $request->input('cantidadUsos');
+        $nuevoQr->cuota = $request->input('cantidadUsos');
+        $nuevoQr->save();
 
         return response()->json(['message' => 'Evento creado con éxito'], 201);
     }
