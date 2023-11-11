@@ -9,10 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('persona_id')->nullable()->unique()->index();
+            $table->foreign('persona_id')->references('id')->on('personas')->onDelete('set null');
             $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->string('nombres')->nullable();

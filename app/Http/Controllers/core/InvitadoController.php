@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\core;
 
 use App\Http\Controllers\Controller;
+use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,17 +86,24 @@ class InvitadoController extends Controller
         return view('autenticacion.registro');
     }
 
+
     public function crearUsuarioEmail(Request $request)
     {
-        $nuevoUsuario = User::create([
-            'nombres' => $request->nombres,
+        $nuevaPersona = Persona::create([
+            'nombre' => $request->nombres,
             'paterno' => $request->paterno,
             'materno' => $request->materno,
+        ]);
+
+        $nuevoUsuario = User::create([
             'email' => $request->email,
             'gauth_type' => 'email',
             'password' => bcrypt($request->input('password')),
+            'persona_id' => $nuevaPersona->id,
         ]);
+
         $nuevoUsuario->assignRole('invitado');
+
         return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
     }
 

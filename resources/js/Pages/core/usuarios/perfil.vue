@@ -21,16 +21,16 @@ export default {
             usuario: this.usuario,
             enviado: false,
             rolesSeleccionados: this.usuario.roles
-                .filter(usuario => usuario.name !== 'invitado')
-                .map(usuario => usuario.name),
-            roles: []
+                .filter((usuario) => usuario.name !== "invitado")
+                .map((usuario) => usuario.name),
+            roles: [],
         };
     },
     validations() {
         return {};
     },
     mounted() {
-        this.cargarRoles(1)
+        this.cargarRoles(1);
     },
     methods: {
         verificarCuenta(usuarioId) {
@@ -76,7 +76,9 @@ export default {
         },
         actualizarRoles() {
             axios
-                .put(`/api/sincronizar/rol/usuario/${this.usuario.id}`, { roles: this.rolesSeleccionados })
+                .put(`/api/sincronizar/rol/usuario/${this.usuario.id}`, {
+                    roles: this.rolesSeleccionados,
+                })
                 .then((response) => {
                     Swal.fire({
                         title: "Éxito",
@@ -92,10 +94,9 @@ export default {
                 .catch((error) => {
                     console.error(error);
                 });
-        }
+        },
     },
 };
 </script>
-
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

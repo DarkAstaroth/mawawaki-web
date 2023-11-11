@@ -72,13 +72,21 @@ class UsuarioController extends Controller
             $busquedaSinEspacios = str_replace(' ', '', $busqueda);
             $usuariosQuery->where(function ($query) use ($busquedaSinEspacios) {
                 $query->whereRaw("REPLACE(name, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+                    ->orWhereHas('persona', function ($subquery) use ($busquedaSinEspacios) {
+                        $subquery->whereRaw("REPLACE(nombre, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+                            ->orWhereRaw("REPLACE(paterno, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+                            ->orWhereRaw("REPLACE(materno, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
+                    })
                     ->orWhereRaw("REPLACE(email, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
             });
         }
 
         $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
         $usuariosIds = $usuarios->pluck('id')->toArray();
-        $usuariosConRoles = User::with('roles')->whereIn('id', $usuariosIds)->get();
+
+        $usuariosConRoles = User::with(['roles', 'persona'])->whereIn('id', $usuariosIds)->get();
+
+        $usuariosConRoles->load('persona');
 
         $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
             $usuario->profile_photo_path = env('APP_URL') . '/' . $usuario->profile_photo_path;
@@ -232,14 +240,14 @@ class UsuarioController extends Controller
     public function PerfilUsuario(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions');
+        $usuario->load('roles', 'permissions', 'persona');
         return view('core.usuarios.perfil', compact('usuario'));
     }
 
     public function UsuarioControl(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions');
+        $usuario->load('roles', 'permissions', 'persona');
         return view('core.usuarios.control', compact('usuario'));
     }
 
