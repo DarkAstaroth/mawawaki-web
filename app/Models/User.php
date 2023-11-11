@@ -42,6 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
+        'persona_id',
         'name',
         'email',
         'nombres',
@@ -84,4 +85,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
     ];
+
+    // public function persona()
+    // {
+    //     return $this->belongsTo(Persona::class);
+    // }
+
+    public function persona()
+    {
+        return $this->belongsTo(Persona::class, 'persona_id');
+    }
 }

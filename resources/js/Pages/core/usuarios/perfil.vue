@@ -10,8 +10,8 @@
                                     <img :src="'/' + usuario.profile_photo_path" alt="image" />
                                 </div>
 
-                                <a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1">{{ usuario.name
-                                }}</a>
+                                <a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1">{{
+                                    usuario.persona.nombre }}</a>
 
                                 <div class="fs-5 fw-semibold text-muted mb-6">
                                     Software Enginer
@@ -35,7 +35,6 @@
 
                             <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold py-4 w-250px fs-6"
                                 data-kt-menu="true">
-
                                 <div class="menu-item px-5">
                                     <a href="#" class="menu-link px-5">Reporte</a>
                                 </div>
@@ -72,9 +71,11 @@
                                                 <tr>
                                                     <td>Nombres:</td>
                                                     <td>
-                                                        <span v-if="usuario.nombres
+                                                        <span v-if="usuario.persona
+                                                                .nombre
                                                             ">{{
-        usuario.nombres
+        usuario.persona
+            .nombre
     }}</span>
                                                         <span v-else>No se registraron
                                                             nombres</span>
@@ -84,9 +85,11 @@
                                                 <tr>
                                                     <td>Apellido Paterno:</td>
                                                     <td>
-                                                        <span v-if="usuario.paterno
+                                                        <span v-if="usuario.persona
+                                                                    .paterno
                                                                 ">{{
-            usuario.paterno
+            usuario.persona
+                .paterno
         }}</span>
                                                         <span v-else>No se registró
                                                             apellido
@@ -97,9 +100,11 @@
                                                 <tr>
                                                     <td>Apellido Materno:</td>
                                                     <td>
-                                                        <span v-if="usuario.materno
+                                                        <span v-if="usuario.persona
+                                                                    .materno
                                                                 ">{{
-            usuario.materno
+            usuario.persona
+                .materno
         }}</span>
                                                         <span v-else>No se registró
                                                             apellido
@@ -110,10 +115,9 @@
                                                 <tr>
                                                     <td>Email:</td>
                                                     <td>
-                                                        <span v-if="usuario.materno
-                                                                ">{{
-            usuario.email
-        }}</span>
+                                                        <span v-if="usuario.email">{{
+                                                            usuario.email
+                                                        }}</span>
                                                         <span v-else>No se registró
                                                             email</span>
                                                     </td>
@@ -153,11 +157,9 @@
                 </div>
             </div>
 
-
             <div class="row">
                 <div class="col-12">
                     <div class="card card-bordered">
-
                         <div class="card-header">
                             <h3 class="card-title">Roles</h3>
                             <div class="div card-toolbar">
@@ -172,24 +174,21 @@
                             <VueMultiselect :multiple="true" :close-on-select="true" v-model="rolesSeleccionados"
                                 :options="roles" selectLabel="Selecionar rol" placeholder="Buscar rol..."
                                 selectedLabel="Seleccionado" :show-labels="false">
-                                <template v-slot:noResult> <span>No se encontraron resultados</span> </template>
+                                <template v-slot:noResult>
+                                    <span>No se encontraron resultados</span>
+                                </template>
                             </VueMultiselect>
-
-
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </template>
 
 <script>
 import { useVuelidate } from "@vuelidate/core";
-import VueMultiselect from 'vue-multiselect'
-
+import VueMultiselect from "vue-multiselect";
 
 export default {
     name: "usuarioPerfil",
@@ -205,16 +204,16 @@ export default {
             usuario: this.usuario,
             enviado: false,
             rolesSeleccionados: this.usuario.roles
-                .filter(usuario => usuario.name !== 'invitado')
-                .map(usuario => usuario.name),
-            roles: []
+                .filter((usuario) => usuario.name !== "invitado")
+                .map((usuario) => usuario.name),
+            roles: [],
         };
     },
     validations() {
         return {};
     },
     mounted() {
-        this.cargarRoles(1)
+        this.cargarRoles(1);
     },
     methods: {
         verificarCuenta(usuarioId) {
@@ -260,7 +259,9 @@ export default {
         },
         actualizarRoles() {
             axios
-                .put(`/api/sincronizar/rol/usuario/${this.usuario.id}`, { roles: this.rolesSeleccionados })
+                .put(`/api/sincronizar/rol/usuario/${this.usuario.id}`, {
+                    roles: this.rolesSeleccionados,
+                })
                 .then((response) => {
                     Swal.fire({
                         title: "Éxito",
@@ -276,10 +277,9 @@ export default {
                 .catch((error) => {
                     console.error(error);
                 });
-        }
+        },
     },
 };
 </script>
-
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

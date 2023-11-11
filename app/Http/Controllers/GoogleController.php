@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Persona;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Exception;
@@ -36,13 +37,21 @@ class GoogleController extends Controller
                 $rutaLocalImagen = public_path('assets/imagenes/' . $nombreImagen);
                 file_put_contents($rutaLocalImagen, $contenidoImagen);
 
+                $nuevaPersona = Persona::create([
+                    'nombre' => '',
+                    'paterno' => '',
+                    'materno' => '',
+                ]);
+
                 $nuevoUsuario = User::create([
                     'name' => $usuario->name,
                     'email' => $usuario->email,
                     'profile_photo_path' => 'assets/imagenes/' . $nombreImagen,
                     'gauth_id' => $usuario->id,
                     'gauth_type' => 'google',
-                    'password' => bcrypt('fhccfnxdy24!')
+                    'password' => bcrypt('fhccfnxdy24!'),
+                    'persona_id' => $nuevaPersona->id,
+
                 ]);
                 $nuevoUsuario->assignRole('invitado');
                 Auth::login($nuevoUsuario);
