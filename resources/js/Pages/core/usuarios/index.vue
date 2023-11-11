@@ -169,7 +169,8 @@
                                     <img :src="usuario.profile_photo_path" alt="foto" class="p-1 rounded-pill" width="50" />
                                     <div class="px-2 d-flex flex-column">
                                         <div>
-                                            {{ usuario.name }}
+                                            {{ usuario.persona.nombre }} {{ usuario.persona.paterno }} {{
+                                                usuario.persona.materno }}
                                         </div>
                                         <div class="py-1 bd-highlight">
                                             <small>
