@@ -10,7 +10,7 @@
                                     <img :src="'/' + usuario.profile_photo_path" alt="image" />
                                 </div>
 
-                                <a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1">{{ usuario.name
+                                <a href="#" class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1">{{ usuario.persona.nombre
                                 }}</a>
 
                                 <div class="fs-5 fw-semibold text-muted mb-6">
@@ -72,9 +72,9 @@
                                                 <tr>
                                                     <td>Nombres:</td>
                                                     <td>
-                                                        <span v-if="usuario.nombres
+                                                        <span v-if="usuario.persona.nombre
                                                             ">{{
-        usuario.nombres
+        usuario.persona.nombre
     }}</span>
                                                         <span v-else>No se registraron
                                                             nombres</span>
@@ -84,9 +84,9 @@
                                                 <tr>
                                                     <td>Apellido Paterno:</td>
                                                     <td>
-                                                        <span v-if="usuario.paterno
+                                                        <span v-if="usuario.persona.paterno
                                                                 ">{{
-            usuario.paterno
+            usuario.persona.paterno
         }}</span>
                                                         <span v-else>No se registró
                                                             apellido
@@ -97,9 +97,9 @@
                                                 <tr>
                                                     <td>Apellido Materno:</td>
                                                     <td>
-                                                        <span v-if="usuario.materno
+                                                        <span v-if="usuario.persona.materno
                                                                 ">{{
-            usuario.materno
+            usuario.persona.materno
         }}</span>
                                                         <span v-else>No se registró
                                                             apellido
@@ -110,7 +110,7 @@
                                                 <tr>
                                                     <td>Email:</td>
                                                     <td>
-                                                        <span v-if="usuario.materno
+                                                        <span v-if="usuario.email
                                                                 ">{{
             usuario.email
         }}</span>

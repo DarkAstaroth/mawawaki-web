@@ -31,7 +31,7 @@ class CreatePermissionTables extends Migration
             $table->string('nombre');
             $table->string('descripcion')->nullable();
             $table->timestamps();
-                $table->softDeletes();
+            $table->softDeletes();
         });
 
         Schema::create('permissions', function (Blueprint $table) {
@@ -163,6 +163,6 @@ class CreatePermissionTables extends Migration
         Schema::drop($tableNames['model_has_permissions']);
         Schema::drop($tableNames['roles']);
         Schema::drop($tableNames['permissions']);
-        Schema::drop($tableNames['modulos']);
+        Schema::dropIfExists('modulos');
     }
 }

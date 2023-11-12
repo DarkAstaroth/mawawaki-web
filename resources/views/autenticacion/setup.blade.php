@@ -18,7 +18,9 @@
                                         <img src="{{ asset(auth()->user()->profile_photo_path) }}" alt="photo_user"
                                             width="40px" class="rounded-pill" />
                                         <div class="mx-4 d-flex flex-column justify-content-center">
-                                            <div class="text-black-500 fw-bold fs-6">{{ auth()->user()->name }}
+                                            <div class="text-black-500 fw-bold fs-6">{{ auth()->user()->persona->nombre }}
+                                                {{ auth()->user()->persona->paterno }}
+                                                {{ auth()->user()->persona->materno }}
                                             </div>
                                             <div class="text-gray-500 fw-semibold fs-base ">{{ auth()->user()->email }}
                                             </div>
@@ -45,17 +47,17 @@
 
                             <div class="mb-8 fv-row">
                                 <input type="text" placeholder="Nombres" name="nombres" autocomplete="off"
-                                    class="bg-transparent form-control" value="{{ auth()->user()->nombres }}" />
+                                    class="bg-transparent form-control" value="{{ auth()->user()->persona->nombre }}" />
                             </div>
 
                             <div class="mb-8 fv-row">
                                 <input type="text" placeholder="Apellido paterno" name="paterno" autocomplete="off"
-                                    class="bg-transparent form-control" value="{{ auth()->user()->paterno }}" />
+                                    class="bg-transparent form-control" value="{{ auth()->user()->persona->paterno }}" />
                             </div>
 
                             <div class="mb-8 fv-row">
                                 <input type="text" placeholder="Apellido materno" name="materno" autocomplete="off"
-                                    class="bg-transparent form-control" value="{{ auth()->user()->materno }}" />
+                                    class="bg-transparent form-control" value="{{ auth()->user()->persona->materno }}" />
                             </div>
 
 
