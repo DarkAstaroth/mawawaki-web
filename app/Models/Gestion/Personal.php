@@ -30,6 +30,6 @@ class Personal extends Model
     // Relación de pertenencia a un usuario
     public function usuario()
     {
-        return $this->belongsTo(Usuario::class, 'UsuarioID', 'id');
+        return $this->belongsTo(User::class, 'UsuarioID', 'id');
     }
 }

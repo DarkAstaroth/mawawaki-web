@@ -20,6 +20,9 @@ class DatabaseSeeder extends Seeder
     {
 
         Role::findOrCreate('invitado');
+        Role::findOrCreate('cliente');
+        Role::findOrCreate('personal');
+
         $role =   Role::findOrCreate('admin');
         $permission = Permission::findOrCreate('crear roles');
         $role->givePermissionTo('crear roles');
