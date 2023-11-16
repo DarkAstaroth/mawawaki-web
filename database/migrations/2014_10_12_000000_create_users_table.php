@@ -24,11 +24,12 @@ return new class extends Migration
             $table->boolean('estado')->default(0);
             $table->boolean('verificada')->default(0);
             $table->boolean('solicitud')->default(0);
+            $table->enum('tipo_solicitud', ['personal', 'cliente'])->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
-            $table->string('profile_photo_path', 2048)->nullable()->default('/assets/imagenes/user-default.jpg');
+            $table->string('profile_photo_path', 2048)->nullable()->default('assets/imagenes/user-default.jpg');
             $table->timestamps();
             $table->softDeletes();
         });

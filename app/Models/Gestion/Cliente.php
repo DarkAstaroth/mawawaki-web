@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Gestion;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +18,7 @@ class Cliente extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = ['UsuarioID', "ocupacion"];
 
     // Relación: Un cliente puede tener muchos pacientes.
     public function pacientes()

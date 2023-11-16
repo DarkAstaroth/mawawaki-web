@@ -41,7 +41,14 @@
                         <div class="mb-5 text-center">
                             <div class="text-gray-500 fw-bold fs-6">Completa tu registro</div>
                         </div>
-                        <form class="form w-100" method="POST" action="{{ route('invitado.update', auth()->user()->id) }}">
+
+
+                        <div id="usuarios-component">
+                            <usuarios-setup :usuario="{{ json_encode(auth()->user()) }}"></usuarios-setup>
+                        </div>
+
+
+                        {{-- <form class="form w-100" method="POST" action="{{ route('invitado.update', auth()->user()->id) }}">
                             @method('PUT')
                             @csrf
 
@@ -83,7 +90,7 @@
                             <div class="text-center text-gray-500 fw-semibold fs-6">¿Ya tienes una cuenta?
                                 <a href="{{ route('login') }}" class="link-primary fw-semibold">Ingresar</a>
                             </div>
-                        </form>
+                        </form> --}}
 
                     </div>
 

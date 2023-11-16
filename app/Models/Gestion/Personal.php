@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Gestion;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +17,19 @@ class Personal extends Model
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
+    protected $table = 'personal';
+
+    protected $fillable = [
+        'UsuarioID',
+        'estado_estudio',
+        'universidad',
+        'facultad',
+        'carrera',
+        'estado',
+        'documentacion',
+        'rango_nivel',
+        'codigo_personal',
+    ];
 
 
     // Relación muchos a muchos

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('diagnostico_paciente', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             // Definir las claves foráneas
-            $table->foreignUuid('cliente_id')->nullable()->constrained('clientes')->onDelete('cascade');
             $table->foreignUuid('paciente_id')->constrained('pacientes')->onDelete('cascade');
             $table->foreignUuid('diagnostico_id')->constrained('diagnosticos')->onDelete('cascade');
             $table->timestamps();

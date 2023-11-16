@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('servicios', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
-            $table->foreignUuid('cliente_id')->nullable()->constrained('clientes');
             $table->foreignUuid('paciente_id')->nullable()->constrained('pacientes');
             $table->timestamps();
             $table->softDeletes();
