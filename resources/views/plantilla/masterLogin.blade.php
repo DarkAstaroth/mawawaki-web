@@ -7,6 +7,8 @@
     @include('complemento.estilos')
     <title>Inicio</title>
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
+    @routes
+    @vite(['resources/js/app.js'])
 
 </head>
 
@@ -15,7 +17,10 @@
     data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true"
     data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
     <!--layout-partial:partials/_drawers.html-->
+
     @yield('contenido')
+
+    @vite(['resources/js/app.js'])
     @include('complemento.tema')
     @include('complemento.scripts')
     <script>

@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('personal', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->foreignUuid('UsuarioID')->constrained('users');
-            $table->string('documentacion');
-            $table->string('rango_nivel');
-            $table->string('codigo_personal');
+            $table->string('universidad')->nullable();;
+            $table->string('facultad')->nullable();;
+            $table->string('carrera')->nullable();;
+            $table->enum('estado_estudio', ['En curso', 'Finalizado'])->nullable();
+            $table->string('documentacion')->nullable();;
+            $table->string('rango_nivel')->nullable();;
+            $table->string('codigo_personal')->nullable();;
             $table->timestamps();
             $table->softDeletes();
         });

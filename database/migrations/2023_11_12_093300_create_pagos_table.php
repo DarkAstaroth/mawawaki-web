@@ -15,6 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary()->unique();
             $table->foreignUuid('sesion_id')->constrained('sesiones');
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

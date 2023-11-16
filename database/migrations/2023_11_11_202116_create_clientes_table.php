@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->foreignUuid('UsuarioID')->constrained('users');
+            $table->string('ocupacion')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

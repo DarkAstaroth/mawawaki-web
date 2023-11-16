@@ -3,6 +3,7 @@
 use App\Http\Controllers\Configuraciones\ModuloController;
 use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\Configuraciones\RolController;
+use App\Http\Controllers\core\InvitadoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
@@ -78,3 +79,6 @@ Route::get('eventos/usuario/{id}', [EventosController::class, 'obtenerEventosUsu
 // Api para gestion de QRs
 Route::post('qr/generar', [QRcontroller::class, 'generarQR']);
 Route::get('qr/evento/{id}', [QRcontroller::class, 'cargarQRS']);
+
+// Api para invitados
+Route::post('invitado/enviar/solicitud', [InvitadoController::class, 'enviarSolicitud']);

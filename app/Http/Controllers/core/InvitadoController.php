@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\core;
 
 use App\Http\Controllers\Controller;
+use App\Models\Gestion\Cliente;
+use App\Models\Gestion\Personal;
 use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -110,5 +112,48 @@ class InvitadoController extends Controller
     public function resetPass()
     {
         return view('autenticacion.forgot');
+    }
+
+    public function enviarSolicitud(Request $request)
+    {
+        $usuario = User::find($request->usuario_id,);
+
+        if ($request->tipo === 'cliente') {
+
+            Cliente::create([
+                'UsuarioID' => $request->usuario_id,
+                'ocupacion' => $request->datos['ocupacion'],
+                'materno' => $request->materno,
+            ]);
+
+            $usuario->update([
+                'solicitud' => 1,
+                'tipo_solicitud' => 'cliente',
+            ]);
+
+            return response()->json([
+                'success' => 'Cliente creado con éxito',
+            ]);
+        }
+
+        if ($request->tipo === 'personal') {
+
+            Personal::create([
+                'UsuarioID' => $request->usuario_id,
+                'universidad' => $request->datos['universidad'],
+                'facultad' => $request->datos['facultad'],
+                'carrera' => $request->datos['carrera'],
+            ]);
+
+            $usuario->update([
+                'solicitud' => 1,
+                'tipo_solicitud' => 'personal',
+
+            ]);
+
+            return response()->json([
+                'success' => 'Cliente creado con éxito',
+            ]);
+        }
     }
 }
