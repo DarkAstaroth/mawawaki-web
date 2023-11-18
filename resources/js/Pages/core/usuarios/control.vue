@@ -139,9 +139,12 @@
                                     <span>No se encontraron resultados</span>
                                 </template>
                             </VueMultiselect>
+                            <DocumentacionUsuario :usuario="usuario" />
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>
@@ -150,11 +153,13 @@
 <script>
 import { useVuelidate } from "@vuelidate/core";
 import VueMultiselect from "vue-multiselect";
+import DocumentacionUsuario from './Tabs/Documentacion.vue'
+
 
 export default {
     name: "UsuarioControl",
     props: ["usuario"],
-    components: { VueMultiselect },
+    components: { VueMultiselect, DocumentacionUsuario },
 
     setup() {
         return { v$: useVuelidate() };

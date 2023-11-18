@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Gestion\Documentacion;
+use App\Models\Gestion\TipoDocumento;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -87,13 +89,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
-    // public function persona()
-    // {
-    //     return $this->belongsTo(Persona::class);
-    // }
-
     public function persona()
     {
         return $this->belongsTo(Persona::class, 'persona_id');
+    }
+
+    public function documentos()
+    {
+        return $this->hasMany(Documentacion::class);
     }
 }

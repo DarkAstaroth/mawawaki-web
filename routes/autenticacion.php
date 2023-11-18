@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 
-
 // Rutas de autenticación (pero no requieren sesión verificada)
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
@@ -32,7 +31,7 @@ Route::post('/reset-password', function (Request $request) {
     return $status === Password::RESET_LINK_SENT
         ? back()->with('success', __($status))
         : back()->with('error', __($status));
-})->middleware('guest')->name('password.email');
+})->middleware('guest')->name('password.email.reset');
 
 Route::get('/reset-password/{token}', function (string $token) {
     return view('autenticacion.reset', ['token' => $token]);
@@ -75,3 +74,13 @@ Route::middleware([
     Route::resource('setup/invitado', InvitadoController::class);
     Route::get('verificar/cuenta', [UsuarioController::class, 'verificarCuenta'])->name('verificar.cuenta');
 });
+
+
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+// ])->group(function () {
+//     Route::get('/storage/documentacion/{archivo}', function ($archivo) {
+//         return response()->file(storage_path('app/public/documentacion/' . $archivo));
+//     });
+// });
