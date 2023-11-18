@@ -7,6 +7,12 @@ import UsuarioSetup from "../../Pages/core/usuarios/setup.vue";
 import UsuarioPerfil from "../../Pages/core/usuarios/perfil.vue";
 import UsuarioControl from "../../Pages/core/usuarios/control.vue";
 import LaravelPermissionToVueJS from "laravel-permission-to-vuejs";
+import PrimeVue from "primevue/config";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+import "primevue/resources/themes/lara-light-teal/theme.css";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
 
 export const usuariosComponent = createApp({
     components: {
@@ -18,4 +24,6 @@ export const usuariosComponent = createApp({
 })
     .use(Ziggy)
     .use(LaravelPermissionToVueJS)
+    .use(PrimeVue)
+    .use(Toast, {})
     .mixin({ methods: { route } });

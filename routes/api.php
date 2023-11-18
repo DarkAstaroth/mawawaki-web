@@ -7,6 +7,7 @@ use App\Http\Controllers\core\InvitadoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
+use App\Http\Controllers\Gestion\DocumentacionController;
 use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\QRcontroller;
 use Illuminate\Http\Request;
@@ -82,3 +83,8 @@ Route::get('qr/evento/{id}', [QRcontroller::class, 'cargarQRS']);
 
 // Api para invitados
 Route::post('invitado/enviar/solicitud', [InvitadoController::class, 'enviarSolicitud']);
+
+// Api para documentacion 
+Route::post('subir-archivo/{usuarioId}', [DocumentacionController::class, 'subirArchivo']);
+Route::get('obtener-documentacion/{usuario_id}', [DocumentacionController::class, 'obtenerDocumentosUsuario']);
+Route::get('tipos-documento', [DocumentacionController::class, 'obtenerTiposDocumento']);

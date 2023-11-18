@@ -7,9 +7,21 @@
                     <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_1"
                         @click="cambiarParametro('todos')">Asistencias</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_2">Documentos</a>
+                </li>
             </ul>
 
-            <AsistenciasUsuario :usuario="usuario" />
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
+                    <AsistenciasUsuario :usuario="usuario" />
+                </div>
+                <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
+                    <DocumentacionUsuario :usuario="usuario" />
+                </div>
+
+            </div>
 
         </div>
     </div>
@@ -19,11 +31,13 @@
 import { useVuelidate } from "@vuelidate/core";
 import VueMultiselect from 'vue-multiselect'
 import AsistenciasUsuario from './Tabs/Asistencias.vue'
+import DocumentacionUsuario from './Tabs/Documentacion.vue'
+
 
 export default {
     name: "TabsUsuario",
     props: ["usuario"],
-    components: { VueMultiselect, AsistenciasUsuario },
+    components: { VueMultiselect, AsistenciasUsuario, DocumentacionUsuario },
 
     setup() {
         return { v$: useVuelidate() };
