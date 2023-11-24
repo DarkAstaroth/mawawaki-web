@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Gestion\Cliente;
 use App\Models\Gestion\Documentacion;
 use App\Models\Gestion\TipoDocumento;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -97,5 +98,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function documentos()
     {
         return $this->hasMany(Documentacion::class);
+    }
+
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class, 'UsuarioID');
     }
 }

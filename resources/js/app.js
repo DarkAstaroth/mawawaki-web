@@ -7,6 +7,7 @@ import { eventosComponent } from "./app/gestion/eventos";
 import { pacientesComponent } from "./app/gestion/pacientes";
 import { terapiasComponent } from "./app/gestion/terapias";
 import { reportesComponent } from "./app/gestion/reportes";
+import { clientesComponent } from "./app/gestion/clientes";
 
 function mountComponent(component, elementId) {
     const element = document.getElementById(elementId);
@@ -25,3 +26,4 @@ mountComponent(eventosComponent, "eventos-component");
 mountComponent(pacientesComponent, "pacientes-component");
 mountComponent(terapiasComponent, "terapias-component");
 mountComponent(reportesComponent, "reportes-component");
+mountComponent(clientesComponent, "clientes-component");

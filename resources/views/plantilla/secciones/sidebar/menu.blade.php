@@ -19,7 +19,7 @@
                         </i>
                     </span>
 
-                    <span class="menu-title">Dashboards</span><span class="menu-arrow"></span>
+                    <span class="menu-title">Inicio</span><span class="menu-arrow"></span>
                 </span>
 
                 <div class="menu-sub menu-sub-accordion">
@@ -37,7 +37,7 @@
             <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">terapias</span></div>
 
 
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+            {{-- <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                 <span class="menu-link">
                     <span class="menu-icon">
                         <i class="ki-duotone ki-element-11 fs-1">
@@ -68,7 +68,53 @@
 
                     </div>
                 </div>
-            </div>
+            </div> --}}
+
+
+            @role('cliente')
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-horse fa-2xl"></i>
+                        </span>
+                        <span class="menu-title">Pacientes</span><span class="menu-arrow"></span>
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link active"
+                                href="{{ route('cliente.pacientes', ['id' => auth()->user()->id]) }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Administrar</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endrole
+
+            @role('admin')
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-horse fa-2xl"></i>
+                        </span>
+                        <span class="menu-title">Pacientes</span><span class="menu-arrow"></span>
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link active" href="{{ route('pacientes.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todos los pacientes</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endrole
 
             <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                 <span class="menu-link">
@@ -100,7 +146,6 @@
                     </div>
                 </div>
             </div>
-
 
 
             @role('admin')
@@ -200,41 +245,43 @@
                 </div>
             @endrole
 
-            <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Sistema</span></div>
 
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-element-11 fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                            <span class="path3"></span>
-                            <span class="path4"></span>
-                        </i>
+            @role('admin')
+                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Sistema</span></div>
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-element-11 fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                            </i>
+                        </span>
+
+
+                        <span class="menu-title">Reportes</span><span class="menu-arrow"></span>
                     </span>
 
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link " href="{{ route('reportes.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todos los reportes</span>
+                            </a>
+                            <a class="menu-link">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Pacientes</span>
+                            </a>
 
-                    <span class="menu-title">Reportes</span><span class="menu-arrow"></span>
-                </span>
-
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link " href="{{ route('reportes.index') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Todos los reportes</span>
-                        </a>
-                        <a class="menu-link">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Pacientes</span>
-                        </a>
-
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endrole
 
 
             @role('admin')

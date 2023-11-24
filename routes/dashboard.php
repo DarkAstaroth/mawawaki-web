@@ -7,6 +7,7 @@ use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
+use App\Http\Controllers\Gestion\ClienteController;
 use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\PacientesController;
 use App\Http\Controllers\Gestion\ReportesController;
@@ -148,4 +149,38 @@ Route::middleware([
     'check.estado'
 ])->group(function () {
     Route::resource('dashboard/reportes', ReportesController::class);
+});
+
+
+
+
+//================================================
+// RUTAS PARA CLIENTES
+//================================================
+
+// CLIENTE
+// pacientes asignados
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::get('dashboard/pacientes/cliente/{id}', [ClienteController::class, 'listaPacientes'])->name('cliente.pacientes');
+});
+
+
+// PERSONAL 
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::get('dashboard/pacientes', [PacientesController::class, 'index'])->name('pacientes.index');
 });
