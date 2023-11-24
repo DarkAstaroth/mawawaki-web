@@ -7,8 +7,10 @@ use App\Http\Controllers\core\InvitadoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
+use App\Http\Controllers\Gestion\ClienteController;
 use App\Http\Controllers\Gestion\DocumentacionController;
 use App\Http\Controllers\Gestion\EventosController;
+use App\Http\Controllers\Gestion\PacientesController;
 use App\Http\Controllers\Gestion\QRcontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -88,3 +90,12 @@ Route::post('invitado/enviar/solicitud', [InvitadoController::class, 'enviarSoli
 Route::post('subir-archivo/{usuarioId}', [DocumentacionController::class, 'subirArchivo']);
 Route::get('obtener-documentacion/{usuario_id}', [DocumentacionController::class, 'obtenerDocumentosUsuario']);
 Route::get('tipos-documento', [DocumentacionController::class, 'obtenerTiposDocumento']);
+
+// Api para clientes
+Route::get('pacientes/cliente/{id}', [ClienteController::class, 'obtenerPacientes']);
+Route::post('pacientes/registrar', [ClienteController::class, 'solicitudPaciente']);
+
+// Api para pacientes
+Route::get('pacientes', [PacientesController::class, 'obtenerPacientes']);
+Route::put('verificar-paciente/{id}', [PacientesController::class, 'verificarPaciente']);
+Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiarEstado']);
