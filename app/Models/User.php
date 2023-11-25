@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Models\Gestion\Cliente;
+use App\Models\Notificacion;
 use App\Models\Gestion\Documentacion;
-use App\Models\Gestion\TipoDocumento;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -103,5 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function cliente()
     {
         return $this->hasOne(Cliente::class, 'UsuarioID');
+    }
+
+
+    public function notificaciones(): HasMany
+    {
+        return $this->hasMany(Notificacion::class, 'usuario_id', 'id');
     }
 }
