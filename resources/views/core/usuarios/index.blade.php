@@ -3,7 +3,7 @@
     {{ Breadcrumbs::render('usuarios') }}
 @endsection
 @section('contenido')
-    <div id="usuarios-component">
+    <div id="app">
         <usuarios-index></usuarios-index>
     </div>
 @endsection

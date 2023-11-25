@@ -6,7 +6,7 @@
     </div>
     <!--end::Search-->
     <!--begin::Activities-->
-    <div class="app-navbar-item ms-1 ms-md-3">
+    {{-- <div class="app-navbar-item ms-1 ms-md-3">
         <!--begin::Drawer toggle-->
         <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
             id="kt_activities_toggle">
@@ -15,7 +15,7 @@
                     class="path5"></span></i>
         </div>
         <!--end::Drawer toggle-->
-    </div>
+    </div> --}}
     <!--end::Activities-->
     <!--begin::Notifications-->
     <div class="app-navbar-item ms-1 ms-md-3">
@@ -27,11 +27,14 @@
                     class="path2"></span><span class="path3"></span><span class="path4"></span></i>
         </div>
         <!--layout-partial:partials/menus/_notifications-menu.html-->
+        @include('plantilla.secciones.header.menus.notificaciones').
+        @yield('notificaciones')
+
         <!--end::Menu wrapper-->
     </div>
     <!--end::Notifications-->
     <!--begin::Chat-->
-    <div class="app-navbar-item ms-1 ms-md-3">
+    {{-- <div class="app-navbar-item ms-1 ms-md-3">
         <!--begin::Menu wrapper-->
         <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px position-relative"
             id="kt_drawer_chat_toggle">
@@ -42,10 +45,10 @@
             </span>
         </div>
         <!--end::Menu wrapper-->
-    </div>
+    </div> --}}
     <!--end::Chat-->
     <!--begin::My apps links-->
-    <div class="app-navbar-item ms-1 ms-md-3">
+    {{-- <div class="app-navbar-item ms-1 ms-md-3">
         <!--begin::Menu wrapper-->
         <div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
@@ -55,7 +58,7 @@
         </div>
         <!--layout-partial:partials/menus/_my-apps-menu.html-->
         <!--end::Menu wrapper-->
-    </div>
+    </div> --}}
     <!--end::My apps links-->
     <!--begin::Theme mode-->
     <div class="app-navbar-item ms-1 ms-md-3">

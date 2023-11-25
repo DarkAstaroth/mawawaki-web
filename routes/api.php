@@ -10,6 +10,7 @@ use App\Http\Controllers\Gestion\AsistenciasController;
 use App\Http\Controllers\Gestion\ClienteController;
 use App\Http\Controllers\Gestion\DocumentacionController;
 use App\Http\Controllers\Gestion\EventosController;
+use App\Http\Controllers\Gestion\NotificacionController;
 use App\Http\Controllers\Gestion\PacientesController;
 use App\Http\Controllers\Gestion\QRcontroller;
 use Illuminate\Http\Request;
@@ -99,3 +100,6 @@ Route::post('pacientes/registrar', [ClienteController::class, 'solicitudPaciente
 Route::get('pacientes', [PacientesController::class, 'obtenerPacientes']);
 Route::put('verificar-paciente/{id}', [PacientesController::class, 'verificarPaciente']);
 Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiarEstado']);
+
+// Api para notificaciones
+Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);
