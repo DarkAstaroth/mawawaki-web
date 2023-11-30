@@ -50,6 +50,7 @@
 
 
 <div class="menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px" data-kt-menu="true" id="kt_menu_notifications">
+
     <!--begin::Heading-->
     <div class="d-flex flex-column bgi-no-repeat rounded-top"
         style="background-image: url('/assets/media/misc/menu-header-bg.jpg')">
@@ -94,8 +95,8 @@
                             <!--end::Symbol-->
                             <!--begin::Title-->
                             <div class="mb-0 me-2">
-                                <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project
-                                    Alice</a>
+                                <a href="#"
+                                    class="fs-6 text-gray-800 text-hover-primary fw-bold">{{ $notificacion->titulo }}</a>
                                 <div class="text-gray-500 fs-7">Phase 1 development</div>
                             </div>
                             <!--end::Title-->
@@ -105,7 +106,7 @@
                         <span class="badge badge-light fs-8">1 hr</span>
                         <!--end::Label-->
                     </div>
-                   
+
                     {{-- <div class="d-flex flex-stack py-4">
                         <!--begin::Section-->
                         <div class="d-flex align-items-center">
@@ -271,7 +272,7 @@
                         <span class="badge badge-light fs-8">20 March</span>
                         <!--end::Label-->
                     </div> --}}
-                 
+
                 @empty
                     <div class="text-center text-muted py-4">No hay notificaciones.</div>
                 @endforelse
@@ -279,8 +280,9 @@
             <!--end::Items-->
             <!--begin::View more-->
             <div class="py-3 text-center border-top">
-                <a href="?page=pages/user-profile/activity" class="btn btn-color-gray-600 btn-active-color-primary">
-                    View All
+                <a href="{{ route('usuario.perfil', Auth::id()) }}"
+                    class="btn btn-color-gray-600 btn-active-color-primary">
+                    Ver todas
                     <i class="ki-duotone ki-arrow-right fs-5"><span class="path1"></span><span
                             class="path2"></span></i>
                 </a>

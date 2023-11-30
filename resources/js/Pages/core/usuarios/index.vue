@@ -1,115 +1,5 @@
 <template>
-  <div class="row">
-    <div class="col-6 col-md-2 mb-5">
-      <div class="card">
-        <div class="card-header p-5">
-          <div
-            class="w-100 d-flex flex-column justify-content-center align-items-center"
-          >
-            <div>
-              <span class="fs-3x fw-bold p-2">{{ ficha.activos }}</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="me-3 text-success ki-duotone ki-user-square fs-1">
-                <span class="path1"></span>
-                <span class="path2"></span>
-                <span class="path3"></span>
-              </i>
-              <span class="opacity-75 pt-1 fw-semibold fs-6">Activos</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-2 mb-5">
-      <div class="card">
-        <div class="card-header p-5">
-          <div
-            class="w-100 d-flex flex-column justify-content-center align-items-center"
-          >
-            <div>
-              <span class="fs-3x fw-bold p-2">{{ ficha.no_activos }}</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="me-3 text-danger ki-duotone ki-user-square fs-1">
-                <span class="path1"></span>
-                <span class="path2"></span>
-                <span class="path3"></span>
-              </i>
-              <span class="opacity-75 pt-1 fw-semibold fs-6">Inactivos</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-2 mb-5">
-      <div class="card">
-        <div class="card-header p-5">
-          <div
-            class="w-100 d-flex flex-column justify-content-center align-items-center"
-          >
-            <div>
-              <span class="fs-3x fw-bold p-2">{{ ficha.solicitudes }}</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="me-3 text-info ki-duotone ki-questionnaire-tablet fs-1">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-              <span class="opacity-75 pt-1 fw-semibold fs-6">Solicitudes</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-2 mb-5">
-      <div class="card">
-        <div class="card-header p-5">
-          <div
-            class="w-100 d-flex flex-column justify-content-center align-items-center"
-          >
-            <div>
-              <span class="fs-3x fw-bold p-2">{{ ficha.verificados }}</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="me-3 text-success ki-duotone ki-shield-tick fs-1">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-              <span class="opacity-75 pt-1 fw-semibold fs-6">Verificados</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-md-2 mb-5">
-      <div class="card">
-        <div class="card-header p-5">
-          <div
-            class="w-100 d-flex flex-column justify-content-center align-items-center"
-          >
-            <div>
-              <span class="fs-3x fw-bold p-2">{{ ficha.por_verificar }}</span>
-            </div>
-            <div class="d-flex align-items-center">
-              <i class="me-3 text-warning ki-duotone ki-shield-tick fs-1">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-              <span class="opacity-75 pt-1 fw-semibold fs-6"
-                >Por verificar</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <FichasIndex />
   <div class="card card-bordered">
     <div class="card-header">
       <h3 class="card-title">Listado de usuarios</h3>
@@ -123,63 +13,21 @@
 
     <div class="card-body">
       <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
-        <li class="nav-item">
+        <li v-for="tab in tabs" :key="tab.parametro" class="nav-item">
           <a
-            class="nav-link active"
+            :class="{
+              'nav-link': true,
+              active: tab.parametro === parametro,
+            }"
             data-bs-toggle="tab"
-            href="#kt_tab_pane_1"
-            @click="cambiarParametro('todos')"
-            >Todos</a
+            :href="'#kt_tab_pane_' + tab.id"
+            @click="cambiarParametro(tab.parametro)"
           >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_2"
-            @click="cambiarParametro('activos')"
-            >Activos</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_3"
-            @click="cambiarParametro('solicitudes')"
-            >Solicitudes</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_4"
-            @click="cambiarParametro('verificados')"
-            >Verificados</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_5"
-            @click="cambiarParametro('porVerificar')"
-            >Por verificar</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_6"
-            @click="cambiarParametro('inactivos')"
-            >Inactivos
-            <!-- <span class="bullet bullet-dot bg-danger translate-middle top-0 start-50 animation-blink">
-                        </span> -->
+            {{ tab.nombre }}
           </a>
         </li>
       </ul>
+
       <input
         class="mb-5 form-control"
         type="text"
@@ -199,7 +47,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="usuario in usuarios" :key="usuario.id">
+            <tr v-for="usuario in store.usuarios" :key="usuario.id">
               <td class="align-middle">
                 <div class="d-flex align-items-center">
                   <img
@@ -242,20 +90,13 @@
                   })
                 }}
               </td>
-              <td class="align-items-center">
-                <div
-                  class="form-check form-switch form-check-custom form-check-solid"
-                >
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    :id="usuario.id"
-                    :checked="usuario.estado"
-                    @click="cambiarEstado(usuario)"
-                  />
-                </div>
+              <td class="align-middle">
+                <InputSwitch
+                  v-model="usuario.estado"
+                  @click="cambiarEstado(usuario)"
+                />
               </td>
-              <td class="align-items-center">
+              <td class="align-middle">
                 <div class="d-flex">
                   <div class="dropdown">
                     <button
@@ -311,19 +152,76 @@
                 </div>
               </td>
             </tr>
-            <tr v-if="usuarios.length === 0">
+            <tr v-if="store.usuarios.length === 0">
               <td colspan="4" class="text-center">No hay datos</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <nav>
+        <ul class="pagination">
+          <li
+            class="page-item"
+            :class="{ disabled: paginacion.paginaActual === 1 }"
+          >
+            <a class="page-link" href="#" @click="cargarRoles(1)">Primera</a>
+          </li>
+          <li
+            class="page-item"
+            :class="{ disabled: paginacion.paginaActual === 1 }"
+          >
+            <a
+              class="page-link"
+              href="#"
+              @click="cargarRoles(paginacion.paginaActual - 1)"
+              >Anterior</a
+            >
+          </li>
+          <li
+            class="page-item"
+            v-for="page in paginacion.ultimaPagina"
+            :key="page"
+            :class="{ active: paginacion.paginaActual === page }"
+          >
+            <a class="page-link" href="#" @click="cargarRoles(page)">{{
+              page
+            }}</a>
+          </li>
+          <li
+            class="page-item"
+            :class="{
+              disabled: paginacion.paginaActual === paginacion.ultimaPagina,
+            }"
+          >
+            <a
+              class="page-link"
+              href="#"
+              @click="cargarRoles(paginacion.paginaActual + 1)"
+              >Siguiente</a
+            >
+          </li>
+          <li
+            class="page-item"
+            :class="{
+              disabled: paginacion.paginaActual === paginacion.ultimaPagina,
+            }"
+          >
+            <a
+              class="page-link"
+              href="#"
+              @click="cargarRoles(paginacion.ultimaPagina)"
+              >Última</a
+            >
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 
   <Dialog
     v-model:visible="modalNotificacion"
     modal
-    header="generar QR"
+    header="Enviar notificacion"
     position="top"
     :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
@@ -356,6 +254,13 @@
               </div>
             </div>
 
+            <div class="col-12 mb-5">
+              <div class="d-flex flex-column gap-2">
+                <label for="titulo">Título</label>
+                <InputText v-model="notificacion.titulo" />
+              </div>
+            </div>
+
             <div class="col-12">
               <div class="d-flex flex-column gap-2">
                 <label for="username"> Mensaje</label>
@@ -375,36 +280,28 @@
       </div>
     </form>
   </Dialog>
+
+  <Toast />
 </template>
 
 <script>
-import axios from "axios";
-import Dialog from "primevue/dialog";
-import InputText from "primevue/inputtext";
-import Textarea from "primevue/textarea";
-import { useToast } from "vue-toastification";
-import Dropdown from "primevue/dropdown";
 import { ref } from "vue";
+import { useDataUsuarios } from "../../../store/dataUsuario";
+import FichasIndex from "./fichasIndex.vue";
+import { useToast } from "primevue/usetoast";
 
 export default {
   name: "UsuariosIndex",
-  components: { Dialog, InputText, Textarea, Dropdown },
+  components: { FichasIndex },
   setup() {
-    const toast = useToast();
+    const store = useDataUsuarios();
     const selectedTipoNotificacion = ref(null);
+    const toast = useToast();
 
-    return { toast, selectedTipoNotificacion };
+    return { store, toast, selectedTipoNotificacion };
   },
   data() {
     return {
-      ficha: {
-        activos: 0,
-        no_activos: 0,
-        solicitudes: 0,
-        verificados: 0,
-        por_verificar: 0,
-      },
-      usuarios: [],
       busqueda: "",
       parametro: "todos",
       paginacion: {
@@ -416,134 +313,90 @@ export default {
         hasta: 0,
       },
       tiposNotificacion: [
-        { id: 1, nombre: "Informativo" },
-        { id: 2, nombre: "Confirmación" },
-        { id: 3, nombre: "Alerta" },
+        { id: "info", nombre: "Informativo" },
+        { id: "success", nombre: "Confirmación" },
+        { id: "warning", nombre: "Alerta" },
       ],
-      notificacion: { tipo: "", mensaje: "" },
+      tabs: [
+        { id: 1, nombre: "Todos", parametro: "todos" },
+        { id: 2, nombre: "Activos", parametro: "activos" },
+        { id: 3, nombre: "Solicitudes", parametro: "solicitudes" },
+        { id: 4, nombre: "Verificados", parametro: "verificados" },
+        { id: 5, nombre: "Por verificar", parametro: "porVerificar" },
+        { id: 6, nombre: "Inactivos", parametro: "inactivos" },
+      ],
+      notificacion: { tipo: "", titulo: "", mensaje: "" },
       usuarioNotificacionID: "",
       modalNotificacion: false,
     };
   },
   validations() {},
   mounted() {
-    this.cargarUsuarios(1);
-    this.cargarFichasUsuario();
+    this.store.cargarUsuarios(1, this.busqueda, this.parametro);
   },
   methods: {
+    mostrarMensaje(tipo, titulo, texto) {
+      this.toast.add({
+        severity: tipo,
+        summary: titulo,
+        detail: texto,
+        life: 2000,
+      });
+    },
     filtrarUsuarios() {
-      this.cargarUsuarios(1);
+      this.store.cargarUsuarios(1, this.busqueda, this.parametro);
     },
     cambiarParametro(tabSeleccionada) {
       this.parametro = tabSeleccionada;
-      this.cargarUsuarios(1);
+      this.store.cargarUsuarios(1, this.busqueda, this.parametro);
     },
-    cargarUsuarios(pagina) {
-      const url =
-        "/api/usuarios?page=" +
-        pagina +
-        "&busqueda=" +
-        this.busqueda +
-        "&parametro=" +
-        this.parametro;
-      axios
-        .get(url)
-        .then((response) => {
-          this.usuarios = response.data.usuarios;
+
+    async cambiarEstado(usuario) {
+      const respuesta = await this.store
+        .actualizarEstado(usuario.id, usuario.estado)
+        .then((respuesta) => {
+          this.mostrarMensaje(
+            "success",
+            "Operación Exitosa",
+            "Estado actualizado correctamente"
+          );
         })
         .catch((error) => {
-          console.log(error);
+          this.mostrarMensaje(
+            "error",
+            "Error",
+            "No se puedo cambiar el estado del usuario"
+          );
         });
-    },
-    cargarFichasUsuario() {
-      const url = `/api/fichasUsuarios`;
-      axios
-        .get(url)
-        .then((response) => {
-          this.ficha.activos = response.data.activos;
-          this.ficha.no_activos = response.data.no_activos;
-          this.ficha.solicitudes = response.data.solicitudes;
-          this.ficha.verificados = response.data.verificados;
-          this.ficha.por_verificar = response.data.por_verificar;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    cambiarEstado(usuario) {
-      if (usuario.estado) {
-        this.mostrarModalConfirmacion(
-          usuario,
-          "¡Esta deshabilitará al usuario!",
-          "Sí, deshabilitar"
-        );
-      } else {
-        this.mostrarModalConfirmacion(
-          usuario,
-          "¡Esta habilitará al usuario!",
-          "Sí, habilitar"
-        );
-      }
-    },
-    mostrarModalConfirmacion(usuario, mensaje, textoBoton) {
-      return Swal.fire({
-        title: "¿Estás seguro?",
-        text: mensaje,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: textoBoton,
-        cancelButtonText: "Cancelar",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios
-            .put(`/api/estado/usuario/${usuario.id}`, {
-              estado: usuario.estado,
-            })
-            .then((response) => {
-              Swal.fire({
-                title: "Éxito",
-                text: "¡Estado actualizado correctamente!",
-                icon: "success",
-                buttonsStyling: false,
-                confirmButtonText: "Aceptar",
-                customClass: {
-                  confirmButton: "btn btn-primary",
-                },
-              });
-              $(`#${usuario.id}`).prop("checked", usuario.estado);
-            })
-            .catch((error) => {});
-        } else {
-          $(`#${usuario.id}`).prop("checked", usuario.estado);
-        }
-        this.cargarUsuarios(1);
-        this.cargarFichasUsuario();
-      });
+      this.store.cargarUsuarios(1, this.busqueda, this.parametro);
     },
     resetModalData: function (estado, usuario) {
       this.usuarioNotificacionID = usuario.id;
       this.modalNotificacion = estado;
     },
-    enviarNotificacion() {
-      axios
-        .post(`/api/enviar-notificacion/${this.usuarioNotificacionID}`, {
-          tipo:
-            this.selectedTipoNotificacion.id === 1
-              ? "info"
-              : this.selectedTipoNotificacion.id === 2
-              ? "success"
-              : "warning",
-          mensaje: this.notificacion.mensaje,
-        })
-        .then((response) => {
-          // Manejar la respuesta si es necesario
-          console.log(response.data);
+    async enviarNotificacion() {
+      this.store
+        .mandarNotificacion(
+          this.usuarioNotificacionID,
+          this.selectedTipoNotificacion.id,
+          this.notificacion
+        )
+        .then((respuesta) => {
+          this.mostrarMensaje(
+            "success",
+            "Operación Exitosa",
+            "Notificación con enviada éxito"
+          );
         })
         .catch((error) => {
-          console.error(error);
+          this.mostrarMensaje(
+            "error",
+            "Error",
+            "No se puedo enviar la notificación"
+          );
         });
+      this.notificacion = { tipo: "", titulo: "", mensaje: "" };
+      this.modalNotificacion = false;
     },
   },
 };
