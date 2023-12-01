@@ -11,6 +11,7 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
             por_verificar: 0,
         },
         usuarios: [],
+        actividades: [],
         mensaje: { success: "", error: "", warning: "" },
     }),
     persist: true,
@@ -78,6 +79,66 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                 return respuesta;
             } catch (error) {
                 return error;
+            }
+        },
+        async cargarActividades(pagina, busqueda, parametro, id) {
+            try {
+                const respuesta = await axios.get(
+                    `/api/actividades/usuario/${id}`,
+                    {
+                        params: {
+                            page: pagina,
+                            busqueda: busqueda,
+                            parametro: parametro,
+                        },
+                    }
+                );
+                this.actividades = respuesta.data.actividades;
+            } catch (error) {
+                return error;
+            }
+        },
+        async registrarActividad(id, actividad) {
+            try {
+                await axios.post(`/api/registrar/actividad/usuario/${id}`, {
+                    titulo: actividad.titulo,
+                    descripcion: actividad.descripcion,
+                    fecha: actividad.fecha,
+                });
+                return "Actividad registrada con éxito";
+            } catch (error) {
+                throw error;
+            }
+        },
+        async verificarActividad(id) {
+            try {
+                const respuesta = await axios.patch(
+                    `/api/verificar/actividad/${id}`
+                );
+                return respuesta.data;
+            } catch (error) {
+                throw error;
+            }
+        },
+        async destacarActividad(id) {
+            try {
+                const respuesta = await axios.patch(
+                    `/api/destacar/actividad/${id}`
+                );
+                return respuesta.data;
+            } catch (error) {
+                throw error;
+            }
+        },
+        async eliminarActividad(id) {
+            try {
+                const respuesta = await axios.delete(
+                    `/api/eliminar/actividad/${id}`
+                );
+                console.log(respuesta, "respuesta");
+                return respuesta.data;
+            } catch (error) {
+                throw error;
             }
         },
         asignarMensaje(tipo, mensaje) {

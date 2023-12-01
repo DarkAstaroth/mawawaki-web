@@ -21,6 +21,7 @@ import ToastService from "primevue/toastservice";
 import ConfirmationService from "primevue/confirmationservice";
 import DialogService from "primevue/dialogservice";
 import InputSwitch from "primevue/inputswitch";
+import Calendar from "primevue/calendar";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -44,4 +45,6 @@ export const appComponents = createApp({
     .component("Toast", Toast)
     .component("Button", Button)
     .component("InputSwitch", InputSwitch)
+    .component("Calendar", Calendar)
+
     .mount("#app");

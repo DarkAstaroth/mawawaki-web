@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Gestion\Actividad;
 use App\Models\Gestion\Cliente;
 use App\Models\Notificacion;
 use App\Models\Gestion\Documentacion;
@@ -110,5 +111,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function notificaciones(): HasMany
     {
         return $this->hasMany(Notificacion::class, 'usuario_id', 'id');
+    }
+
+    public function actividades(): HasMany
+    {
+        return $this->hasMany(Actividad::class, 'id_usuario');
     }
 }

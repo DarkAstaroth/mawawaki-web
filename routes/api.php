@@ -105,3 +105,11 @@ Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiar
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);
 Route::get('notificaciones/usuario/{id}', [NotificacionController::class, 'obtenerNotificaciones']);
 Route::put('notificaciones/marcar-leidas/{usuarioId}', [NotificacionController::class, 'marcarTodasLeidas']);
+
+// Api para actividades
+Route::get('actividades/usuario/{id}', [UsuarioController::class, 'obtenerActividades']);
+Route::post('registrar/actividad/usuario/{id}', [UsuarioController::class, 'registrarActividad']);
+Route::delete('eliminar/actividad/{id}', [UsuarioController::class, 'eliminarActividad']);
+// web.php o api.php
+Route::patch('/verificar/actividad/{id}', [UsuarioController::class, 'verificarActividad']);
+Route::patch('/destacar/actividad/{id}', [UsuarioController::class, 'destacarActividad']);
