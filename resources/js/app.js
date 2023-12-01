@@ -1,29 +1,47 @@
-import { rolesComponent } from "./app/configuraciones/roles";
-import { modulosComponent } from "./app/configuraciones/modulos";
-import { permisosComponent } from "./app/configuraciones/permisos";
-import { usuariosComponent } from "./app/configuraciones/usuarios";
-import { caballosComponent } from "./app/gestion/caballos";
-import { eventosComponent } from "./app/gestion/eventos";
-import { pacientesComponent } from "./app/gestion/pacientes";
-import { terapiasComponent } from "./app/gestion/terapias";
-import { reportesComponent } from "./app/gestion/reportes";
-import { clientesComponent } from "./app/gestion/clientes";
+import { Ziggy } from "@/ziggy";
+import route from "ziggy-js";
+import { createApp } from "vue/dist/vue.esm-bundler";
+import { createPinia } from "pinia";
+import LaravelPermissionToVueJS from "laravel-permission-to-vuejs";
+import PrimeVue from "primevue/config";
 
-function mountComponent(component, elementId) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        component.mount(`#${elementId}`);
-    }
-}
+import "primevue/resources/themes/lara-light-teal/theme.css";
+import "primevue/resources/primevue.min.css";
+import "primeicons/primeicons.css";
+import componentesApp from "./componentes";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
-// Monta componentes solo si los elementos HTML existen en la página
-mountComponent(rolesComponent, "roles-component");
-mountComponent(modulosComponent, "modulos-component");
-mountComponent(permisosComponent, "permisos-component");
-mountComponent(usuariosComponent, "usuarios-component");
-mountComponent(caballosComponent, "caballos-component");
-mountComponent(eventosComponent, "eventos-component");
-mountComponent(pacientesComponent, "pacientes-component");
-mountComponent(terapiasComponent, "terapias-component");
-mountComponent(reportesComponent, "reportes-component");
-mountComponent(clientesComponent, "clientes-component");
+import Dialog from "primevue/dialog";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
+import Dropdown from "primevue/dropdown";
+import Button from "primevue/button";
+import Toast from "primevue/toast";
+import ToastService from "primevue/toastservice";
+import ConfirmationService from "primevue/confirmationservice";
+import DialogService from "primevue/dialogservice";
+import InputSwitch from "primevue/inputswitch";
+
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+export const appComponents = createApp({
+    components: {
+        ...componentesApp,
+    },
+})
+    .use(pinia)
+    .use(Ziggy)
+    .use(LaravelPermissionToVueJS)
+    .use(PrimeVue, { ripple: true })
+    .use(ConfirmationService)
+    .use(ToastService)
+    .use(DialogService)
+    .mixin({ methods: { route } })
+    .component("Dialog", Dialog)
+    .component("InputText", InputText)
+    .component("Textarea", Textarea)
+    .component("Dropdown", Dropdown)
+    .component("Toast", Toast)
+    .component("Button", Button)
+    .component("InputSwitch", InputSwitch)
+    .mount("#app");

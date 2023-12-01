@@ -91,6 +91,8 @@ class UsuarioController extends Controller
         $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
             $usuario->profile_photo_path = env('APP_URL') . '/' . $usuario->profile_photo_path;
             $usuario->nuevo_campo = "Valor del nuevo campo para este usuario";
+            $usuario->estado = $usuario->estado == 1 ? true : false;
+
             return $usuario;
         });
 
