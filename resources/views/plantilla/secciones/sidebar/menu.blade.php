@@ -200,7 +200,7 @@
 
                 <div class="menu-sub menu-sub-accordion">
                     <div class="menu-item">
-                        <a class="menu-link " href="/dashboard">
+                        <a class="menu-link " href="{{ route('usuario.actividades', ['id' => auth()->user()->id]) }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>

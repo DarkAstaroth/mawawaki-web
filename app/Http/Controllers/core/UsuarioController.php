@@ -4,6 +4,8 @@ namespace App\Http\Controllers\core;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\core\UsuarioResource;
+use App\Http\Resources\Gestion\ActividadResource;
+use App\Models\Gestion\Actividad;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -285,5 +287,118 @@ class UsuarioController extends Controller
         return response()->json([
             'success' => 'Roles actualizados con exito',
         ]);
+    }
+
+    public function actividadesUsuario(string $id)
+    {
+        $usuario = User::findOrFail($id);
+        $usuario->load('roles', 'permissions', 'persona');
+        return view('core.usuarios.actividades', compact('usuario'));
+    }
+
+    public function obtenerActividades($id)
+    {
+        $porPagina = request('porPagina', 10);
+        $pagina = request('page', 1);
+        $busqueda = request('busqueda');
+        $parametro = request('parametro');
+
+        // Obtén el usuario específico
+        $usuario = User::findOrFail($id);
+
+        // Accede a las actividades a través de la relación
+        $actividadesQuery = $usuario->actividades();
+
+        // Aplicar filtros según el parámetro
+        // Puedes añadir más condiciones según tus necesidades
+
+        // Aplicar búsqueda
+        if ($busqueda) {
+            $actividadesQuery->where(function ($query) use ($busqueda) {
+                $query->where('titulo', 'like', "%$busqueda%")
+                    ->orWhere('descripcion', 'like', "%$busqueda%");
+            });
+        }
+
+        // Paginar y obtener actividades
+        $actividades = $actividadesQuery->paginate($porPagina, ['*'], 'page', $pagina);
+
+        // Transformar los recursos utilizando ActividadResource
+        $actividadesResource = ActividadResource::collection($actividades);
+
+        // Preparar la respuesta JSON
+        $resultadoBusqueda = $actividadesResource->isEmpty() ? [] : $actividadesResource;
+
+        return response()->json([
+            'actividades' => $resultadoBusqueda,
+            'paginacion' => [
+                'total' => $actividades->total(),
+                'porPagina' => $actividades->perPage(),
+                'paginaActual' => $actividades->currentPage(),
+                'ultimaPagina' => $actividades->lastPage(),
+                'desde' => $actividades->firstItem(),
+                'hasta' => $actividades->lastItem()
+            ]
+        ]);
+    }
+
+    public function registrarActividad(Request $request, $id)
+    {
+        $request->validate([
+            'titulo' => 'required',
+            'descripcion' => 'required',
+            'fecha' => 'required|date',
+        ]);
+
+        // Buscar al usuario por ID
+        $usuario = User::findOrFail($id);
+
+        // Crear una nueva instancia de Actividad
+        $actividad = new Actividad([
+            'titulo' => $request->input('titulo'),
+            'descripcion' => $request->input('descripcion'),
+            'fecha' => strtotime($request->input('fecha'))
+            // Puedes agregar más campos según tu estructura de base de datos
+        ]);
+
+        // Asociar la actividad al usuario
+        $actividad->usuario()->associate($usuario);
+
+        // Guardar la actividad en la base de datos
+        $actividad->save();
+
+        // Puedes devolver una respuesta JSON o lo que desees
+        return response()->json(['mensaje' => 'Actividad registrada con éxito']);
+    }
+
+    public function eliminarActividad($id)
+    {
+        $actividad = Actividad::find($id);
+
+        if (!$actividad) {
+            return response()->json(['mensaje' => 'Actividad no encontrada'], 404);
+        }
+
+        $actividad->delete();
+
+        return response()->json(['mensaje' => 'Actividad eliminada correctamente']);
+    }
+
+    public function verificarActividad($id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $actividad->verificada = true;
+        $actividad->save();
+
+        return response()->json(['message' => 'Actividad verificada correctamente']);
+    }
+
+    public function destacarActividad($id)
+    {
+        $actividad = Actividad::findOrFail($id);
+        $actividad->destacada = true;
+        $actividad->save();
+
+        return response()->json(['message' => 'Actividad destacada correctamente']);
     }
 }
