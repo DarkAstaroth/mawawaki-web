@@ -28,6 +28,7 @@ class NotificationsServiceProvider extends ServiceProvider
             if ($usuarioAutenticado) {
 
                 $notificaciones = Notificacion::where('usuario_id', $usuarioAutenticado->id)
+                    ->where('leido', false) // Agregamos este filtro
                     ->latest()
                     ->take(5)
                     ->get();

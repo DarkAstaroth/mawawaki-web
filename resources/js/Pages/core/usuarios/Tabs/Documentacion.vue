@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 col-md-12">
+  <div class="col-12 col-md-12 mb-5">
     <div class="d-flex gap-2">
       <Dropdown
         v-model="selectedTipoDocumento"
@@ -34,7 +34,6 @@
       </div>
     </div>
   </div>
-  <h2 class="my-10">Mis documentos</h2>
   <div class="col-12 col-md-12">
     <div class="table-responsive">
       <table class="table table-bordered">
@@ -69,6 +68,7 @@
 </template>
 
 <script>
+import { useDataPerfil } from "../../../../store/dataPerfil";
 import axios from "axios";
 import { useToast } from "vue-toastification";
 import Dropdown from "primevue/dropdown";
@@ -76,19 +76,18 @@ import { ref } from "vue";
 
 export default {
   name: "DocumentacionUsuario",
-  props: ["usuario"],
   components: { Dropdown },
 
   setup() {
     const toast = useToast();
     const selectedTipoDocumento = ref(null);
     const archivoSeleccionado = ref(null);
+    const store = useDataPerfil();
 
-    return { toast, selectedTipoDocumento, archivoSeleccionado };
+    return { store, toast, selectedTipoDocumento, archivoSeleccionado };
   },
   data() {
     return {
-      usuario: this.usuario,
       tiposDocumento: [],
       documentos: [],
     };
@@ -126,7 +125,7 @@ export default {
       }
 
       if (archivo) {
-        const url = `/api/subir-archivo/${this.usuario.id}`;
+        const url = `/api/subir-archivo/${this.store.usuario.id}`;
 
         const formData = new FormData();
         formData.append("tipo_documento_id", tipoDocumento.id);
@@ -157,7 +156,7 @@ export default {
     },
 
     obtenerDocumentos() {
-      const url = `/api/obtener-documentacion/${this.usuario.id}`;
+      const url = `/api/obtener-documentacion/${this.store.usuario.id}`;
 
       axios
         .get(url)

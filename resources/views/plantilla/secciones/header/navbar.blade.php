@@ -30,7 +30,9 @@
         </div>
         <!--layout-partial:partials/menus/_notifications-menu.html-->
         @include('plantilla.secciones.header.menus.notificaciones')
-        <span class="bullet bullet-dot bg-success h-6px w-6px top-0 start-50 animation-blink">
+        @if (count($notificaciones) > 0)
+            <span class="bullet bullet-dot bg-success h-6px w-6px top-0 start-50 animation-blink"></span>
+        @endif
         </span>
 
 

@@ -58,7 +58,9 @@
                       data-bs-custom-class="tooltip-inverse"
                       data-bs-placement="bottom"
                       title="Ver perfil"
-                      :href="route('usuario.perfil', { id: usuario.id })"
+                      :href="
+                        route('usuario.perfil', { id: this.store.usuario.id })
+                      "
                       ><i class="bi bi-eye-fill fs-4"></i> Ver Perfil</a
                     >
                   </li>
@@ -87,21 +89,20 @@
 </template>
 
 <script>
-import { useVuelidate } from "@vuelidate/core";
+import { useDataPerfil } from "../../../../store/dataPerfil";
 import VueMultiselect from "vue-multiselect";
 
 export default {
   name: "AsistenciasUsuario",
-  props: ["usuario"],
   components: { VueMultiselect },
 
   setup() {
-    return { v$: useVuelidate() };
+    const store = useDataPerfil();
+    return { store };
   },
 
   data() {
     return {
-      usuario: this.usuario,
       asistencias: [],
       busqueda: "",
       eventoSeleccionado: "",
@@ -130,10 +131,9 @@ export default {
     },
     obtenerEventos() {
       axios
-        .get(`/api/eventos/usuario/${this.usuario.id}`)
+        .get(`/api/eventos/usuario/${this.store.usuario.id}`)
         .then((response) => {
           this.options = response.data;
-          console.log(response);
         })
         .catch((error) => {
           console.error(error);
@@ -141,7 +141,7 @@ export default {
     },
     obtenerAsistencias(evento) {
       axios
-        .post(`/api/asistencias/usuario/${this.usuario.id}`, {
+        .post(`/api/asistencias/usuario/${this.store.usuario.id}`, {
           idEvento: evento.value,
         })
         .then((response) => {

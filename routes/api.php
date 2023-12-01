@@ -103,3 +103,5 @@ Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiar
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);
+Route::get('notificaciones/usuario/{id}', [NotificacionController::class, 'obtenerNotificaciones']);
+Route::put('notificaciones/marcar-leidas/{usuarioId}', [NotificacionController::class, 'marcarTodasLeidas']);
