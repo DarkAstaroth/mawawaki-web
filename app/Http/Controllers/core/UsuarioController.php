@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\core\UsuarioResource;
 use App\Http\Resources\Gestion\ActividadResource;
 use App\Models\Gestion\Actividad;
+use App\Models\Gestion\Personal;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -119,7 +120,6 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -127,7 +127,6 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
@@ -135,7 +134,6 @@ class UsuarioController extends Controller
      */
     public function show(string $id)
     {
-        //
     }
 
     /**
@@ -143,7 +141,6 @@ class UsuarioController extends Controller
      */
     public function edit(string $id)
     {
-        //
     }
 
     /**
@@ -151,7 +148,6 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
     }
 
     /**
@@ -159,7 +155,6 @@ class UsuarioController extends Controller
      */
     public function destroy(string $id)
     {
-        //
     }
 
 
@@ -202,7 +197,7 @@ class UsuarioController extends Controller
     {
         $response = [];
 
-        // Usuarios activos (estado = 1)
+
         $activos = User::where('estado', 1)
             ->where('solicitud', 1)
             ->where('verificada', 1)
@@ -217,7 +212,7 @@ class UsuarioController extends Controller
             ->count();
         $response['no_activos'] = $no_activos;
 
-        // Usuarios con solicitudes (estado = 0, solicitud = 1, verificado = 1)
+
         $solicitudes = User::where('estado', 0)
             ->where('solicitud', 1)
             ->where('verificada', 0)
@@ -225,7 +220,7 @@ class UsuarioController extends Controller
             ->count();
         $response['solicitudes'] = $solicitudes;
 
-        // Usuarios verificados (email_verified_at no es null)
+
         $verificados = User::whereNotNull('email_verified_at')->count();
         $response['verificados'] = $verificados;
 
@@ -303,16 +298,9 @@ class UsuarioController extends Controller
         $busqueda = request('busqueda');
         $parametro = request('parametro');
 
-        // Obtén el usuario específico
         $usuario = User::findOrFail($id);
-
-        // Accede a las actividades a través de la relación
         $actividadesQuery = $usuario->actividades();
 
-        // Aplicar filtros según el parámetro
-        // Puedes añadir más condiciones según tus necesidades
-
-        // Aplicar búsqueda
         if ($busqueda) {
             $actividadesQuery->where(function ($query) use ($busqueda) {
                 $query->where('titulo', 'like', "%$busqueda%")
@@ -320,13 +308,13 @@ class UsuarioController extends Controller
             });
         }
 
-        // Paginar y obtener actividades
+
         $actividades = $actividadesQuery->paginate($porPagina, ['*'], 'page', $pagina);
 
-        // Transformar los recursos utilizando ActividadResource
+
         $actividadesResource = ActividadResource::collection($actividades);
 
-        // Preparar la respuesta JSON
+
         $resultadoBusqueda = $actividadesResource->isEmpty() ? [] : $actividadesResource;
 
         return response()->json([
@@ -350,24 +338,24 @@ class UsuarioController extends Controller
             'fecha' => 'required|date',
         ]);
 
-        // Buscar al usuario por ID
+
         $usuario = User::findOrFail($id);
 
-        // Crear una nueva instancia de Actividad
+
         $actividad = new Actividad([
             'titulo' => $request->input('titulo'),
             'descripcion' => $request->input('descripcion'),
             'fecha' => strtotime($request->input('fecha'))
-            // Puedes agregar más campos según tu estructura de base de datos
+
         ]);
 
-        // Asociar la actividad al usuario
+
         $actividad->usuario()->associate($usuario);
 
-        // Guardar la actividad en la base de datos
+
         $actividad->save();
 
-        // Puedes devolver una respuesta JSON o lo que desees
+
         return response()->json(['mensaje' => 'Actividad registrada con éxito']);
     }
 
@@ -400,5 +388,11 @@ class UsuarioController extends Controller
         $actividad->save();
 
         return response()->json(['message' => 'Actividad destacada correctamente']);
+    }
+
+    public function obtenerPersonal()
+    {
+        $personales = Personal::with(['usuario', 'usuario.persona'])->get();
+        return response()->json(['personales' => $personales]);
     }
 }

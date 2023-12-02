@@ -96,7 +96,7 @@
                       class="dropdown-menu"
                       aria-labelledby="dropdownMenuButton1"
                     >
-                      <li>
+                      <li v-if="is('admin')">
                         <a
                           class="dropdown-item"
                           @click="verificar(actividad.id)"
@@ -104,7 +104,7 @@
                         >
                       </li>
 
-                      <li>
+                      <li v-if="is('admin')">
                         <a class="dropdown-item" @click="destacar(actividad.id)"
                           ><i class="bi bi-star-fill"></i> Destacar</a
                         >

@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('servicios', function (Blueprint $table) {
             $table->uuid('id')->primary()->unique();
             $table->foreignUuid('paciente_id')->nullable()->constrained('pacientes');
+            $table->enum('tipo_servicio', ['EQUITACION', 'EQUINOTERAPIA'])->default('EQUINOTERAPIA');
+            $table->text('observaciones')->nullable();
+            $table->bigInteger('fecha_ingreso')->nullable();
+            $table->bigInteger('fecha_final')->nullable();
+            $table->boolean('estado')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

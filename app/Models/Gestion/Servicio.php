@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Gestion;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,10 +13,23 @@ class Servicio extends Model
     use HasUuids;
     use SoftDeletes;
 
-
+    protected $table = 'servicios';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
+
+    protected $fillable = [
+        'paciente_id',
+        'tipo_servicio',
+        'observaciones',
+        'fecha_ingreso',
+        'fecha_final',
+        'estado',
+    ];
+
+    protected $casts = [
+        'estado' => 'boolean',
+    ];
 
     // Relación: Un servicio pertenece a un cliente.
     public function cliente()

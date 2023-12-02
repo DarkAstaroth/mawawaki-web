@@ -13,6 +13,7 @@ use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\NotificacionController;
 use App\Http\Controllers\Gestion\PacientesController;
 use App\Http\Controllers\Gestion\QRcontroller;
+use App\Http\Controllers\Gestion\TerapiasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -110,6 +111,15 @@ Route::put('notificaciones/marcar-leidas/{usuarioId}', [NotificacionController::
 Route::get('actividades/usuario/{id}', [UsuarioController::class, 'obtenerActividades']);
 Route::post('registrar/actividad/usuario/{id}', [UsuarioController::class, 'registrarActividad']);
 Route::delete('eliminar/actividad/{id}', [UsuarioController::class, 'eliminarActividad']);
-// web.php o api.php
 Route::patch('/verificar/actividad/{id}', [UsuarioController::class, 'verificarActividad']);
 Route::patch('/destacar/actividad/{id}', [UsuarioController::class, 'destacarActividad']);
+
+
+//Api para servicios
+Route::get('servicios', [TerapiasController::class, 'obtenerServicio']);
+Route::post('servicios', [TerapiasController::class, 'store']);
+Route::post('sesiones', [TerapiasController::class, 'registrarSesion']);
+
+
+//Api para obtener personal
+Route::get('personal', [UsuarioController::class, 'obtenerPersonal']);

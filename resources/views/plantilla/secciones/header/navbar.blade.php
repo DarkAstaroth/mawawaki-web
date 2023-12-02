@@ -78,7 +78,7 @@
         <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
             data-kt-menu-placement="bottom-end">
-            <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="user" />
+            <img src="{{ asset(asset(auth()->user()->profile_photo_path)) }}" alt="user" />
         </div>
 
         <!--layout-partial:partials/menus/_user-account-menu.html-->

@@ -43,7 +43,7 @@
                         </div>
 
 
-                        <div id="usuarios-component">
+                        <div id="app">
                             <usuarios-setup :usuario="{{ json_encode(auth()->user()) }}"></usuarios-setup>
                         </div>
 

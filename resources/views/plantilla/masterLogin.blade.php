@@ -17,9 +17,9 @@
     data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true"
     data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
     <!--layout-partial:partials/_drawers.html-->
-    {{-- <div id="app"> --}}
-        @yield('contenido')
-    {{-- </div> --}}
+
+    @yield('contenido')
+
 
     @vite(['resources/js/app.js'])
     @include('complemento.tema')
