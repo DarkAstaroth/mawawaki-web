@@ -5,7 +5,7 @@
         <div class="menu-content d-flex align-items-center px-3">
 
             <div class="symbol symbol-50px me-5">
-                <img alt="Logo" src="{{ asset('assets/media/avatars/300-1.jpg') }}" />
+                <img alt="Logo" src="{{ asset(auth()->user()->profile_photo_path) }}" />
             </div>
 
 

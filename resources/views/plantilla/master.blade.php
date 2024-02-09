@@ -89,6 +89,16 @@
         }
     </style>
 
+    <style>
+        .image-input-placeholder {
+            background-image: url('svg/avatars/blank.svg');
+        }
+
+        [data-bs-theme="dark"] .image-input-placeholder {
+            background-image: url('svg/avatars/blank-dark.svg');
+        }
+    </style>
+
 </body>
 
 </html>

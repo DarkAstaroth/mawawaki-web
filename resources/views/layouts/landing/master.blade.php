@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @include('complemento.estilos')
-    <title>Scallia - Software Agency</title>
+    <title>EQT - Centro Integral de Terapias Equinas Mawqawaki Sarañani</title>
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
 
 </head>

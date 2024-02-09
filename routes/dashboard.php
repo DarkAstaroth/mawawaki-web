@@ -200,3 +200,19 @@ Route::middleware([
 ])->group(function () {
     Route::get('dashboard/actividades/usuario/{id}', [UsuarioController::class, 'actividadesUsuario'])->name('usuario.actividades');
 });
+
+
+//================================================
+// RUTAS PARA ACTIVIDADES
+//======
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+    Route::get('dashboard/servicio/{id}', [TerapiasController::class, 'verServicio'])->name('servicio.detalles');
+});

@@ -120,8 +120,8 @@
 
                 <div class="px-5 d-flex flex-column flex-center py-7 py-lg-15 px-md-15 w-100">
 
-                    <a href="../../demo1/dist/index.html" class="mb-0 mb-lg-12">
-                        <img alt="Logo" src="{{ asset('assets/media/logos/logo-scallia.png') }}"
+                    <a href="{{ route('home') }}" class="mb-0 mb-lg-12">
+                        <img alt="Logo" src="{{ asset('assets/media/logos/logo-unido.png') }}"
                             class="h-60px h-lg-75px" />
                     </a>
 

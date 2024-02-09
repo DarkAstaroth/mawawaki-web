@@ -3,9 +3,9 @@
     <!--begin::Toolbar container-->
     <div id="kt_app_toolbar_container" class="app-container  container-fluid d-flex flex-stack ">
         <!--layout-partial:layout/partials/_page-title.html-->
-        @include('plantilla.secciones.cuerpo.titulo')
+        {{-- @include('plantilla.secciones.cuerpo.titulo') --}}
         <!--begin::Actions-->
-        <div class="d-flex align-items-center gap-2 gap-lg-3">
+        {{-- <div class="d-flex align-items-center gap-2 gap-lg-3">
             <!--begin::Secondary button-->
             <a href="#" class="btn btn-sm fw-bold bg-body btn-color-gray-700 btn-active-color-primary"
                 data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">
@@ -16,7 +16,7 @@
                 data-bs-target="#kt_modal_new_target">
                 Add Target </a>
             <!--end::Primary button-->
-        </div>
+        </div> --}}
         <!--end::Actions-->
     </div>
     <!--end::Toolbar container-->
