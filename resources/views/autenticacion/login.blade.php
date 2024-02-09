@@ -11,20 +11,13 @@
                             <h1 class="text-dark fw-bolder mb-3">Bienvenido</h1>
                         </div>
                         <div class="row g-3 mb-9">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <a href="auth/google"
                                     class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
                                     <img alt="Logo" src="assets/media/svg/brand-logos/google-icon.svg"
                                         class="h-15px me-3" />Ingresar con Google</a>
                             </div>
-                            <div class="col-md-6">
-                                <a href="#"
-                                    class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-                                    <img alt="Logo" src="assets/media/svg/brand-logos/apple-black.svg"
-                                        class="theme-light-show h-15px me-3" />
-                                    <img alt="Logo" src="assets/media/svg/brand-logos/apple-black-dark.svg"
-                                        class="theme-dark-show h-15px me-3" />Ingresar con Apple</a>
-                            </div>
+
                         </div>
 
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
@@ -86,24 +79,23 @@
 
                 <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
 
-                    <a href="../../demo1/dist/index.html" class="mb-0 mb-lg-12">
-                        <img alt="Logo" src="assets/media/logos/logo-scallia.png" class="h-60px h-lg-75px" />
+                    <a href="{{ route("home") }}" class="mb-0 mb-lg-12">
+                        <img alt="Logo" src="assets/media/logos/logo-unido.png" class="h-60px h-lg-75px" />
                     </a>
 
                     <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
                         src="assets/media/misc/auth-screens.png" alt="" />
 
 
-                    <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">Fast, Efficient and
-                        Productive</h1>
+                    <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">Una Mirada al Éxito de la
+                        Terapia con Caballos
+                    </h1>
 
 
-                    <div class="d-none d-lg-block text-white fs-base text-center">In this kind of post,
-                        <a href="#" class="opacity-75-hover text-warning fw-bold me-1">the blogger</a>introduces a
-                        person they’ve interviewed
-                        <br />and provides some background information about
-                        <a href="#" class="opacity-75-hover text-warning fw-bold me-1">the interviewee</a>and their
-                        <br />work following this is a transcript of the interview.
+                    <div class="d-none d-lg-block text-white fs-base text-center">IConecta con la naturaleza, siente la<br>
+                        poderosa presencia equina y desata tu bienestar emocional. En nuestro sitio, explorarás cómo este<br>
+                        enfoque innovador acelera tu camino hacia el éxito personal. ¡Bienvenido a una terapia que te<br>
+                        impulsa hacia la mejor versión de ti mismo!
                     </div>
 
                 </div>

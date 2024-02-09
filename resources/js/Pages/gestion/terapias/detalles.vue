@@ -23,7 +23,6 @@
           <p class="card-text">
             Precondicion: {{ servicio.paciente.precondicion }}
           </p>
-          <!-- Agrega más detalles según sea necesario -->
         </div>
         <div class="w-100">
           <h5 class="card-title">Detalles de Contacto de Emergencia</h5>
@@ -181,7 +180,7 @@
   </Dialog>
   <Toast />
 </template>
-  
+
 <script>
 import { useDataPacientes } from "../../../store/dataPaciente";
 import { useToast } from "primevue/usetoast";

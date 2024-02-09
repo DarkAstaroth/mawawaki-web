@@ -2,7 +2,7 @@
 <div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
     <!--begin::Logo image-->
     <a href="?page=index">
-        <img alt="Logo" src="{{ asset('assets/media/logos/logo-scallia.png') }}"
+        <img alt="Logo" src="{{ asset('assets/media/logos/logo-unido.png') }}"
             class="h-35px
             app-sidebar-logo-default" />
         <img alt="Logo" src="{{ asset('assets/media/logos/scallia-min.png') }}"
