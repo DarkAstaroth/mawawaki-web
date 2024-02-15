@@ -79,6 +79,8 @@ Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);
 Route::post('evento', [EventosController::class, 'store']);
 Route::get('eventos/usuario/{id}', [EventosController::class, 'obtenerEventosUsuario']);
+Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
+
 
 
 // Api para gestion de QRs

@@ -1,292 +1,348 @@
 <template>
-    <div class="card card-bordered">
-        <div class="card-header">
-            <h3 class="card-title">Listado de eventos</h3>
-            <div class="div card-toolbar">
-                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_1"
-                    @click="
-                        modo = 'crear';
-                    resetModalData();
-                    ">
-                    <i class="text-white far fa-plus"></i>
-                    Nuevo
-                </button>
-            </div>
-        </div>
-
-        <div class="modal fade" tabindex="-1" id="kt_modal_1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title">
-                            {{
-                                modo === "crear"
-                                ? "Crear Evento"
-                                : "Editar Evento"
-                            }}
-                        </h3>
-
-                        <!--begin::Close-->
-                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                            aria-label="Close">
-                            <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
-                        </div>
-                        <!--end::Close-->
-                    </div>
-                    <!-- <form action=""> -->
-                    <form class="input-feild" v-on:submit.prevent="
-                    modo === 'crear'
-                        ? crearEvento()
-                        : actualizarEvento()
-                        ">
-                        <div class="modal-body">
-                            <div class="mb-5 form-group">
-                                <input type="text" v-model="nombre" id="" class="form-control"
-                                    placeholder="Nombre del evento" aria-describedby="helpId" />
-                                <div v-if="v$?.nombre.$error" class="m-2 fv-plugins-message-container invalid-feedback">
-                                    <div data-field="text_input" data-validator="notEmpty">
-                                        El nombre del evento es requirido
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-5">
-                                <VueDatePicker v-model="fechaInicio"></VueDatePicker>
-                            </div>
-
-                            <div class="form-group mb-5">
-                                <VueDatePicker v-model="fechaFin"></VueDatePicker>
-                            </div>
-
-                            <div class="mb-5 form-group">
-                                <input type="text" v-model="lugar" id="" class="form-control" placeholder="Lugar del evento"
-                                    aria-describedby="helpId" />
-                                <div v-if="v$?.lugar.$error" class="m-2 fv-plugins-message-container invalid-feedback">
-                                    <div data-field="text_input" data-validator="notEmpty">
-                                        El lugar del evento es requirido
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <textarea class="form-control" v-model="descripcion" id="" rows="3"
-                                    placeholder="Descripción"></textarea>
-                                <div v-if="v$?.descripcion.$error"
-                                    class="m-2 fv-plugins-message-container invalid-feedback">
-                                    <div data-field="text_input" data-validator="notEmpty">
-                                        La descripcion del lugar es requerida.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-                                Cerrar
-                            </button>
-                            <button type="submit" class="btn btn-success">
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="card-body">
-            <input class="mb-5 form-control" type="text" v-model="busqueda" @input="filtrarEventos"
-                placeholder="Buscar..." />
-            <div class="table-responsive">
-                <table class="table table-striped table-sm table-bordered">
-                    <thead>
-                        <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
-                            <th class="min-w-150px">Nombre</th>
-                            <th class="min-w-150px">Fecha Inicio</th>
-                            <th class="max-w-100px">Fecha Fin</th>
-                            <th class="max-w-100px">Lugar</th>
-                            <th class="max-w-100px">Descripcion</th>
-                            <th class="min-w-150px">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="evento in eventos" :key="evento.id">
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ evento.nombre }}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ fechaHoraLegible(evento.fecha_hora_inicio) }}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ fechaHoraLegible(evento.fecha_hora_fin) }}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ evento.lugar }}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ evento.descripcion }}
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-items-center">
-                                <div class="d-flex">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
-                                            data-boundary="viewport">
-                                            Acciones
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-
-                                            </li>
-                                            <li>
-                                                <a :href="route('evento.detalle', { id: evento.id })"
-                                                    class="dropdown-item"><i class="bi bi-pencil-square fs-4"></i>
-
-                                                    Detalles</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr v-if="eventos.length === 0">
-                            <td colspan="5" class="text-center">
-                                No hay datos
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="card card-bordered">
+    <div class="card-header">
+      <h3 class="card-title">Listado de eventos</h3>
+      <div class="div card-toolbar">
+        <button
+          type="button"
+          class="btn btn-sm btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_1"
+          @click="this.estadoModal()"
+        >
+          <i class="text-white far fa-plus"></i>
+          Nuevo
+        </button>
+      </div>
     </div>
+
+    <div class="card-body">
+      <input
+        class="mb-5 form-control"
+        type="text"
+        v-model="busqueda"
+        @input="filtrarEventos"
+        placeholder="Buscar..."
+      />
+      <div class="table-responsive">
+        <table class="table table-striped table-sm table-bordered">
+          <thead>
+            <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
+              <th class="min-w-150px">Nombre</th>
+              <th class="min-w-150px">Fecha Inicio</th>
+              <th class="max-w-100px">Fecha Fin</th>
+              <th class="max-w-100px">Lugar</th>
+              <th class="max-w-100px">Descripcion</th>
+              <th class="min-w-150px">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="evento in store.eventos" :key="evento.id">
+              <td class="align-middle">
+                <div class="d-flex align-items-center">
+                  <div class="px-2 d-flex flex-column">
+                    <div>
+                      {{ evento.nombre }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="align-middle">
+                <div class="d-flex align-items-center">
+                  <div class="px-2 d-flex flex-column">
+                    <div>
+                      {{ fechaHoraLegible(evento.fecha_hora_inicio) }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="align-middle">
+                <div class="d-flex align-items-center">
+                  <div class="px-2 d-flex flex-column">
+                    <div>
+                      {{ fechaHoraLegible(evento.fecha_hora_fin) }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="align-middle">
+                <div class="d-flex align-items-center">
+                  <div class="px-2 d-flex flex-column">
+                    <div>
+                      {{ evento.lugar }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="align-middle">
+                <div class="d-flex align-items-center">
+                  <div class="px-2 d-flex flex-column">
+                    <div>
+                      {{ evento.descripcion }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="align-items-center">
+                <div class="d-flex">
+                  <div class="dropdown">
+                    <button
+                      class="btn btn-secondary dropdown-toggle btn-sm"
+                      type="button"
+                      id="dropdownMenuButton1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      data-boundary="viewport"
+                    >
+                      Acciones
+                    </button>
+                    <ul
+                      class="dropdown-menu"
+                      aria-labelledby="dropdownMenuButton1"
+                    >
+                      <li></li>
+                      <li>
+                        <a
+                          :href="route('evento.detalle', { id: evento.id })"
+                          class="dropdown-item"
+                          ><i class="bi bi-pencil-square fs-4"></i>
+
+                          Detalles</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="store.eventos.length === 0">
+              <td colspan="5" class="text-center">No hay datos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <Toast />
+  <Button label="Show" @click="this.estadoModal()" />
+
+  <Dialog
+    v-model:visible="modalCrearEvento"
+    modal
+    header="Crear Evento"
+    position="center"
+    :style="{ width: '60rem' }"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+  >
+    <form
+      class="input-feild"
+      v-on:submit.prevent="
+        modo === 'crear' ? crearEvento() : actualizarEvento()
+      "
+    >
+      <div class="modal-body">
+        <div class="card flex justify-content-center">
+          <div class="d-flex flex-column gap-2">
+            <label for="titulo">Nombre del evento</label>
+            <InputText v-model="nombre" />
+            <small id="username-help"
+              >Enter your username to reset your password.</small
+            >
+          </div>
+        </div>
+
+        <div class="d-flex w-100 gap-5 my-5">
+          <div class="d-flex flex-column w-100">
+            <label for="calendar-12h" class="font-bold block mb-2">
+              Fecha inicio
+            </label>
+            <Calendar
+              class="w-full"
+              id="calendar-12h"
+              v-model="fechaInicio"
+              showTime
+              hourFormat="12"
+            />
+          </div>
+
+          <div class="d-flex flex-column w-100">
+            <label for="calendar-12h" class="font-bold block mb-2">
+              Fecha Fin
+            </label>
+            <Calendar
+              class="w-100"
+              id="calendar-12h"
+              v-model="fechaFin"
+              showTime
+              hourFormat="12"
+            />
+          </div>
+        </div>
+
+        <div class="card flex justify-content-center">
+          <div class="d-flex flex-column gap-2">
+            <label for="titulo">Lugar del evento</label>
+            <InputText v-model="lugar" />
+            <small id="username-help"
+              >Enter your username to reset your password.</small
+            >
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <label for="calendar-12h" class="font-bold block mb-2">
+            Descripcion
+          </label>
+          <Textarea
+            class="w-100"
+            v-model="descripcion"
+            rows="5"
+            placeholder="Descripción"
+          />
+        </div>
+        <MapaComponent @obtenerDatos="establecerDatos" />
+      </div>
+
+      <div class="modal-footer d-flex gap-5">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+          Cerrar
+        </button>
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </div>
+    </form>
+    <p>Latitud: {{ latitud }}</p>
+    <p>Longitud: {{ longitud }}</p>
+  </Dialog>
 </template>
 
 <script>
-import dayjs from 'dayjs';
-import 'dayjs/locale/es'
+import { ref } from "vue";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 import axios from "axios";
 import VueDatePicker from "@vuepic/vue-datepicker";
+import MapaComponent from "./mapa.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
-dayjs.locale('es')
-
+dayjs.locale("es");
+import { useDataEventos } from "../../../store/dataEventos";
+import { useToast } from "primevue/usetoast";
+import "leaflet/dist/leaflet.css";
+import {
+  LMap,
+  LTileLayer,
+  LCircleMarker,
+  LMarker,
+} from "@vue-leaflet/vue-leaflet";
 
 export default {
-    name: "EventosIndex",
-    components: { VueDatePicker },
-    setup() { },
-    data() {
-        return {
-            eventos: [],
-            nombre: "",
-            fechaInicio: null,
-            fechaFin: null,
-            lugar: "",
-            descripcion: "",
-            busqueda: "",
-            paginacion: {
-                total: 0,
-                porPagina: 10,
-                paginaActual: 1,
-                ultimaPagina: 1,
-                desde: 0,
-                hasta: 0,
-            },
-            modo: "crear",
-            enviado: false,
-        };
+  name: "EventosIndex",
+  components: {
+    VueDatePicker,
+    LMap,
+    LTileLayer,
+    LCircleMarker,
+    LMarker,
+    MapaComponent,
+  },
+  setup() {
+    const store = useDataEventos();
+    const toast = useToast();
+
+    return { store, toast };
+  },
+  data() {
+    return {
+      zoom: 17,
+      coordinates: [-16.499981, -68.1552951],
+      geojsonOptions: {},
+      eventos: [],
+      nombre: "",
+      fechaInicio: null,
+      fechaFin: null,
+      lugar: "",
+      descripcion: "",
+      busqueda: "",
+      paginacion: {
+        total: 0,
+        porPagina: 10,
+        paginaActual: 1,
+        ultimaPagina: 1,
+        desde: 0,
+        hasta: 0,
+      },
+      modo: "crear",
+      enviado: false,
+      modalCrearEvento: false,
+      latitud: null,
+      longitud: null,
+    };
+  },
+
+  validations() {},
+
+  mounted() {
+    this.store.cargarEventos(1, this.busqueda);
+    console.log(this.$refs);
+  },
+  methods: {
+    establecerDatos(obj) {
+      this.latitud = obj.lat;
+      this.longitud = obj.lng;
     },
-    validations() { },
-    mounted() {
-        this.cargarEventos(1);
+    obtenerCoordenadas(location) {
+      this.latitud = location.lat;
+      this.longitud = location.lng;
     },
-    methods: {
-        filtrarEventos() {
-            this.cargarEventos(1);
-        },
-        cargarEventos(pagina) {
-            const url =
-                "/api/eventos?page=" + pagina + "&busqueda=" + this.busqueda;
-            axios
-                .get(url)
-                .then((response) => {
-                    this.eventos = response.data.eventos;
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
-        crearEvento() {
-            axios
-                .post("/api/evento", {
-                    nombre: this.nombre,
-                    fechaInicio: this.fechaInicio,
-                    fechaFin: this.fechaFin,
-                    lugar: this.lugar,
-                    descripcion: this.descripcion,
-                })
-                .then(() => {
-                    Swal.fire({
-                        title: "Éxito",
-                        text: "El evento fue creado correctamente",
-                        icon: "success",
-                        buttonsStyling: false,
-                        confirmButtonText: "Aceptar",
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                        },
-                    });
-                    $("#kt_modal_1").modal("hide");
-                    this.busqueda = "";
-                    this.cargarEventos(1);
-                })
-                .catch();
-        },
-        fechaHoraLegible(fecha) {
-            return dayjs.unix(fecha).format('D [de] MMMM [-] H:mm');
-        },
-        resetModalData: function () {
-            this.nombre = "";
-            this.description = "";
-        },
+    mostrarMensaje(tipo, titulo, texto) {
+      this.toast.add({
+        severity: tipo,
+        summary: titulo,
+        detail: texto,
+        life: 2000,
+      });
     },
+    filtrarEventos() {
+      this.store.cargarEventos(1, this.busqueda);
+    },
+
+    crearEvento() {
+      this.store
+        .crearEvento(
+          this.nombre,
+          this.fechaInicio,
+          this.fechaFin,
+          this.lugar,
+          this.descripcion,
+          this.latitud,
+          this.longitud
+        )
+        .then(() => {
+          this.mostrarMensaje(
+            "success",
+            "Operación Exitosa",
+            "Evento creado correctamente"
+          );
+          $("#kt_modal_1").modal("hide");
+          this.busqueda = "";
+          this.store.cargarEventos(1, this.busqueda);
+          this.modalCrearEvento = !this.modalCrearEvento;
+        });
+    },
+    fechaHoraLegible(fecha) {
+      return dayjs.unix(fecha).format("D [de] MMMM [-] H:mm");
+    },
+    resetModalData: function () {
+      this.nombre = "";
+      this.description = "";
+    },
+    estadoModal() {
+      this.modalCrearEvento = !this.modalCrearEvento;
+    },
+  },
 };
 </script>

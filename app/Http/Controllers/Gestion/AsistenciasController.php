@@ -147,7 +147,7 @@ class AsistenciasController extends Controller
             }
         }
 
-        return redirect()->route('dashboard')->with('success', 'Marcado registrado correctamente');
+        // return redirect()->route('dashboard')->with('success', 'Marcado registrado correctamente');
     }
 
 
