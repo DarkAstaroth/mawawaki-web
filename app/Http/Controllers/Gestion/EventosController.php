@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Gestion;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Gestion\EventosResource;
 use App\Models\Gestion\Evento;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 
 class EventosController extends Controller
@@ -14,6 +15,37 @@ class EventosController extends Controller
      */
     public function index()
     {
+        // $client = new Client();
+        // $response = $client->request('GET', 'https://api.ipgeolocation.io/getip');
+        // $ipInfo = $response->getBody()->getContents();
+        // $getIP = json_decode($ipInfo, true);
+
+        // // Dirección IP obtenida de la respuesta anterior
+        // $ip = $getIP['ip'];
+
+        // // Clave de la API
+        // $apiKey = "37cac8b6d41846c5976151b2b5480a88";
+
+        // // Crear una instancia de Guzzle Client
+        // $client = new Client();
+
+        // // Realizar la solicitud GET a la API
+        // $response = $client->request('GET', 'https://api.ipgeolocation.io/ipgeo', [
+        //     'query' => [
+        //         'apiKey' => $apiKey,
+        //         'ip' => $ip,
+        //     ],
+        // ]);
+
+        // // Obtener el contenido de la respuesta como un string JSON
+        // $geoInfo = $response->getBody()->getContents();
+
+        // // Parsear el string JSON a un array en PHP
+        // $geoInfoArray = json_decode($geoInfo, true);
+
+        // // Mostrar la respuesta en un dd
+        // dd($geoInfoArray);
+
         return view('gestion.eventos.index');
     }
 
@@ -69,6 +101,8 @@ class EventosController extends Controller
         $nuevoEvento->fecha_hora_inicio = strtotime($request->input('fechaInicio'));
         $nuevoEvento->fecha_hora_fin = strtotime($request->input('fechaFin'));
         $nuevoEvento->lugar = $request->input('lugar');
+        $nuevoEvento->latitud = $request->input('latitud');
+        $nuevoEvento->longitud = $request->input('longitud');
         $nuevoEvento->descripcion = $request->input('descripcion');
 
         $nuevoEvento->save();

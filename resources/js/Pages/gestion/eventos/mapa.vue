@@ -1,0 +1,117 @@
+<template>
+  <Button class="mb-5" type="button" @click="obtenerDireccion"
+    >Ubicación Actual</Button
+  >
+
+  <div ref="mapContainer" style="width: 100%; height: 400px"></div>
+</template>
+  
+  <script>
+import { onMounted, ref } from "vue";
+import L from "leaflet";
+
+export default {
+  emits: ["obtenerDatos"],
+  setup(_, { emit }) {
+    const lat = ref(0);
+    const lng = ref(0);
+    const map = ref();
+    const mapContainer = ref();
+    let marker = null;
+    let circle = null;
+    let marcadorMovido = false; // Variable para verificar si el marcador se ha movido
+
+    onMounted(() => {
+      map.value = L.map(mapContainer.value).setView(
+        [-16.5393727, -68.066687],
+        18
+      );
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 20,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map.value);
+
+      // Agregar el marcador al inicio
+      agregarMarcadorInicial();
+
+      // Manejar clic en el mapa
+      map.value.on("click", (e) => {
+        lat.value = e.latlng.lat;
+        lng.value = e.latlng.lng;
+        actualizarMarcador();
+        enviarDatos({ lat: lat.value, lng: lng.value });
+      });
+    });
+
+    function agregarMarcadorInicial() {
+      if (marker) {
+        marker.remove();
+      }
+
+      if (circle) {
+        circle.remove();
+      }
+
+      marker = L.marker([lat.value, lng.value], { draggable: true })
+        .addTo(map.value)
+        .on("dragend", (event) => {
+          marcadorMovido = true; // Marcador movido
+          const { lat: newLat, lng: newLng } = event.target.getLatLng();
+          lat.value = newLat;
+          lng.value = newLng;
+          updateCirclePosition();
+          enviarDatos({ lat: lat.value, lng: lng.value });
+        });
+
+      circle = L.circle([lat.value, lng.value], {
+        color: "blue",
+        fillColor: "blue",
+        fillOpacity: 0.2,
+        radius: 50,
+      }).addTo(map.value);
+    }
+
+    function actualizarMarcador() {
+      if (marker) {
+        marker.setLatLng([lat.value, lng.value]);
+        updateCirclePosition();
+      }
+    }
+
+    function updateCirclePosition() {
+      if (circle) {
+        circle.setLatLng([lat.value, lng.value]);
+      }
+    }
+
+    function enviarDatos(data) {
+      // Emitir el evento obtenerDatos con los datos necesarios
+      emit("obtenerDatos", data);
+    }
+
+    function obtenerDireccion() {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition((position) => {
+          lat.value = position.coords.latitude;
+          lng.value = position.coords.longitude;
+          map.value.setView([lat.value, lng.value], 17);
+
+          if (!marcadorMovido) {
+            // Agregar el marcador solo si no se ha movido
+            agregarMarcadorInicial();
+          }
+        });
+      }
+    }
+
+    return {
+      obtenerDireccion,
+      lat,
+      lng,
+      mapContainer,
+    };
+  },
+};
+</script>
+  

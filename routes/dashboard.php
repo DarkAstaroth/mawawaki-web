@@ -112,7 +112,6 @@ Route::middleware([
     'check.auth',
 ])->group(function () {
     Route::get('asistencia/{id}', [AsistenciasController::class, 'registrarAsistencia'])->name('registrar.aistencia');
-    Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
 });
 
 //Ruta para asistencias

@@ -13,7 +13,7 @@ class Evento extends Model
     use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['nombre', 'fecha_hora_inicio', 'fecha_hora_fin', 'lugar','descripcion'];
+    protected $fillable = ['nombre', 'fecha_hora_inicio', 'fecha_hora_fin', 'lugar', 'latitud', 'longitud', 'descripcion'];
 
     public function qrs()
     {

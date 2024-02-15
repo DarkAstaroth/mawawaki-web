@@ -11,6 +11,7 @@
             }
         </style>
 
+
         <div class="d-flex flex-column flex-center flex-column-fluid">
             <div class="d-flex flex-column flex-center text-center p-10">
                 <div class="card card-flush w-lg-650px py-5">
@@ -25,6 +26,8 @@
                         <h1 class="fw-bolder text-gray-900 mb-5">
                             Registrar asistencia
                         </h1>
+
+
 
                         <div class="mb-1  d-flex justify-content-center mb-5">
                             <span class="px-5 border rounded border-secondary">
@@ -45,22 +48,32 @@
 
 
 
-                        <div class="mb-1 d-flex justify-content-center mw-60 mb-5">
-                            <span class="px-5">
+                        <div class="mb-1 d-flex flex-column  w-100 mb-5 align-items-center">
+
+                            <span class="px-5 mb-5">
                                 <div class="p-2">
                                     <div class="d-flex">
-                                        <div class="mx-4 d-flex flex-column justify-content-center">
+                                        <div class="mx-4 d-flex flex-column">
                                             <div class="text-black-500 fw-bold fs-6">{{ $evento->nombre }}
                                             </div>
-                                            <div class="text-gray-500 fw-semibold fs-base ">{{ $evento->descripcion }}
-                                            </div>
+                                            {{-- <div class="text-gray-500 fw-semibold fs-base ">{{ $evento->descripcion }}
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
                             </span>
+
+                            <div id="app">
+                                <div id="eventos-component">
+                                    <registro-qr :evento='{{ json_encode($evento) }}'
+                                        :usuario='{{ json_encode($usuario->id) }}'
+                                        :qr='{{ json_encode($qr->id) }}'></registro-qr>
+                                </div>
+                            </div>
                         </div>
 
-                        <form action="{{ route('registrar.marcado') }}" method="POST">
+
+                        {{-- <form action="{{ route('registrar.marcado') }}" method="POST">
                             @csrf
                             <input type="hidden" value="{{ $evento->id }}" name='evento'>
                             <input type="hidden" value="{{ $usuario->id }}" name='usuario'>
@@ -74,7 +87,7 @@
                                     <span class="path5"></span>
                                 </i>
                                 Registrar</button>
-                        </form>
+                        </form> --}}
                         <div class="">
                             <a href="#" class="btn btn-icon-primary btn-text-primary">
                                 <i class="ki-duotone ki-home fs-1"><span class="path1"></span><span
