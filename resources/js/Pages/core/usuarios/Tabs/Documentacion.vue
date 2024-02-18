@@ -1,13 +1,13 @@
 <template>
   <div class="col-12 col-md-12 mb-5">
-    <div class="d-flex gap-2">
+    <div class="d-flex gap-2 flex-sm-row flex-column">
       <Dropdown
         v-model="selectedTipoDocumento"
         :options="tiposDocumento"
         filter
         optionLabel="nombre"
         placeholder="Selecciona tipo de archivo"
-        class="w-50 md:w-14rem"
+        class="w-100 md:w-14rem"
       >
         <template #value="slotProps">
           <div v-if="slotProps.value">{{ slotProps.value.nombre }}</div>

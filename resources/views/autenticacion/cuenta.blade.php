@@ -17,8 +17,8 @@
                     <div class="card-body py-15 py-lg-20">
                         <div class="mb-14">
                             <a href="../../demo1/dist/index.html" class="">
-                                <img alt="Logo" src="{{ asset('assets/media/logos/logo-scallia-light.png') }}"
-                                    width="120" />
+                                <img alt="Logo" src="{{ asset('assets/media/logos/logo-equino.png') }}"
+                                    width="220" />
                             </a>
                         </div>
 
@@ -31,10 +31,14 @@
                             <span class="px-5 border rounded border-secondary">
                                 <div class="p-2">
                                     <div class="d-flex">
-                                        <img src="{{ asset(auth()->user()->profile_photo_path) }}" alt="photo_user"
-                                            width="40px" class="rounded-pill" />
+                                        <div>
+                                            <img src="{{ asset(auth()->user()->profile_photo_path) }}" alt="photo_user"
+                                                width="40px" class="rounded-pill" />
+                                        </div>
                                         <div class="mx-4 d-flex flex-column justify-content-center">
-                                            <div class="text-black-500 fw-bold fs-6">{{ auth()->user()->name }}
+                                            <div class="text-black-500 fw-bold fs-6">{{ auth()->user()->persona->nombre }}
+                                                {{ auth()->user()->persona->paterno }}
+                                                {{ auth()->user()->persona->materno }}
                                             </div>
                                             <div class="text-gray-500 fw-semibold fs-base ">{{ auth()->user()->email }}
                                             </div>
@@ -98,7 +102,7 @@
                         </div>
 
                         <div class="">
-                            <a href="#" class="btn btn-icon-primary btn-text-primary">
+                            <a href="{{ route('dashboard') }}" class="btn btn-icon-primary btn-text-primary">
                                 <i class="ki-duotone ki-home fs-1"><span class="path1"></span><span
                                         class="path2"></span></i>
                                 Inicio

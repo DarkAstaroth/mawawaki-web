@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <img alt="Logo" src="{{ asset('assets/media/logos/logo-scallia-light.png') }}" width="120px" />
+            <img alt="Logo" src="{{ asset('assets/media/logos/logo-equino.png') }}" width="220px" />
         </x-slot>
 
         <div class="mb-4 text-sm text-gray-600">
@@ -26,6 +26,7 @@
                             {{ __('Enviar verificación a correo') }}
                         @endif
                     </x-button>
+
                 </div>
             </form>
 

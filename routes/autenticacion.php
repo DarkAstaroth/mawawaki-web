@@ -63,7 +63,7 @@ Route::patch('/update-password', function (Request $request) {
         : back()->with('error', __($status));
 })->middleware('guest')->name('password.update');
 
-Route::get('/logout', [UsuarioController::class, 'logout'])->name('logout');
+Route::get('/logout', [UsuarioController::class, 'logout'])->name('user.logout');
 
 // Rutas de solicitud y verificacion de estado de cuenta
 Route::middleware([

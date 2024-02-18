@@ -19,23 +19,45 @@
                             @csrf
 
                             <div class="mb-8 fv-row">
-                                <input type="text" placeholder="Nombres" name="nombres" autocomplete="off"
-                                    class="bg-transparent form-control" />
+                                <label class="form-label">Nombres:</label>
+                                <input type="text" placeholder="Ej: Juan Carlos" name="nombres" autocomplete="off"
+                                    class="bg-transparent form-control" value="{{ old('nombres') }}"
+                                    style="text-transform: capitalize;" />
+                                @error('nombres')
+                                    <div class="text-danger"> El campo nombres es obligatorio. </div>
+                                @enderror
+                            </div>
+
+                            <div class="d-flex gap-2 mb-8 fv-row">
+                                <div>
+
+                                    <label class="form-label">Apellido Paterno:</label>
+                                    <input type="text" placeholder="Ej: Perez" name="paterno" autocomplete="off"
+                                        class="bg-transparent form-control" value="{{ old('paterno') }}"
+                                        style="text-transform: capitalize;" />
+                                    @error('paterno')
+                                        <div class="text-danger"> El campo apellido paterno es obligatorio. </div>
+                                    @enderror
+                                </div>
+                                <div>
+
+                                    <label class="form-label">Apellido Materno:</label>
+                                    <input type="text" placeholder="Ej: Torrez" name="materno" autocomplete="off"
+                                        class="bg-transparent form-control" value="{{ old('materno') }}"
+                                        style="text-transform: capitalize;" />
+                                    @error('materno')
+                                        <div class="text-danger"> El campo apellido materno es obligatorio. </div>
+                                    @enderror
+                                </div>
                             </div>
 
                             <div class="mb-8 fv-row">
-                                <input type="text" placeholder="Apellido paterno" name="paterno" autocomplete="off"
-                                    class="bg-transparent form-control" />
-                            </div>
-
-                            <div class="mb-8 fv-row">
-                                <input type="text" placeholder="Apellido materno" name="materno" autocomplete="off"
-                                    class="bg-transparent form-control" />
-                            </div>
-
-                            <div class="mb-8 fv-row">
+                                <label class="form-label">Correo electrónico:</label>
                                 <input type="email" placeholder="Correo electrónico" name="email" autocomplete="off"
-                                    class="bg-transparent form-control" />
+                                    class="bg-transparent form-control" value="{{ old('email') }}" />
+                                @error('email')
+                                    <div class="text-danger"> El correo electrónico es obligatorio y debe ser válido. </div>
+                                @enderror
                             </div>
 
 
@@ -44,8 +66,14 @@
                                 <div class="mb-1">
 
                                     <div class="mb-3 position-relative">
-                                        <input class="bg-transparent form-control" type="password" placeholder="Contraseña"
-                                            name="password" autocomplete="off" />
+                                        <label class="form-label">Contraseña:</label>
+                                        <input class="bg-transparent form-control" type="password"
+                                            placeholder="Establece una contraseña segura" name="password"
+                                            autocomplete="off" />
+                                        @error('password')
+                                            <div class="text-danger"> La contraseña es obligatoria y debe tener al menos 8
+                                                caracteres. </div>
+                                        @enderror
                                         <span
                                             class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
                                             data-kt-password-meter-control="visibility">
@@ -73,10 +101,13 @@
 
 
                             <div class="mb-8 fv-row">
-
+                                <label class="form-label">Confirmar contraseña:</label>
                                 <input placeholder="Repite la contraseña" name="password_confirmation" type="password"
                                     autocomplete="off" class="bg-transparent form-control" />
-
+                                @error('password_confirmation')
+                                    <div class="text-danger"> La confirmación de contraseña no coincide con la contraseña.
+                                    </div>
+                                @enderror
                             </div>
 
 
@@ -115,35 +146,36 @@
             </div>
 
 
-            <div class="order-1 d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-lg-2"
-                style="background-image: url({{ asset('assets/media/misc/auth-bg.png)') }}">
+            <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 bg-dark">
 
-                <div class="px-5 d-flex flex-column flex-center py-7 py-lg-15 px-md-15 w-100">
+                <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
 
-                    <a href="{{ route('home') }}" class="mb-0 mb-lg-12">
+                    <a href="../../demo1/dist/index.html" class="mb-0 mb-lg-12">
                         <img alt="Logo" src="{{ asset('assets/media/logos/logo-unido.png') }}"
                             class="h-60px h-lg-75px" />
                     </a>
 
-                    <img class="mx-auto mb-10 d-none d-lg-block w-275px w-md-50 w-xl-500px mb-lg-20"
-                        src="{{ asset('assets/media/misc/auth-screens.png') }}" alt="" />
+
+                    <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
+                        src="{{ asset('assets/media/misc/Login-image.png') }}" alt="" />
 
 
-                    <h1 class="text-center text-white d-none d-lg-block fs-2qx fw-bolder mb-7">Fast, Efficient and
-                        Productive</h1>
+                    <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">Una Mirada al Éxito de la
+                        Terapia con Caballos
+                    </h1>
 
 
-                    <div class="text-center text-white d-none d-lg-block fs-base">In this kind of post,
-                        <a href="#" class="opacity-75-hover text-warning fw-bold me-1">the blogger</a>introduces a
-                        person they’ve interviewed
-                        <br />and provides some background information about
-                        <a href="#" class="opacity-75-hover text-warning fw-bold me-1">the interviewee</a>and their
-                        <br />work following this is a transcript of the interview.
+                    <div class="d-none d-lg-block text-white fs-base text-center">IConecta con la naturaleza, siente la<br>
+                        poderosa presencia equina y desata tu bienestar emocional. En nuestro sitio, explorarás cómo
+                        este<br>
+                        enfoque innovador acelera tu camino hacia el éxito personal. ¡Bienvenido a una terapia que te<br>
+                        impulsa hacia la mejor versión de ti mismo!
                     </div>
 
                 </div>
 
             </div>
+
 
         </div>
 

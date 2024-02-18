@@ -33,13 +33,13 @@ class Personal extends Model
     ];
 
 
-    // Relación muchos a muchos
-    public function universidades()
-    {
-        return $this->belongsToMany(Universidad::class, 'personal_universidad', 'personal_id', 'universidad_id')
-            ->withPivot('Matricula')
-            ->withTimestamps();
-    }
+    // // Relación muchos a muchos
+    // public function universidades()
+    // {
+    //     return $this->belongsToMany(Universidad::class, 'personal_universidad', 'personal_id', 'universidad_id')
+    //         ->withPivot('Matricula')
+    //         ->withTimestamps();
+    // }
 
     // Relación de pertenencia a un usuario
     public function usuario()

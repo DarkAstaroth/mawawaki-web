@@ -91,6 +91,18 @@ class InvitadoController extends Controller
 
     public function crearUsuarioEmail(Request $request)
     {
+        $request->validate([
+            'nombres' => 'required',
+            'paterno' => 'required',
+            'materno' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+            'toc' => 'accepted',
+        ], [
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'toc.accepted' => 'Debe aceptar los términos y condiciones.',
+        ]);
+
         $nuevaPersona = Persona::create([
             'nombre' => $request->nombres,
             'paterno' => $request->paterno,
@@ -108,6 +120,7 @@ class InvitadoController extends Controller
 
         return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
     }
+
 
     public function resetPass()
     {

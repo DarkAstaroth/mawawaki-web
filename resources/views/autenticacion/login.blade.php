@@ -19,12 +19,12 @@
                             </div>
 
                         </div>
-
+                        
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
                             action="{{ route('verificar.login') }}" method="POST">
                             @csrf
                             @method('POST')
-                            <div class="separator separator-content my-14">
+<div class="separator separator-content my-14">
                                 <span class="text-gray-500 fw-semibold fs-7">Ingresar con tu correo</span>
                             </div>
 
@@ -74,17 +74,17 @@
             </div>
 
 
-            <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2"
-                style="background-image: url(assets/media/misc/auth-bg.png)">
+            <div
+                class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 bg-dark bg-emerald-100   ">
 
                 <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
 
-                    <a href="{{ route("home") }}" class="mb-0 mb-lg-12">
+                    <a href="{{ route('home') }}" class="mb-0 mb-lg-12">
                         <img alt="Logo" src="assets/media/logos/logo-unido.png" class="h-60px h-lg-75px" />
                     </a>
 
                     <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
-                        src="assets/media/misc/auth-screens.png" alt="" />
+                        src="assets/media/misc/Login-image.png" alt="" />
 
 
                     <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">Una Mirada al Éxito de la
@@ -93,7 +93,8 @@
 
 
                     <div class="d-none d-lg-block text-white fs-base text-center">IConecta con la naturaleza, siente la<br>
-                        poderosa presencia equina y desata tu bienestar emocional. En nuestro sitio, explorarás cómo este<br>
+                        poderosa presencia equina y desata tu bienestar emocional. En nuestro sitio, explorarás cómo
+                        este<br>
                         enfoque innovador acelera tu camino hacia el éxito personal. ¡Bienvenido a una terapia que te<br>
                         impulsa hacia la mejor versión de ti mismo!
                     </div>

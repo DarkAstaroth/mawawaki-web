@@ -15,7 +15,7 @@
                         {{ auth()->user()->persona->nombre }} {{ auth()->user()->persona->paterno }}
                         {{ auth()->user()->persona->materno }}
                     @endif
-                    <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
+                    {{-- <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span> --}}
                 </div>
                 <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
                     @if (auth()->check())

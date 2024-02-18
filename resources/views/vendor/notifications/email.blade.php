@@ -1,14 +1,4 @@
 <x-mail::message>
-{{-- Greeting --}}
-@if (! empty($greeting))
-# {{ $greeting }}
-@else
-@if ($level === 'error')
-# @lang('Whoops!')
-@else
-# @lang('Hola!')
-@endif
-@endif
 
 {{-- Intro Lines --}}
 @foreach ($introLines as $line)
@@ -25,7 +15,7 @@
     };
 ?>
 <x-mail::button :url="$actionUrl" :color="$color">
-Verificar Correo
+{{ $actionText }}
 </x-mail::button>
 @endisset
 
