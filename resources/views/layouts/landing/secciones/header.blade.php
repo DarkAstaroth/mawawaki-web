@@ -63,7 +63,7 @@
 
                                     <a class="menu-link nav-link  py-3 px-4 px-xxl-6" href="#achievements"
                                         data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">
-                                        Achievements </a>
+                                        Eventos </a>
 
                                 </div>
 
@@ -81,7 +81,7 @@
 
                                     <a class="menu-link nav-link  py-3 px-4 px-xxl-6" href="#portfolio"
                                         data-kt-scroll-toggle="true" data-kt-drawer-dismiss="true">
-                                        Portafolio </a>
+                                        Clientes </a>
 
                                 </div>
 

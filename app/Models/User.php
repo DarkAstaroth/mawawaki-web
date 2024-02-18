@@ -6,6 +6,9 @@ use App\Models\Gestion\Actividad;
 use App\Models\Gestion\Cliente;
 use App\Models\Notificacion;
 use App\Models\Gestion\Documentacion;
+use App\Models\Gestion\Personal;
+use App\Notifications\PasswordReset;
+use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\URL;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
@@ -107,6 +111,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasOne(Cliente::class, 'UsuarioID');
     }
 
+    public function personal()
+    {
+        return $this->hasOne(Personal::class, 'UsuarioID');
+    }
+
 
     public function notificaciones(): HasMany
     {
@@ -116,5 +125,27 @@ class User extends Authenticatable implements MustVerifyEmail
     public function actividades(): HasMany
     {
         return $this->hasMany(Actividad::class, 'id_usuario');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordReset($token));
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail($this->verificationUrl($this)));
+    }
+
+    public function verificationUrl($notifiable)
+    {
+        return URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(config('auth.verification.expire', 60)),
+            [
+                'id' => $notifiable->getKey(),
+                'hash' => sha1($notifiable->getEmailForVerification()),
+            ]
+        );
     }
 }

@@ -1,3 +1,41 @@
+@php
+    $assetsDirectory = public_path('build/assets');
+    $largestCss = null;
+    $firstJs = null;
+
+    if (is_dir($assetsDirectory)) {
+        $cssFiles = [];
+        $jsFiles = [];
+        $files = scandir($assetsDirectory);
+
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..') {
+                $filePath = 'build/assets/' . $file;
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+
+                if ($extension === 'css') {
+                    $cssFiles[$file] = filesize($filePath);
+                } elseif ($extension === 'js' && strpos($file, 'app') === 0) {
+                    $jsFiles[] = $filePath;
+                }
+            }
+        }
+
+        if (!empty($cssFiles)) {
+            // Ordenar el array de archivos CSS por tamaño en orden descendente
+            arsort($cssFiles);
+            // Seleccionar el archivo CSS más grande
+            $largestCss = key($cssFiles);
+        }
+
+        if (!empty($jsFiles)) {
+            // Seleccionar el primer archivo JavaScript que comience con "app"
+            $firstJs = reset($jsFiles);
+        }
+    }
+@endphp
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -9,11 +47,14 @@
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
 
     @routes
-    @vite(['resources/js/app.js'])
-    {{-- @routes
-    @vite(['resources/js/app.js', 'resources/js/Pages/configuraciones/roles/index.vue']) --}}
-    {{-- @inertiaHead --}}
 
+    @if (!is_dir($assetsDirectory))
+        {{-- @vite(['resources/js/app.js']) --}}
+    @endif
+
+    @if (!empty($largestCss))
+        <link rel="stylesheet" href="/build/assets/{{ $largestCss }}">
+    @endif
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true"
@@ -22,7 +63,6 @@
     data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
 
     <div id="app">
-
         <!--begin::App-->
         <div class="d-flex flex-column flex-root app-root" id="kt_app_root">
             <!--begin::Page-->
@@ -51,12 +91,13 @@
             </div>
             <!--end::Page-->
         </div>
-
     </div>
     <!--end::App-->
     <!--layout-partial:partials/_drawers.html-->
-    @vite(['resources/js/app.js'])
-    {{-- <script src="{{ asset('build/assets/app-9f559481.js')}}" defer></script> --}}
+
+    @if (!empty($firstJs))
+        <script type="module" src="/{{ $firstJs }}"></script>
+    @endif
 
     @include('complemento.tema')
     @include('complemento.scripts')
@@ -64,8 +105,7 @@
     <script type="text/javascript">
         window.Laravel = {
             csrfToken: "{{ csrf_token() }}",
-            jsPermissions: {!! auth()->user()
-                ?->jsPermissions() !!}
+            jsPermissions: {!! auth()->user()?->jsPermissions() !!}
         }
     </script>
 
@@ -102,7 +142,6 @@
 </body>
 
 </html>
-
 
 @if (session('error'))
     <script>

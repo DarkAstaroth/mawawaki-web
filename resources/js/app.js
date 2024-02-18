@@ -23,6 +23,8 @@ import ConfirmationService from "primevue/confirmationservice";
 import DialogService from "primevue/dialogservice";
 import InputSwitch from "primevue/inputswitch";
 import Calendar from "primevue/calendar";
+import Password from "primevue/password";
+
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -41,6 +43,7 @@ export const appComponents = createApp({
     .mixin({ methods: { route } })
     .component("Dialog", Dialog)
     .component("InputText", InputText)
+    .component("Password", Password)
     .component("Textarea", Textarea)
     .component("Dropdown", Dropdown)
     .component("Toast", Toast)

@@ -41,13 +41,13 @@
     <!--begin::Root-->
     <div class="d-flex flex-column flex-root" id="kt_app_root">
         @include('layouts.landing.secciones.header')
-        @include('layouts.landing.secciones.info')
-        @include('layouts.landing.secciones.estadisticas')
+        {{-- @include('layouts.landing.secciones.info') --}}
+        {{-- @include('layouts.landing.secciones.estadisticas')
         @include('layouts.landing.secciones.equipo')
         @include('layouts.landing.secciones.proyectos')
         @include('layouts.landing.secciones.precios')
         @include('layouts.landing.secciones.testimonios')
-        @include('layouts.landing.secciones.footer')
+        @include('layouts.landing.secciones.footer') --}}
 
     </div>
     <!--end::Root-->

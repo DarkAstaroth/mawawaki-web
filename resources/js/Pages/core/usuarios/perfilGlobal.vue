@@ -3,20 +3,13 @@
     <div id="kt_app_content_container" class="app-container container-xxl">
       <div class="card mb-6">
         <div class="card-body pt-9 pb-0">
-          <div class="d-flex flex-wrap flex-sm-nowrap">
-            <div class="me-7 mb-4">
-              <div
-                class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative"
-              >
-                <img
-                  :src="`/${this.store.usuario.profile_photo_path}`"
-                  alt="foto"
-                />
-                <div
-                  class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px"
-                ></div>
-              </div>
-            </div>
+          <div class="d-flex flex-wrap">
+            <!-- <div class="bg-primary">
+              <img
+                :src="`/${this.store.usuario.profile_photo_path}`"
+                alt="foto"
+              />
+            </div> -->
 
             <div class="flex-grow-1">
               <div
@@ -54,7 +47,7 @@
                 </div>
               </div>
 
-              <div class="d-flex flex-wrap flex-stack">
+              <!-- <div class="d-flex flex-wrap flex-stack">
                 <div class="d-flex flex-column flex-grow-1 pe-8">
                   <div class="d-flex flex-wrap">
                     <div
@@ -137,7 +130,7 @@
                     ></div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

@@ -28,14 +28,16 @@
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
-                            <span class="menu-title">Default</span>
+                            <span class="menu-title">Panel inicial</span>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">terapias</span></div>
 
+            @role('admin')
+                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">terapias</span></div>
+            @endrole
 
             {{-- <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                 <span class="menu-link">
@@ -116,36 +118,38 @@
                 </div>
             @endrole
 
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-lovely fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
+            @role('admin')
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-lovely fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+
+                        <span class="menu-title">Terapias</span><span class="menu-arrow"></span>
                     </span>
 
-                    <span class="menu-title">Terapias</span><span class="menu-arrow"></span>
-                </span>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link " href="{{ route('terapias.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todas las terapias</span>
+                            </a>
+                            <a class="menu-link " href="/dashboard">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Nueva Terapia</span>
+                            </a>
 
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link " href="{{ route('terapias.index') }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Todas las terapias</span>
-                        </a>
-                        <a class="menu-link " href="/dashboard">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Nueva Terapia</span>
-                        </a>
-
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endrole
 
 
             @role('admin')
@@ -171,44 +175,47 @@
             @endrole
 
 
-            <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Personal</span></div>
 
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-calendar fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
+            @role('admin')
+                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Personal</span></div>
+
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-calendar fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Calendario</span>
                     </span>
-                    <span class="menu-title">Calendario</span>
-                </span>
-            </div>
+                </div>
 
 
-            <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                <span class="menu-link">
-                    <span class="menu-icon">
-                        <i class="ki-duotone ki-questionnaire-tablet fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-questionnaire-tablet fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+
+                        <span class="menu-title">Actividades</span><span class="menu-arrow"></span>
                     </span>
 
-                    <span class="menu-title">Actividades</span><span class="menu-arrow"></span>
-                </span>
-
-                <div class="menu-sub menu-sub-accordion">
-                    <div class="menu-item">
-                        <a class="menu-link " href="{{ route('usuario.actividades', ['id' => auth()->user()->id]) }}">
-                            <span class="menu-bullet">
-                                <span class="bullet bullet-dot"></span>
-                            </span>
-                            <span class="menu-title">Todas las actividades</span>
-                        </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link " href="{{ route('usuario.actividades', ['id' => auth()->user()->id]) }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todas las actividades</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endrole
 
             @role('admin')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">

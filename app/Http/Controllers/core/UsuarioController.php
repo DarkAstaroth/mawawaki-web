@@ -246,7 +246,7 @@ class UsuarioController extends Controller
     public function UsuarioControl(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions', 'persona');
+        $usuario->load('roles', 'permissions', 'persona', 'personal');
         return view('core.usuarios.control', compact('usuario'));
     }
 

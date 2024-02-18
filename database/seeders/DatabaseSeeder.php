@@ -52,39 +52,65 @@ class DatabaseSeeder extends Seeder
         ]);
         $adminUser->assignRole($adminRole);
 
-        // Crear una persona y un usuario con el rol de cliente y la misma contraseña
-        $clientePersona = Persona::factory()->create([
-            'nombre' => 'Juan',
-            'paterno' => 'Perez',
-            'materno' => 'Gonzales',
-            'fecha_nacimiento' => strtotime('1995-05-10'),
+
+        // Crear una persona y un usuario con el rol de administrador
+        $adminResp = Persona::factory()->create([
+            'nombre' => 'Doris Lucy',
+            'paterno' => 'Cruz',
+            'materno' => 'Fuentes',
+            'fecha_nacimiento' => strtotime('1980-01-01'),
             'genero' => 'femenino',
-            'telefono' => '987654321',
-            'direccion' => 'Calle Secundaria, Ciudad',
-            'email' => 'cliente@example.com',
-            'ci' => '7654321',
+            'telefono' => '123456789',
+            'direccion' => 'Calle Principal, Ciudad',
+            'email' => 'doriscruz@gmail.com',
+            'ci' => '9876543',
         ]);
 
-        $clienteUser = User::factory()->create([
-            'name' => 'JuanUser',
-            'email' => 'cliente@example.com',
+        $adminUserResp = User::factory()->create([
+            'name' => 'Responsable Equino',
+            'email' => 'doriscruz@gmail.com',
             'solicitud' => 1,
             'verificada' => 1,
             'estado' => 1,
             'profile_photo_path' => 'assets/imagenes/user-default.jpg',
-            'password' => bcrypt('fhccfnxdy2'),
-            'persona_id' => $clientePersona->id,
+            'password' => bcrypt('doris2024'),
+            'persona_id' => $adminResp->id,
         ]);
-        $clienteUser->assignRole('cliente');
+        $adminUserResp->assignRole($adminRole);
+
+        // Crear una persona y un usuario con el rol de cliente y la misma contraseña
+        // $clientePersona = Persona::factory()->create([
+        //     'nombre' => 'Juan',
+        //     'paterno' => 'Perez',
+        //     'materno' => 'Gonzales',
+        //     'fecha_nacimiento' => strtotime('1995-05-10'),
+        //     'genero' => 'femenino',
+        //     'telefono' => '987654321',
+        //     'direccion' => 'Calle Secundaria, Ciudad',
+        //     'email' => 'cliente@example.com',
+        //     'ci' => '7654321',
+        // ]);
+
+        // $clienteUser = User::factory()->create([
+        //     'name' => 'JuanUser',
+        //     'email' => 'cliente@example.com',
+        //     'solicitud' => 1,
+        //     'verificada' => 1,
+        //     'estado' => 1,
+        //     'profile_photo_path' => 'assets/imagenes/user-default.jpg',
+        //     'password' => bcrypt('fhccfnxdy2'),
+        //     'persona_id' => $clientePersona->id,
+        // ]);
+        // $clienteUser->assignRole('cliente');
 
         // Seeder para la tabla 'clientes'
-        DB::table('clientes')->insert([
-            'id' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
-            'UsuarioID' => $clienteUser->id,
-            'ocupacion' => 'profesor',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // DB::table('clientes')->insert([
+        //     'id' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
+        //     'UsuarioID' => $clienteUser->id,
+        //     'ocupacion' => 'profesor',
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
 
         // Otros seeders o factory calls
         // $this->call(RoleSeeder::class);
