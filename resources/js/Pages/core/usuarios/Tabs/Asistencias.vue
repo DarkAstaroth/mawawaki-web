@@ -1,17 +1,23 @@
 <template>
   <div class="mb-6">
-    <VueMultiselect
-      v-model="value"
+    <Dropdown
+      v-model="selectEvento"
       :options="options"
-      placeholder="Selecciona un Evento"
-      label="name"
-      track-by="name"
-      @select="obtenerAsistencias"
+      filter
+      optionLabel="nombre"
+      placeholder="Selecciona tipo de archivo"
+      class="w-100 md:w-14rem"
+      @change="obtenerAsistencias"
     >
-      <template v-slot:noResult>
-        <span>No se encontraron resultados</span>
+      >
+      <template #value="slotProps">
+        <div v-if="slotProps.value">{{ slotProps.value.name }}</div>
+        <span v-else>{{ slotProps.placeholder }}</span>
       </template>
-    </VueMultiselect>
+      <template #option="slotProps">
+        <div>{{ slotProps.option.name }}</div>
+      </template>
+    </Dropdown>
   </div>
 
   <div class="table-responsive">
@@ -21,7 +27,6 @@
           <th class="min-w-150px">Ingreso</th>
           <th class="min-w-150px">Salida</th>
           <th class="min-w-150px">Total</th>
-          <th class="min-w-150px">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -36,49 +41,6 @@
             {{ asistencia.horas }} hora(s) {{ asistencia.minutos }} minuto(s)
             {{ asistencia.segundos }} segundos
           </td>
-
-          <td class="align-items-center">
-            <div class="d-flex">
-              <div class="dropdown">
-                <button
-                  class="btn btn-secondary dropdown-toggle btn-sm"
-                  type="button"
-                  id="dropdownMenuButton1"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                  data-boundary="viewport"
-                >
-                  Acciones
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                  <li>
-                    <a
-                      class="dropdown-item"
-                      data-bs-toggle="tooltip"
-                      data-bs-custom-class="tooltip-inverse"
-                      data-bs-placement="bottom"
-                      title="Ver perfil"
-                      :href="
-                        route('usuario.perfil', { id: this.store.usuario.id })
-                      "
-                      ><i class="bi bi-eye-fill fs-4"></i> Ver Perfil</a
-                    >
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      class="dropdown-item"
-                      data-bs-toggle="modal"
-                      data-bs-target="#kt_modal_1"
-                      ><i class="bi bi-pencil-square fs-4"></i>
-
-                      Editar</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </td>
         </tr>
         <tr v-if="asistencias.length === 0">
           <td colspan="4" class="text-center">No hay datos</td>
@@ -86,11 +48,18 @@
       </tbody>
     </table>
   </div>
+  <div>
+    <Message :closable="false" severity="info">
+      Total Horas: {{ totalGlobal.horas }} minutos:
+      {{ totalGlobal.minutos }} segundos: {{ totalGlobal.segundos }}</Message
+    >
+  </div>
 </template>
 
 <script>
 import { useDataPerfil } from "../../../../store/dataPerfil";
 import VueMultiselect from "vue-multiselect";
+import { ref } from "vue";
 
 export default {
   name: "AsistenciasUsuario",
@@ -98,7 +67,8 @@ export default {
 
   setup() {
     const store = useDataPerfil();
-    return { store };
+    const selectEvento = ref(null);
+    return { store, selectEvento };
   },
 
   data() {
@@ -117,6 +87,7 @@ export default {
         hasta: 0,
       },
       total: {},
+      totalGlobal: { horas: 0, minutos: 0, segundos: 0 },
     };
   },
   validations() {
@@ -139,19 +110,38 @@ export default {
           console.error(error);
         });
     },
-    obtenerAsistencias(evento) {
+    obtenerAsistencias() {
+      console.log(this.selectEvento.value);
       axios
         .post(`/api/asistencias/usuario/${this.store.usuario.id}`, {
-          idEvento: evento.value,
+          idEvento: this.selectEvento.value,
         })
         .then((response) => {
           this.asistencias = response.data.asistencias;
           this.paginacion = response.data.paginacion;
           this.total = response.data.total;
+          this.calcularTiempoTotal();
+          console.log(this.totalGlobal);
         })
         .catch((error) => {
           console.error(error);
         });
+    },
+    calcularTiempoTotal() {
+      let totalSegundos = 0;
+
+      // Convertir cada entrada a segundos y sumarlos
+      this.asistencias.forEach((asistencia) => {
+        totalSegundos +=
+          asistencia.horas * 3600 +
+          asistencia.minutos * 60 +
+          asistencia.segundos;
+      });
+
+      // Convertir el total de segundos a horas, minutos y segundos
+      this.totalGlobal.horas = Math.floor(totalSegundos / 3600);
+      this.totalGlobal.minutos = Math.floor((totalSegundos % 3600) / 60);
+      this.totalGlobal.segundos = totalSegundos % 60;
     },
   },
 };

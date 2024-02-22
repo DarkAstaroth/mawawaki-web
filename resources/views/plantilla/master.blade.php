@@ -49,7 +49,7 @@
     @routes
 
     @if (!is_dir($assetsDirectory))
-        {{-- @vite(['resources/js/app.js']) --}}
+        @vite(['resources/js/app.js'])
     @endif
 
     @if (!empty($largestCss))
@@ -126,6 +126,14 @@
 
         .multiselect__single {
             font-size: 13px;
+        }
+
+        .p-button {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
+            border-radius: 6px;
+            outline-color: transparent;
         }
     </style>
 
