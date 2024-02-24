@@ -54,10 +54,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.evento.latitud);
-    console.log(this.evento.longitud);
-    console.log(this.usuario, "usuario");
-    console.log(this.qr, "qr");
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const latitude = position.coords.latitude;

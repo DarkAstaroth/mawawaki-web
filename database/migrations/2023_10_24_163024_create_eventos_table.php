@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('lugar');
             $table->string('latitud');
             $table->string('longitud');
+            $table->boolean('solo_ingreso')->default(true);
+            $table->boolean('principal')->default(false);
+            $table->json('usuarios_ids')->nullable();
             $table->string('descripcion');
             $table->timestamps();
             $table->softDeletes();

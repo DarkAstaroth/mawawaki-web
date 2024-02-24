@@ -3,16 +3,14 @@
     <div class="card-header">
       <h3 class="card-title">Listado de eventos</h3>
       <div class="div card-toolbar">
-        <button
+        <a
+          :href="route('eventos.create')"
           type="button"
           class="btn btn-sm btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#kt_modal_1"
-          @click="this.estadoModal()"
         >
           <i class="text-white far fa-plus"></i>
           Nuevo
-        </button>
+        </a>
       </div>
     </div>
 
@@ -32,7 +30,7 @@
               <th class="min-w-150px">Fecha Inicio</th>
               <th class="max-w-100px">Fecha Fin</th>
               <th class="max-w-100px">Lugar</th>
-              <th class="max-w-100px">Descripcion</th>
+              <th class="max-w-100px">Tipo</th>
               <th class="min-w-150px">Acciones</th>
             </tr>
           </thead>
@@ -82,7 +80,23 @@
                 <div class="d-flex align-items-center">
                   <div class="px-2 d-flex flex-column">
                     <div>
-                      {{ evento.descripcion }}
+                      <Badge
+                        :value="
+                          evento.tipo.toLowerCase() === 'privado'
+                            ? 'Privado'
+                            : 'Público'
+                        "
+                        :severity="
+                          evento.tipo.toLowerCase() === 'privado'
+                            ? 'info'
+                            : 'warning'
+                        "
+                      ></Badge>
+                      <Badge
+                        v-if="evento.principal"
+                        value="Principal"
+                        severity="success"
+                      ></Badge>
                     </div>
                   </div>
                 </div>
