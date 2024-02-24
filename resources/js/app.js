@@ -24,7 +24,13 @@ import DialogService from "primevue/dialogservice";
 import InputSwitch from "primevue/inputswitch";
 import Calendar from "primevue/calendar";
 import Password from "primevue/password";
-
+import Badge from "primevue/badge";
+import BadgeDirective from "primevue/badgedirective";
+import Avatar from "primevue/avatar";
+import AvatarGroup from "primevue/avatargroup";
+import Message from "primevue/message";
+import RadioButton from "primevue/radiobutton";
+import MultiSelect from 'primevue/multiselect';
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -50,5 +56,12 @@ export const appComponents = createApp({
     .component("Button", Button)
     .component("InputSwitch", InputSwitch)
     .component("Calendar", Calendar)
+    .component("Badge", Badge)
+    .component("AvatarGroup", AvatarGroup)
+    .component("Avatar", Avatar)
+    .component("Message", Message)
+    .component("RadioButton", RadioButton)
+    .component("MultiSelect", MultiSelect)
+    .directive("badge", BadgeDirective)
 
     .mount("#app");

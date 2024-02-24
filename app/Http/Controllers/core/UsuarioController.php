@@ -115,6 +115,18 @@ class UsuarioController extends Controller
         ]);
     }
 
+    public function obtenerUsuariosSinPaginacion()
+    {
+        // Obtener solo los usuarios con el rol "personal"
+        $users = User::with('persona')
+            ->role('personal')
+            ->get();
+
+
+        // Devolver la respuesta JSON con la estructura deseada
+        return response()->json(['usuarios' => $users]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

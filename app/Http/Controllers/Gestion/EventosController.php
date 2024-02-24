@@ -86,16 +86,19 @@ class EventosController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+
     public function create()
     {
-        //
+        return view('gestion.eventos.crear');
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+
         $nuevoEvento = new Evento;
         $nuevoEvento->nombre = $request->input('nombre');
         $nuevoEvento->fecha_hora_inicio = strtotime($request->input('fechaInicio'));
@@ -104,7 +107,10 @@ class EventosController extends Controller
         $nuevoEvento->latitud = $request->input('latitud');
         $nuevoEvento->longitud = $request->input('longitud');
         $nuevoEvento->descripcion = $request->input('descripcion');
-
+        $nuevoEvento->tipo = $request->input('tipoEvento');
+        $nuevoEvento->tipo = $request->input('tipoEvento');
+        $nuevoEvento->solo_ingreso = $request->input('soloIngreso');
+        $nuevoEvento->usuarios_ids = json_encode($request->input('usuariosFiltro'));
         $nuevoEvento->save();
 
         return response()->json(['message' => 'Evento creado con éxito'], 201);

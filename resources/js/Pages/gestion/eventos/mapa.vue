@@ -1,9 +1,10 @@
 <template>
-  <Button class="mb-5" type="button" @click="obtenerDireccion"
-    >Ubicación Actual</Button
-  >
-
-  <div ref="mapContainer" style="width: 100%; height: 400px"></div>
+  <div ref="mapContainer" style="width: 100%; height: 500px"></div>
+  <div>
+    <Button class="mb-5 mt-5" type="button" @click="obtenerDireccion"
+      >Ubicación Actual</Button
+    >
+  </div>
 </template>
   
   <script>
@@ -88,6 +89,7 @@ export default {
     function enviarDatos(data) {
       // Emitir el evento obtenerDatos con los datos necesarios
       emit("obtenerDatos", data);
+      console.log(data);
     }
 
     function obtenerDireccion() {
@@ -96,6 +98,7 @@ export default {
           lat.value = position.coords.latitude;
           lng.value = position.coords.longitude;
           map.value.setView([lat.value, lng.value], 17);
+          enviarDatos({ lat: lat.value, lng: lng.value });
 
           if (!marcadorMovido) {
             // Agregar el marcador solo si no se ha movido

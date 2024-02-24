@@ -13,8 +13,20 @@ class Evento extends Model
     use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['nombre', 'fecha_hora_inicio', 'fecha_hora_fin', 'lugar', 'latitud', 'longitud', 'descripcion'];
-
+    protected $fillable = [
+        'imagen_evento',
+        'nombre',
+        'fecha_hora_inicio',
+        'fecha_hora_fin',
+        'tipo',
+        'lugar',
+        'latitud',
+        'longitud',
+        'solo_ingreso',
+        'principal',
+        'descripcion',
+        'usuarios_ids', 
+    ];
     public function qrs()
     {
         return $this->hasMany(QR::class, 'EventoID', 'id');
