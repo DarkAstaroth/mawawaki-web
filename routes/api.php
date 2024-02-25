@@ -128,3 +128,8 @@ Route::post('sesiones', [TerapiasController::class, 'registrarSesion']);
 
 //Api para obtener personal
 Route::get('personal', [UsuarioController::class, 'obtenerPersonal']);
+
+// API para configuraciones generales
+Route::get('eventos/principal', [EventosController::class, 'verificarEventoPrincipal']);
+Route::get('eventos/principal-false', [EventosController::class, 'eventosPrincipalFalse']);
+Route::put('eventos/asignar', [EventosController::class, 'establecerPrincipal']);

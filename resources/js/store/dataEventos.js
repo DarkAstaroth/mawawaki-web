@@ -76,5 +76,34 @@ export const useDataEventos = defineStore("dataEventos", {
                     return "Error al realizar el marcado";
                 });
         },
+        async verificarEvento() {
+            try {
+                const response = await axios.get("/api/eventos/principal");
+                return response; // Devuelve la respuesta si la solicitud es exitosa
+            } catch (error) {
+                throw new Error("Error al verificar el evento");
+            }
+        },
+        async eventosFiltro() {
+            try {
+                const response = await axios.get(
+                    "/api/eventos/principal-false"
+                );
+                return response;
+            } catch (error) {
+                throw new Error("Error al verificar el evento");
+            }
+        },
+        async establecerPrincipal(evento) {
+            try {
+                const response = await axios.put(
+                    "/api/eventos/asignar",
+                    evento
+                );
+                return response;
+            } catch (error) {
+                throw new Error("Error al establecer el evento principal");
+            }
+        },
     },
 });

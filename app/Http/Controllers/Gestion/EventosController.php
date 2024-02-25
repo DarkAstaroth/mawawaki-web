@@ -169,4 +169,34 @@ class EventosController extends Controller
 
         return response()->json($result);
     }
+
+    public function verificarEventoPrincipal(Request $request)
+    {
+        $eventoPrincipal = Evento::where('principal', true)->first();
+
+        if ($eventoPrincipal) {
+            return response()->json(['existe' => true, 'evento' => $eventoPrincipal]);
+        }
+
+        return response()->json(['existe' => false]);
+    }
+
+    public function eventosPrincipalFalse(Request $request)
+    {
+        $eventos = Evento::where('principal', false)->get(['id', 'nombre']);
+
+        return response()->json($eventos);
+    }
+
+    public function establecerPrincipal(Request $request)
+    {
+        $evento = Evento::findOrFail($request->id);
+
+        $evento->update([
+            'principal' => true,
+            'solo_ingreso' => false
+        ]);
+
+        return response()->json($evento);
+    }
 }

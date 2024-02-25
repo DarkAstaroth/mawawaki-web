@@ -23,6 +23,11 @@ class UsuarioController extends Controller
         return view('core.usuarios.index');
     }
 
+    public function vistaConfiguracion()
+    {
+        return view('configuraciones.general');
+    }
+
     public function obtenerUsuarios(Request $request)
     {
         $porPagina = $request->get('porPagina', 10);
