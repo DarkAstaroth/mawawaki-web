@@ -67,35 +67,35 @@
                       </td>
                     </tr>
 
-                    <!-- <tr>
+                    <tr v-if="usuario.personal">
                       <td>Universidad:</td>
                       <td>
-                        <span v-if="usuario.email">{{
+                        <span v-if="usuario.personal.universidad">{{
                           usuario.personal.universidad
                         }}</span>
-                        <span v-else>No se registró email</span>
+                        <span v-else>No se registró universidad</span>
                       </td>
                     </tr>
 
-                    <tr>
+                    <tr v-if="usuario.personal">
                       <td>Facultad:</td>
                       <td>
-                        <span v-if="usuario.email">{{
+                        <span v-if="usuario.personal.facultad">{{
                           usuario.personal.facultad
                         }}</span>
-                        <span v-else>No se registró email</span>
+                        <span v-else>No se registró facultad</span>
                       </td>
                     </tr>
 
-                    <tr>
+                    <tr v-if="usuario.personal">
                       <td>Carrera:</td>
                       <td>
-                        <span v-if="usuario.email">{{
+                        <span v-if="usuario.personal.carrera">{{
                           usuario.personal.carrera
                         }}</span>
-                        <span v-else>No se registró email</span>
+                        <span v-else>No se registró carrera</span>
                       </td>
-                    </tr> -->
+                    </tr>
 
                     <tr v-if="usuario.tipo_solicitud === 'cliente'">
                       <td>Ocupación:</td>

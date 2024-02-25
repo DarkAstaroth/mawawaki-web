@@ -28,6 +28,19 @@ Route::middleware([
 });
 
 
+// Rutas para configuraciones generales
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'check.solicitud',
+    'check.verificacion',
+    'check.estado'
+])->group(function () {
+
+    Route::get('dashboard/config/general', [UsuarioController::class, 'vistaConfiguracion'])->name('config.general');
+});
+
 // Rutas de roles
 Route::middleware([
     'auth:sanctum',

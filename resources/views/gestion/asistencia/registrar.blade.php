@@ -18,7 +18,7 @@
                     <div class="card-body py-15 py-lg-20">
                         <div class="mb-14">
                             <a href="../../demo1/dist/index.html" class="">
-                                <img alt="Logo" src="{{ asset('assets/media/logos/logo-scallia-light.png') }}"
+                                <img alt="Logo" src="{{ asset('assets/media/logos/logo-equino.png') }}"
                                     width="120" />
                             </a>
                         </div>

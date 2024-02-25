@@ -30,7 +30,8 @@
               <th class="min-w-150px">Fecha Inicio</th>
               <th class="max-w-100px">Fecha Fin</th>
               <th class="max-w-100px">Lugar</th>
-              <th class="max-w-100px">Tipo</th>
+              <th class="max-w-100px">Tipo Ingreso</th>
+              <th class="max-w-100px">Visibilidad</th>
               <th class="min-w-150px">Acciones</th>
             </tr>
           </thead>
@@ -71,6 +72,23 @@
                   <div class="px-2 d-flex flex-column">
                     <div>
                       {{ evento.lugar }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <td class="align-middle">
+                <div class="d-flex align-items-center">
+                  <div class="px-2 d-flex flex-column">
+                    <div>
+                      <Badge
+                        :value="
+                          evento.solo_ingreso
+                            ? 'Solo Ingreso'
+                            : 'Ingreso - Salida'
+                        "
+                        :severity="evento.solo_ingreso ? 'info' : 'warning'"
+                      ></Badge>
                     </div>
                   </div>
                 </div>
@@ -143,95 +161,6 @@
     </div>
   </div>
   <Toast />
-  <Button label="Show" @click="this.estadoModal()" />
-
-  <Dialog
-    v-model:visible="modalCrearEvento"
-    modal
-    header="Crear Evento"
-    position="center"
-    :style="{ width: '60rem' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
-  >
-    <form
-      class="input-feild"
-      v-on:submit.prevent="
-        modo === 'crear' ? crearEvento() : actualizarEvento()
-      "
-    >
-      <div class="modal-body">
-        <div class="card flex justify-content-center">
-          <div class="d-flex flex-column gap-2">
-            <label for="titulo">Nombre del evento</label>
-            <InputText v-model="nombre" />
-            <small id="username-help"
-              >Enter your username to reset your password.</small
-            >
-          </div>
-        </div>
-
-        <div class="d-flex w-100 gap-5 my-5">
-          <div class="d-flex flex-column w-100">
-            <label for="calendar-12h" class="font-bold block mb-2">
-              Fecha inicio
-            </label>
-            <Calendar
-              class="w-full"
-              id="calendar-12h"
-              v-model="fechaInicio"
-              showTime
-              hourFormat="12"
-            />
-          </div>
-
-          <div class="d-flex flex-column w-100">
-            <label for="calendar-12h" class="font-bold block mb-2">
-              Fecha Fin
-            </label>
-            <Calendar
-              class="w-100"
-              id="calendar-12h"
-              v-model="fechaFin"
-              showTime
-              hourFormat="12"
-            />
-          </div>
-        </div>
-
-        <div class="card flex justify-content-center">
-          <div class="d-flex flex-column gap-2">
-            <label for="titulo">Lugar del evento</label>
-            <InputText v-model="lugar" />
-            <small id="username-help"
-              >Enter your username to reset your password.</small
-            >
-          </div>
-        </div>
-
-        <div class="mb-5">
-          <label for="calendar-12h" class="font-bold block mb-2">
-            Descripcion
-          </label>
-          <Textarea
-            class="w-100"
-            v-model="descripcion"
-            rows="5"
-            placeholder="Descripción"
-          />
-        </div>
-        <MapaComponent @obtenerDatos="establecerDatos" />
-      </div>
-
-      <div class="modal-footer d-flex gap-5">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
-          Cerrar
-        </button>
-        <button type="submit" class="btn btn-success">Guardar</button>
-      </div>
-    </form>
-    <p>Latitud: {{ latitud }}</p>
-    <p>Longitud: {{ longitud }}</p>
-  </Dialog>
 </template>
 
 <script>

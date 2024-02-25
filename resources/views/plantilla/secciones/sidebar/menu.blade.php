@@ -309,6 +309,18 @@
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
                             <a class="menu-link {{ request()->segment(2) == 'roles' ? 'active' : '' }}"
+                                href="{{ route('config.general') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">General</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link {{ request()->segment(2) == 'roles' ? 'active' : '' }}"
                                 href="{{ route('roles.index') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
