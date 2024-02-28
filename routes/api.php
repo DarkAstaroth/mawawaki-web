@@ -12,6 +12,7 @@ use App\Http\Controllers\Gestion\DocumentacionController;
 use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\NotificacionController;
 use App\Http\Controllers\Gestion\PacientesController;
+use App\Http\Controllers\Gestion\PDFController;
 use App\Http\Controllers\Gestion\QRcontroller;
 use App\Http\Controllers\Gestion\TerapiasController;
 use Illuminate\Http\Request;
@@ -64,6 +65,9 @@ Route::post('asignar/permisos/rol/{rolId}', [RolController::class, 'asignarPermi
 // Api para usuarios
 Route::get('usuarios', [UsuarioController::class, 'obtenerUsuarios']);
 Route::get('usuarios/filtro', [UsuarioController::class, 'obtenerUsuariosSinPaginacion']);
+Route::post('imagen/usuario/{id}', [UsuarioController::class, 'subirFoto']);
+
+
 
 Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);
 Route::post('/asistencias/usuario/{id}', [AsistenciasController::class, 'obtenerAsistencias']);
@@ -133,3 +137,7 @@ Route::get('personal', [UsuarioController::class, 'obtenerPersonal']);
 Route::get('eventos/principal', [EventosController::class, 'verificarEventoPrincipal']);
 Route::get('eventos/principal-false', [EventosController::class, 'eventosPrincipalFalse']);
 Route::put('eventos/asignar', [EventosController::class, 'establecerPrincipal']);
+
+
+//API para los PDF
+Route::get('pdf/usuarios', [PDFController::class, 'usuariosSistema']);

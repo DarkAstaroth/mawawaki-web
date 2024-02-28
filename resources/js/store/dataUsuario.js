@@ -36,28 +36,17 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                     console.log(error);
                 });
         },
-        cargarUsuarios(pagina, busqueda, parametro) {
-            axios
-                .get("/api/usuarios", {
-                    params: {
-                        page: pagina,
-                        busqueda: busqueda,
-                        parametro: parametro,
-                    },
-                })
-                .then((response) => {
-                    this.usuarios = response.data.usuarios;
-                    this.asignarMensaje(
-                        "success",
-                        "Usuarios cargados exitosamente."
-                    );
-                })
-                .catch((error) => {
-                    this.asignarMensaje(
-                        "error",
-                        "Hubo un error al cargar los usuarios."
-                    );
-                });
+        async cargarUsuarios(pagina, busqueda, parametro) {
+            const respuesta = await axios.get("/api/usuarios", {
+                params: {
+                    page: pagina,
+                    busqueda: busqueda,
+                    parametro: parametro,
+                },
+            });
+            this.usuarios = respuesta.data.usuarios;
+
+            return respuesta.data.paginacion;
         },
         async actualizarEstado(id, estado) {
             try {
@@ -137,6 +126,14 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                 );
                 console.log(respuesta, "respuesta");
                 return respuesta.data;
+            } catch (error) {
+                throw error;
+            }
+        },
+        async usuariosPDF() {
+            try {
+                const respuesta = await axios.get("/api/pdf/usuarios");
+                return respuesta;
             } catch (error) {
                 throw error;
             }

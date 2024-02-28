@@ -1,63 +1,23 @@
 <template>
   <div class="card card-bordered">
     <div class="card-body">
-      <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_1"
-            @click="cambiarParametro('todos')"
-            >Asistencias</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_2"
-            >Documentos</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-bs-toggle="tab"
-            href="#kt_tab_pane_3"
-            @click="store.marcarTodasLeidas"
-          >
-            Notificaciones
-            <span
-              v-if="store.no_visto > 0"
-              class="badge badge-primary badge-circle badge-sm"
-            >
-              {{ store.no_visto }}
-            </span>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3"
-            >Actividades</a
-          >
-        </li>
-      </ul>
-
-      <div class="tab-content" id="myTabContent">
-        <div
-          class="tab-pane fade show active"
-          id="kt_tab_pane_1"
-          role="tabpanel"
-        >
+      <TabView :scrollable="true">
+        <TabPanel header="Datos personales" @click="cambiarParametro('todos')">
           <AsistenciasUsuario />
-        </div>
-        <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
+        </TabPanel>
+        <TabPanel header="Asistencias" @click="cambiarParametro('todos')">
+          <AsistenciasUsuario />
+        </TabPanel>
+        <TabPanel header="Eventos" @click="cambiarParametro('todos')">
+          <AsistenciasUsuario />
+        </TabPanel>
+        <TabPanel header="Documentos">
           <DocumentacionUsuario />
-        </div>
-        <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
+        </TabPanel>
+        <TabPanel header="Notificaciones" @click="store.marcarTodasLeidas">
           <NotificacionesUsuario />
-        </div>
-        <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
-          <DocumentacionUsuario />
-        </div>
-      </div>
+        </TabPanel>
+      </TabView>
     </div>
   </div>
 </template>

@@ -30,7 +30,11 @@ import Avatar from "primevue/avatar";
 import AvatarGroup from "primevue/avatargroup";
 import Message from "primevue/message";
 import RadioButton from "primevue/radiobutton";
-import MultiSelect from 'primevue/multiselect';
+import MultiSelect from "primevue/multiselect";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+import FileUpload from "primevue/fileupload";
+import Menu from "primevue/menu";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -62,6 +66,10 @@ export const appComponents = createApp({
     .component("Message", Message)
     .component("RadioButton", RadioButton)
     .component("MultiSelect", MultiSelect)
+    .component("TabView", TabView)
+    .component("TabPanel", TabPanel)
+    .component("FileUpload", FileUpload)
+    .component("Menu", Menu)
     .directive("badge", BadgeDirective)
 
     .mount("#app");
