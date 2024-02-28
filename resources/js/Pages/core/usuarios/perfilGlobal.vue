@@ -5,25 +5,32 @@
         <div class="card-body">
           <div
             :class="[
-              'd-flex',
+              'd-flex ',
               'flex-wrap',
-              'justify-content-between',
+              'justify-content-center',
               esResponsivo ? 'flex-column' : 'flex-row',
             ]"
           >
             <div
               :class="[
-                'd-flex flex-grow-1',
+                'd-flex flex-grow-1 justify-content-center',
                 esResponsivo && 'flex-column align-items-center',
               ]"
             >
-              <div class="me-10">
-                <Avatar
-                  :image="'/'.concat(this.store.usuario.profile_photo_path)"
-                  class="mr-2"
-                  size="xlarge"
-                  shape="circle"
-                />
+              <div
+                :class="[
+                  'd-flex justify-content-center',
+                  esResponsivo ? 'w-100 mb-5' : 'me-10',
+                ]"
+              >
+                <div class="container_usuario">
+                  <img
+                    :src="'/'.concat(this.store.usuario.profile_photo_path)"
+                    alt=""
+                    class="crop"
+                    width="150"
+                  />
+                </div>
               </div>
 
               <div
@@ -33,21 +40,30 @@
                 ]"
               >
                 <div
-                  class="d-flex align-items-center justify-content-center text-center"
+                  :class="[
+                    'd-flex align-items-center justify-content-center text-center ',
+                    esResponsivo ? 'flex-column gap-0' : 'gap-2',
+                  ]"
                 >
                   <a
                     href="#"
-                    class="text-gray-900 text-hover-primary fs-2 fw-bold me-1"
+                    class="text-gray-900 text-hover-primary fs-2 fw-bold"
                   >
                     {{ this.store.usuario.persona.nombre }}
+                  </a>
+
+                  <a
+                    href="#"
+                    class="text-gray-900 text-hover-primary fs-2 fw-bold"
+                  >
                     {{ this.store.usuario.persona.paterno }}
                     {{ this.store.usuario.persona.materno }}
-                  </a>
-                  <a href="#">
-                    <i class="ki-duotone ki-verify fs-1 text-primary">
-                      <span class="path1"></span>
-                      <span class="path2"></span>
-                    </i>
+                    <a href="#">
+                      <i class="ki-duotone ki-verify fs-1 text-primary">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                      </i>
+                    </a>
                   </a>
                 </div>
 
@@ -56,7 +72,7 @@
                 >
                   <a
                     href="#"
-                    class="d-flex align-items-center text-gray-400 text-hover-primary"
+                    class="d-flex align-items-center text-gray-400 text-hover-primary mb-3"
                   >
                     <i class="ki-duotone ki-sms fs-4 me-1">
                       <span class="path1"></span>
@@ -84,7 +100,16 @@
 
             <div class="d-flex flex-column gap-3">
               <div class="w-full">
-                <Button class="w-100" label="Editar" />
+                <FileUpload
+                  class="w-100"
+                  mode="basic"
+                  name="foto[]"
+                  :url="`/api/imagen/usuario/${store.usuario.id}`"
+                  accept="image/*"
+                  chooseLabel="Subir Foto"
+                  :maxFileSize="1000000"
+                  @upload="onUpload"
+                />
               </div>
             </div>
           </div>
@@ -94,6 +119,7 @@
       <TabsUsuario />
     </div>
   </div>
+  <Toast />
 </template>
 
 
@@ -101,6 +127,7 @@
 import { useDataPerfil } from "../../../store/dataPerfil";
 import VueMultiselect from "vue-multiselect";
 import TabsUsuario from "./TabsUsuario.vue";
+import { useToast } from "primevue/usetoast";
 
 export default {
   name: "PerfilGlobal",
@@ -108,7 +135,9 @@ export default {
   components: { VueMultiselect, TabsUsuario },
   setup() {
     const store = useDataPerfil();
-    return { store };
+    const toast = useToast();
+
+    return { store, toast };
   },
   created() {
     this.verificarResponsivo();
@@ -128,8 +157,33 @@ export default {
   },
   mounted() {},
   methods: {
+    mostrarMensaje(tipo, titulo, texto) {
+      this.toast.add({
+        severity: tipo,
+        summary: titulo,
+        detail: texto,
+        life: 2000,
+      });
+    },
     verificarResponsivo() {
       this.esResponsivo = window.innerWidth < 768;
+    },
+    async onUpload(event) {
+      try {
+        const response = event.xhr;
+
+        if (response.status === 200) {
+          this.mostrarMensaje(
+            "success",
+            "Operación Exitosa",
+            "Foto subida con éxito, Recarga la página"
+          );
+        } else {
+          this.mostrarMensaje("error", "Error", "No se puedo subir la foto");
+        }
+      } catch (error) {
+        this.mostrarMensaje("error", "Error", "No se puedo subir la foto");
+      }
     },
   },
 };

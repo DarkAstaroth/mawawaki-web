@@ -4,9 +4,14 @@
     <div class="card-header">
       <h3 class="card-title">Listado de usuarios</h3>
       <div class="div card-toolbar">
-        <button type="button" class="btn btn-sm btn-success">
+        <button type="button" class="btn btn-sm btn-success me-5">
           <i class="text-white far fa-plus"></i>
           Nuevo
+        </button>
+
+        <button type="button" class="btn btn-sm btn-danger" @click="generarPDF">
+          <i class="text-white far fa-file"></i>
+          PDF
         </button>
       </div>
     </div>
@@ -28,12 +33,12 @@
         </li>
       </ul>
 
-      <input
-        class="mb-5 form-control"
+      <InputText
+        class="w-100 mb-5"
         type="text"
         v-model="busqueda"
         @input="filtrarUsuarios"
-        placeholder="Buscar..."
+        placeholder="Buscar usuario..."
       />
       <div class="table-responsive">
         <table class="table table-striped table-sm table-bordered">
@@ -41,9 +46,9 @@
             <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
               <th class="min-w-150px">Nombre</th>
               <th class="min-w-150px">Rol</th>
-              <th class="max-w-100px">Creado en</th>
+              <th class="min-w-200px">Creado en</th>
               <th class="max-w-100px">Estado</th>
-              <th class="min-w-150px">Acciones</th>
+              <th class="min-w-10px">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -106,9 +111,7 @@
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                       data-boundary="viewport"
-                    >
-                      Acciones
-                    </button>
+                    ></button>
                     <ul
                       class="dropdown-menu"
                       aria-labelledby="dropdownMenuButton1"
@@ -153,7 +156,7 @@
               </td>
             </tr>
             <tr v-if="store.usuarios.length === 0">
-              <td colspan="4" class="text-center">No hay datos</td>
+              <td colspan="5" class="text-center">No hay datos</td>
             </tr>
           </tbody>
         </table>
@@ -164,7 +167,9 @@
             class="page-item"
             :class="{ disabled: paginacion.paginaActual === 1 }"
           >
-            <a class="page-link" href="#" @click="cargarRoles(1)">Primera</a>
+            <a class="page-link" href="#" @click="cambiarPaginacion(1)"
+              >Primera</a
+            >
           </li>
           <li
             class="page-item"
@@ -173,7 +178,7 @@
             <a
               class="page-link"
               href="#"
-              @click="cargarRoles(paginacion.paginaActual - 1)"
+              @click="cambiarPaginacion(paginacion.paginaActual - 1)"
               >Anterior</a
             >
           </li>
@@ -183,7 +188,7 @@
             :key="page"
             :class="{ active: paginacion.paginaActual === page }"
           >
-            <a class="page-link" href="#" @click="cargarRoles(page)">{{
+            <a class="page-link" href="#" @click="cambiarPaginacion(page)">{{
               page
             }}</a>
           </li>
@@ -196,7 +201,7 @@
             <a
               class="page-link"
               href="#"
-              @click="cargarRoles(paginacion.paginaActual + 1)"
+              @click="cambiarPaginacion(paginacion.paginaActual + 1)"
               >Siguiente</a
             >
           </li>
@@ -209,7 +214,7 @@
             <a
               class="page-link"
               href="#"
-              @click="cargarRoles(paginacion.ultimaPagina)"
+              @click="cambiarPaginacion(paginacion.ultimaPagina)"
               >Última</a
             >
           </li>
@@ -289,6 +294,8 @@ import { ref } from "vue";
 import { useDataUsuarios } from "../../../store/dataUsuario";
 import FichasIndex from "./fichasIndex.vue";
 import { useToast } from "primevue/usetoast";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default {
   name: "UsuariosIndex",
@@ -302,6 +309,21 @@ export default {
   },
   data() {
     return {
+      items: [
+        {
+          label: "Options",
+          items: [
+            {
+              label: "Refresh",
+              icon: "pi pi-refresh",
+            },
+            {
+              label: "Export",
+              icon: "pi pi-upload",
+            },
+          ],
+        },
+      ],
       busqueda: "",
       parametro: "todos",
       paginacion: {
@@ -328,13 +350,37 @@ export default {
       notificacion: { tipo: "", titulo: "", mensaje: "" },
       usuarioNotificacionID: "",
       modalNotificacion: false,
+      todos: [
+        { title: "todo 1", description: "description 1" },
+        { title: "todo 2", description: "description2" },
+        { title: "todo 3", description: "description 3" },
+        { title: "todo 4", description: "description 4" },
+        { title: "todo 5", description: "description 5" },
+      ],
     };
   },
   validations() {},
   mounted() {
-    this.store.cargarUsuarios(1, this.busqueda, this.parametro);
+    this.store
+      .cargarUsuarios(1, this.busqueda, this.parametro)
+      .then((respuesta) => {
+        this.paginacion = respuesta;
+      });
   },
   methods: {
+    cambiarPaginacion(pagina, busqueda, parametro) {
+      this.store
+        .cargarUsuarios(pagina, this.busqueda, this.parametro)
+        .then((respuesta) => {
+          this.paginacion = respuesta;
+        });
+    },
+
+    abrirMenu(event) {
+      console.log(this.$refs.menu);
+      this.$refs.menu[1].toggle(event);
+      this.$refs.menu[1].toggle(event);
+    },
     mostrarMensaje(tipo, titulo, texto) {
       this.toast.add({
         severity: tipo,
@@ -344,11 +390,20 @@ export default {
       });
     },
     filtrarUsuarios() {
-      this.store.cargarUsuarios(1, this.busqueda, this.parametro);
+      this.store
+        .cargarUsuarios(1, this.busqueda, this.parametro)
+        .then((respuesta) => {
+          this.paginacion = respuesta;
+        });
     },
     cambiarParametro(tabSeleccionada) {
+      console.log("maneul");
       this.parametro = tabSeleccionada;
-      this.store.cargarUsuarios(1, this.busqueda, this.parametro);
+      this.store
+        .cargarUsuarios(1, this.busqueda, this.parametro)
+        .then((respuesta) => {
+          this.paginacion = respuesta;
+        });
     },
 
     async cambiarEstado(usuario) {
@@ -397,6 +452,68 @@ export default {
         });
       this.notificacion = { tipo: "", titulo: "", mensaje: "" };
       this.modalNotificacion = false;
+    },
+    generarPDF() {
+      this.store.usuariosPDF().then((respuesta) => {
+        var doc = new jsPDF();
+
+        var img = new Image();
+        img.src = "http://localhost:8000/assets/media/logos/logo-equino.png";
+        doc.addImage(img, "JPEG", 10, 10, 25, 6);
+
+        var titulo = "Usuarios del sistema";
+        var tituloWidth =
+          (doc.getStringUnitWidth(titulo) * doc.internal.getFontSize()) /
+          doc.internal.scaleFactor;
+        var x = (doc.internal.pageSize.getWidth() - tituloWidth) / 2;
+        doc.text(titulo, x, 20);
+
+        var startY = 30;
+
+        var footer = function (data) {
+          var pageCount = doc.internal.getNumberOfPages();
+          var str = "Página " + data.pageNumber;
+          var pageWidth = doc.internal.pageSize.getWidth();
+          var textWidth =
+            (doc.getStringUnitWidth(str) * doc.internal.getFontSize()) /
+            doc.internal.scaleFactor;
+          doc.setFontSize(10);
+          doc.text(
+            str,
+            pageWidth - data.settings.margin.right - textWidth,
+            doc.internal.pageSize.getHeight() - 10
+          );
+          doc.text(
+            "Centro Integral de Terapias Equinas",
+            doc.internal.pageSize.getWidth() / 2,
+            doc.internal.pageSize.getHeight() - 10,
+            { align: "center" }
+          );
+        };
+
+        var options = {
+          startY: startY,
+          head: respuesta.data.cabecera,
+          body: respuesta.data.usuarios,
+          margin: { top: 20, bottom: 20 },
+          theme: "grid",
+          didDrawPage: footer,
+        };
+
+        // Obtener la fecha actual
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, "0");
+        var mm = String(today.getMonth() + 1).padStart(2, "0"); // Enero es 0
+        var yyyy = today.getFullYear();
+        var fecha = dd + "-" + mm + "-" + yyyy;
+
+        // Generar el nombre del archivo PDF con la fecha actual
+        var nombreArchivo = "Reporte_usuario_" + fecha + ".pdf";
+
+        doc.autoTable(options);
+
+        doc.save(nombreArchivo);
+      });
     },
   },
 };

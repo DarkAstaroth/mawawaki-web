@@ -136,7 +136,31 @@
             outline-color: transparent;
         }
 
-        
+        .p-tabview-title {
+            line-height: 1;
+            white-space: nowrap;
+            color: #101820
+        }
+
+        .container_usuario {
+            width: 100px;
+            height: 100px;
+            overflow: hidden;
+            margin: 10px;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .container_usuario>.crop {
+            position: absolute;
+            left: -100%;
+            right: -100%;
+            top: -100%;
+            bottom: -100%;
+            margin: auto;
+            min-height: 100%;
+            min-width: 100%;
+        }
     </style>
 
     <style>

@@ -5,7 +5,7 @@
       :options="options"
       filter
       optionLabel="nombre"
-      placeholder="Selecciona tipo de archivo"
+      placeholder="Selecciona evento"
       class="w-100 md:w-14rem"
       @change="obtenerAsistencias"
     >
