@@ -34,6 +34,7 @@ export default {
         .map((usuario) => usuario.name),
       roles: [],
       cargando: true,
+      enviado: false,
     };
   },
   validations() {

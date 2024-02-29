@@ -3,11 +3,11 @@
     <div class="card-body">
       <TabView :scrollable="true">
         <TabPanel header="Datos personales" @click="cambiarParametro('todos')">
-          <AsistenciasUsuario />
+          <DatosPersonales />
         </TabPanel>
-        <TabPanel header="Asistencias" @click="cambiarParametro('todos')">
+        <!-- <TabPanel header="Asistencias" @click="cambiarParametro('todos')">
           <AsistenciasUsuario />
-        </TabPanel>
+        </TabPanel> -->
         <TabPanel header="Eventos" @click="cambiarParametro('todos')">
           <AsistenciasUsuario />
         </TabPanel>
@@ -25,6 +25,7 @@
 <script>
 import { useDataPerfil } from "../../../store/dataPerfil";
 import VueMultiselect from "vue-multiselect";
+import DatosPersonales from "./Tabs/DatosPersonales.vue";
 import AsistenciasUsuario from "./Tabs/Asistencias.vue";
 import DocumentacionUsuario from "./Tabs/Documentacion.vue";
 import NotificacionesUsuario from "./Tabs/Notificaciones.vue";
@@ -33,6 +34,7 @@ export default {
   name: "TabsUsuario",
   components: {
     VueMultiselect,
+    DatosPersonales,
     AsistenciasUsuario,
     DocumentacionUsuario,
     NotificacionesUsuario,

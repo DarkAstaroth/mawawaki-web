@@ -41,5 +41,16 @@ export const useDataPerfil = defineStore("dataPerfil", {
                     );
                 });
         },
+        async modificarDatos(usuario) {
+            try {
+                const respuesta = await axios.put(
+                    `/api/usuario/${this.usuario.id}`,
+                    usuario
+                );
+                return respuesta;
+            } catch (error) {
+                throw error;
+            }
+        },
     },
 });

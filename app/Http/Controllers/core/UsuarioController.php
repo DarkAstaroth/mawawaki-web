@@ -256,7 +256,7 @@ class UsuarioController extends Controller
     public function PerfilUsuario(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions', 'persona');
+        $usuario->load('roles', 'permissions', 'persona', 'personal', 'cliente');
         return view('core.usuarios.perfil', compact('usuario'));
     }
 
@@ -435,5 +435,30 @@ class UsuarioController extends Controller
         }
 
         return response()->json(['error' => 'No se encontró ninguna foto para subir'], 400);
+    }
+
+
+    public function modificarUsuario(Request $request, $id)
+    {
+        $userData = $request->input('usuario');
+        $user = User::findOrFail($id);
+
+        $personaData = $userData['persona'] ?? [];
+        $personalData = $userData['personal'] ?? [];
+
+
+        if (!empty($personaData)) {
+            if ($user->persona) {
+                $user->persona()->update($personaData);
+            }
+        }
+
+        if (!empty($personalData)) {
+            if ($user->personal) {
+                $user->personal()->update($personalData);
+            }
+        }
+
+        return response()->json(['message' => 'Datos modificados correctamente']);
     }
 }

@@ -66,7 +66,7 @@ Route::post('asignar/permisos/rol/{rolId}', [RolController::class, 'asignarPermi
 Route::get('usuarios', [UsuarioController::class, 'obtenerUsuarios']);
 Route::get('usuarios/filtro', [UsuarioController::class, 'obtenerUsuariosSinPaginacion']);
 Route::post('imagen/usuario/{id}', [UsuarioController::class, 'subirFoto']);
-
+Route::put('usuario/{id}', [UsuarioController::class, 'modificarUsuario']);
 
 
 Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);

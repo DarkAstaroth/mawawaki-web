@@ -81,7 +81,7 @@
         <!--begin::Tab panel-->
         <div class="tab-pane fade" id="kt_topbar_notifications_3" role="tabpanel">
             <!--begin::Items-->
-            <div class="scroll-y mh-325px my-5 px-8">
+            {{-- <div class="scroll-y mh-325px my-5 px-8">
                 <!--begin::Item-->
                 <div class="d-flex flex-stack py-4">
                     <!--begin::Section-->
@@ -286,11 +286,11 @@
                     <!--end::Label-->
                 </div>
                 <!--end::Item-->
-            </div>
+            </div> --}}
             <!--end::Items-->
             <!--begin::View more-->
             <div class="py-3 text-center border-top">
-                <a href="?page=pages/user-profile/activity" class="btn btn-color-gray-600 btn-active-color-primary">
+                <a href="#" class="btn btn-color-gray-600 btn-active-color-primary">
                     Ver Todas
                     <i class="ki-duotone ki-arrow-right fs-5"><span class="path1"></span><span
                             class="path2"></span></i>
