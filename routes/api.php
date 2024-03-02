@@ -71,6 +71,8 @@ Route::put('usuario/{id}', [UsuarioController::class, 'modificarUsuario']);
 
 Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);
 Route::post('/asistencias/usuario/{id}', [AsistenciasController::class, 'obtenerAsistencias']);
+Route::post('asistencias/total', [AsistenciasController::class, 'calcularTotalAsistencias']);
+
 
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
@@ -85,8 +87,12 @@ Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
 // Api para eventos
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);
 Route::post('evento', [EventosController::class, 'store']);
+Route::put('evento/{id}', [EventosController::class, 'update']);
 Route::get('eventos/usuario/{id}', [EventosController::class, 'obtenerEventosUsuario']);
 Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
+Route::get('eventos/privados', [EventosController::class, 'obtenerEventosPrivados']);
+Route::get('evento/principal', [EventosController::class, 'obtenerEventosPrincipal']);
+
 
 
 
@@ -141,3 +147,4 @@ Route::put('eventos/asignar', [EventosController::class, 'establecerPrincipal'])
 
 //API para los PDF
 Route::get('pdf/usuarios', [PDFController::class, 'usuariosSistema']);
+Route::post('pdf/asistencias/principal/usuario', [AsistenciasController::class, 'generarPDFAsistencias']);

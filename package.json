@@ -44,6 +44,7 @@
         "primevue": "^3.40.1",
         "qrcode": "^1.5.3",
         "qrcode.vue": "^3.4.1",
+        "sweetalert2": "^11.10.5",
         "uuid": "^9.0.0",
         "vue-html2canvas": "^0.0.4",
         "vue-loader": "^17.0.1",

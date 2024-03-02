@@ -377,7 +377,6 @@ export default {
     },
 
     abrirMenu(event) {
-      console.log(this.$refs.menu);
       this.$refs.menu[1].toggle(event);
       this.$refs.menu[1].toggle(event);
     },
@@ -397,7 +396,6 @@ export default {
         });
     },
     cambiarParametro(tabSeleccionada) {
-      console.log("maneul");
       this.parametro = tabSeleccionada;
       this.store
         .cargarUsuarios(1, this.busqueda, this.parametro)

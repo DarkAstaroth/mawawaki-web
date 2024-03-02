@@ -19,15 +19,9 @@
                         <div class="mb-14">
                             <a href="../../demo1/dist/index.html" class="">
                                 <img alt="Logo" src="{{ asset('assets/media/logos/logo-equino.png') }}"
-                                    width="120" />
+                                    width="220" />
                             </a>
                         </div>
-
-                        <h1 class="fw-bolder text-gray-900 mb-5">
-                            Registrar asistencia
-                        </h1>
-
-
 
                         <div class="mb-1  d-flex justify-content-center mb-5">
                             <span class="px-5 border rounded border-secondary">
@@ -48,14 +42,18 @@
 
 
 
+
+
+
+
+
                         <div class="mb-1 d-flex flex-column  w-100 mb-5 align-items-center">
 
-                            <span class="px-5 mb-5">
+                            <span class="mb-5">
                                 <div class="p-2">
                                     <div class="d-flex">
                                         <div class="mx-4 d-flex flex-column">
-                                            <div class="text-black-500 fw-bold fs-6">{{ $evento->nombre }}
-                                            </div>
+
                                             {{-- <div class="text-gray-500 fw-semibold fs-base ">{{ $evento->descripcion }}
                                             </div> --}}
                                         </div>
@@ -63,7 +61,7 @@
                                 </div>
                             </span>
 
-                            <div id="app">
+                            <div id="app" class="w-100">
                                 <div id="eventos-component">
                                     <registro-qr :evento='{{ json_encode($evento) }}'
                                         :usuario='{{ json_encode($usuario->id) }}'
@@ -72,28 +70,7 @@
                             </div>
                         </div>
 
-
-                        {{-- <form action="{{ route('registrar.marcado') }}" method="POST">
-                            @csrf
-                            <input type="hidden" value="{{ $evento->id }}" name='evento'>
-                            <input type="hidden" value="{{ $usuario->id }}" name='usuario'>
-                            <input type="hidden" value="{{ $qr->id }}" name='qr'>
-                            <button type='submit' class="btn btn-primary mb-10">
-                                <i class="ki-duotone ki-fingerprint-scanning fs-1">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                    <span class="path3"></span>
-                                    <span class="path4"></span>
-                                    <span class="path5"></span>
-                                </i>
-                                Registrar</button>
-                        </form> --}}
                         <div class="">
-                            <a href="#" class="btn btn-icon-primary btn-text-primary">
-                                <i class="ki-duotone ki-home fs-1"><span class="path1"></span><span
-                                        class="path2"></span></i>
-                                Inicio
-                            </a>
                             <a href="/logout" class="btn btn-icon-danger btn-text-danger">
                                 <i class="ki-duotone ki-cross-square fs-1">
                                     <span class="path1"></span>

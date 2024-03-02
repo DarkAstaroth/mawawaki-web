@@ -294,7 +294,7 @@ export default {
             this.longitud,
             this.tipoEvento,
             this.soloIngreso,
-            this.usuariosFiltro
+            this.usuariosSeleccionados
           )
           .then(() => {
             this.mostrarMensaje(

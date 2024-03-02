@@ -348,7 +348,6 @@ export default {
           this.cargarQRS(1);
         })
         .catch((error) => {
-          console.log(error);
           Swal.fire({
             title: "Upss..",
             text: "Hubo un error al generar el QR",

@@ -97,21 +97,16 @@ export default {
     this.obtenerEventos();
   },
   methods: {
-    onChange(value) {
-      console.log("hola");
-    },
+    onChange(value) {},
     obtenerEventos() {
       axios
         .get(`/api/eventos/usuario/${this.store.usuario.id}`)
         .then((response) => {
           this.options = response.data;
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     },
     obtenerAsistencias() {
-      console.log(this.selectEvento.value);
       axios
         .post(`/api/asistencias/usuario/${this.store.usuario.id}`, {
           idEvento: this.selectEvento.value,
@@ -121,11 +116,8 @@ export default {
           this.paginacion = response.data.paginacion;
           this.total = response.data.total;
           this.calcularTiempoTotal();
-          console.log(this.totalGlobal);
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     },
     calcularTiempoTotal() {
       let totalSegundos = 0;

@@ -212,7 +212,6 @@ export default {
       this.modalTerapia = estado;
     },
     registrar() {
-      console.log(this.pacienteSeleccionado.value);
       this.store
         .registrarServicio(this.pacienteSeleccionado.value, this.datosServicio)
         .then((respuesta) => {

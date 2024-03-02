@@ -4,7 +4,7 @@
         <div class="d-flex flex-column flex-lg-row flex-column-fluid">
             <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
                 <div class="d-flex flex-center flex-column flex-lg-row-fluid">
-                    <div class="w-lg-500px p-10">
+                    <div class="w-lg-500px w-100 mt-20">
 
 
                         <div class="text-center mb-11">
@@ -19,12 +19,12 @@
                             </div>
 
                         </div>
-                        
+
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
                             action="{{ route('verificar.login') }}" method="POST">
                             @csrf
                             @method('POST')
-<div class="separator separator-content my-14">
+                            <div class="separator separator-content my-14">
                                 <span class="text-gray-500 fw-semibold fs-7">Ingresar con tu correo</span>
                             </div>
 

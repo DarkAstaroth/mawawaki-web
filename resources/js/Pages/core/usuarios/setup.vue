@@ -229,9 +229,7 @@ export default {
       },
     };
   },
-  mounted() {
-    console.log(this.v$);
-  },
+  mounted() {},
   methods: {
     irAlSiguientePaso() {
       if (this.opcionSeleccionada) {
@@ -244,7 +242,6 @@ export default {
     enviarFormulario() {
       this.enviado = true;
       if (this.v$.$invalid) {
-        console.log("Formulario no válido");
         return;
       }
       axios

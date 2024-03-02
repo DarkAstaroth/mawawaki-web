@@ -245,9 +245,7 @@ export default {
   destroyed() {
     window.removeEventListener("resize", this.verificarResponsivo);
   },
-  mounted() {
-    console.log(this.store.usuario);
-  },
+  mounted() {},
   methods: {
     mostrarMensaje(tipo, titulo, texto) {
       this.toast.add({

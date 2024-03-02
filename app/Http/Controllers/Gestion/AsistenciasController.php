@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Gestion;
 use App\Http\Controllers\Controller;
 use App\Models\Gestion\Asistencia;
 use App\Models\Gestion\QR;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AsistenciasController extends Controller
 {
@@ -74,8 +76,17 @@ class AsistenciasController extends Controller
         if ($qr) {
             // Obtener el evento al que pertenece el QR
             $evento = $qr->evento;
-
             if ($evento) {
+                // Verificar si el evento ya ha finalizado
+                if ($evento->fecha_hora_fin) {
+                    $fechaFin = Carbon::createFromTimestamp($evento->fecha_hora_fin);
+                    $now = Carbon::now();
+
+                    if ($now->gt($fechaFin)) {
+                        return view('gestion.asistencia.caducado');
+                    }
+                }
+
                 $usuario = Auth::user();
                 return view('gestion.asistencia.registrar', compact('usuario', 'evento', 'qr'));
             } else {
@@ -85,6 +96,7 @@ class AsistenciasController extends Controller
             return "QR no encontrado.";
         }
     }
+
 
 
     public function registrarMarcado(Request $request)
@@ -228,5 +240,76 @@ class AsistenciasController extends Controller
                 'hasta' => $fin,
             ],
         ]);
+    }
+
+    public function calcularTotalAsistencias(Request $request)
+    {
+        // Validar los datos de entrada
+        $request->validate([
+            'idUsuario' => 'required|uuid',
+            'idEvento' => 'required|uuid',
+        ]);
+
+        // Obtener el total de segundos de todas las asistencias
+        $totalAsistencias = Asistencia::where('UsuarioID', $request->idUsuario)
+            ->where('EventoID', $request->idEvento)
+            ->sum(DB::raw('fecha_hora_salida - fecha_hora_entrada'));
+
+        // Convertir el total a horas, minutos y segundos
+        $horas = floor($totalAsistencias / 3600);
+        $minutos = floor(($totalAsistencias % 3600) / 60);
+        $segundos = $totalAsistencias % 60;
+
+        return response()->json([
+            'horas' => $horas,
+            'minutos' => $minutos,
+            'segundos' => $segundos,
+        ]);
+    }
+
+    public function generarPDFAsistencias(Request $request)
+    {
+        // Obtener idUsuario y idEvento del cuerpo de la solicitud
+        $idUsuario = $request->idUsuario;
+        $idEvento = $request->idEvento;
+
+        // Consultar asistencias en la base de datos
+        $asistenciasQuery = Asistencia::where('UsuarioID', $idUsuario);
+
+        if ($idEvento) {
+            $asistenciasQuery->where('EventoID', $idEvento);
+        }
+
+        $asistencias = $asistenciasQuery->get();
+
+        // Cabecera y datos para el PDF
+        $cabecera = [['Fecha y Hora de Entrada', 'Fecha y Hora de Salida', 'Horas', 'Minutos', 'Segundos']];
+        $datos = [];
+
+        foreach ($asistencias as $asistencia) {
+            $horaEntrada = \Carbon\Carbon::createFromTimestamp($asistencia->fecha_hora_entrada);
+            $horaSalida = $asistencia->fecha_hora_salida ? \Carbon\Carbon::createFromTimestamp($asistencia->fecha_hora_salida) : null;
+
+            // Calcular diferencia de tiempo si hay hora de salida
+            if ($horaSalida) {
+                $diferencia = $horaSalida->diff($horaEntrada);
+                $horas = $diferencia->h;
+                $minutos = $diferencia->i;
+                $segundos = $diferencia->s;
+            } else {
+                $horas = $minutos = $segundos = null;
+            }
+
+            $datos[] = [
+                $horaEntrada->format('H:i:s d/m/Y'), // Formato personalizado
+                $horaSalida ? $horaSalida->format('H:i:s d/m/Y') : null, // Formato personalizado
+                $horas,
+                $minutos,
+                $segundos
+            ];
+        }
+
+        // Enviar la respuesta con los datos en formato JSON
+        return response()->json(['cabecera' => $cabecera, 'datos' => $datos]);
     }
 }

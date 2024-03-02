@@ -32,9 +32,7 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                     this.ficha.verificados = response.data.verificados;
                     this.ficha.por_verificar = response.data.por_verificar;
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((error) => {});
         },
         async cargarUsuarios(pagina, busqueda, parametro) {
             const respuesta = await axios.get("/api/usuarios", {
@@ -124,7 +122,7 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                 const respuesta = await axios.delete(
                     `/api/eliminar/actividad/${id}`
                 );
-                console.log(respuesta, "respuesta");
+
                 return respuesta.data;
             } catch (error) {
                 throw error;
@@ -142,14 +140,12 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
             if (["success", "error", "warning"].includes(tipo)) {
                 this.mensaje[tipo] = mensaje;
             } else {
-                console.error("Tipo de mensaje no válido.");
             }
         },
         limpiarMensaje({ commit }, tipo) {
             if (["success", "error", "warning"].includes(tipo)) {
                 commit("SET_MENSAJE", { tipo, mensaje: "" });
             } else {
-                console.error("Tipo de mensaje no válido.");
             }
         },
     },

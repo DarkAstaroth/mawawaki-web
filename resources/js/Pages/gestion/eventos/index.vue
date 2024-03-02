@@ -28,11 +28,11 @@
             <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
               <th class="min-w-150px">Nombre</th>
               <th class="min-w-150px">Fecha Inicio</th>
-              <th class="max-w-100px">Fecha Fin</th>
-              <th class="max-w-100px">Lugar</th>
-              <th class="max-w-100px">Tipo Ingreso</th>
-              <th class="max-w-100px">Visibilidad</th>
-              <th class="min-w-150px">Acciones</th>
+              <th class="min-w-150px">Fecha Fin</th>
+              <th class="min-w-200px">Lugar</th>
+              <th class="min-w-150px">Tipo Ingreso</th>
+              <th class="min-w-150px">Visibilidad</th>
+              <th class="min-w-50px">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -130,9 +130,7 @@
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                       data-boundary="viewport"
-                    >
-                      Acciones
-                    </button>
+                    ></button>
                     <ul
                       class="dropdown-menu"
                       aria-labelledby="dropdownMenuButton1"
@@ -230,7 +228,6 @@ export default {
 
   mounted() {
     this.store.cargarEventos(1, this.busqueda);
-    console.log(this.$refs);
   },
   methods: {
     establecerDatos(obj) {

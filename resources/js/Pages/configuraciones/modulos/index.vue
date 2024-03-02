@@ -304,9 +304,7 @@ export default {
           this.modulos = response.data.modulos;
           this.paginacion = response.data.paginacion;
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     },
     crearRol: function () {
       this.v$.$touch();
@@ -346,7 +344,6 @@ export default {
         $("#kt_modal_1").modal("hide");
         this.v$.$reset();
       } else {
-        console.log("error de formulario");
       }
     },
     editarModulo: function (moduloId) {
