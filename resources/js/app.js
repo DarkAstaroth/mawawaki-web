@@ -35,7 +35,8 @@ import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import FileUpload from "primevue/fileupload";
 import Menu from "primevue/menu";
-import ProgressSpinner from 'primevue/progressspinner';
+import ProgressSpinner from "primevue/progressspinner";
+import Card from "primevue/card";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -72,6 +73,7 @@ export const appComponents = createApp({
     .component("FileUpload", FileUpload)
     .component("Menu", Menu)
     .component("ProgressSpinner", ProgressSpinner)
+    .component("Card", Card)
     .directive("badge", BadgeDirective)
 
     .mount("#app");

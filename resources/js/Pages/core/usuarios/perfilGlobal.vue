@@ -107,7 +107,7 @@
                   :url="`/api/imagen/usuario/${store.usuario.id}`"
                   accept="image/*"
                   chooseLabel="Subir Foto"
-                  :maxFileSize="1000000"
+                  :maxFileSize="2097152"
                   @upload="onUpload"
                 />
               </div>

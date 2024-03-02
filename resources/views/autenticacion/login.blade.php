@@ -10,7 +10,7 @@
                         <div class="text-center mb-11">
                             <h1 class="text-dark fw-bolder mb-3">Bienvenido</h1>
                         </div>
-                        <div class="row g-3 mb-9">
+                        {{-- <div class="row g-3 mb-9">
                             <div class="col-md-12">
                                 <a href="auth/google"
                                     class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
@@ -18,7 +18,7 @@
                                         class="h-15px me-3" />Ingresar con Google</a>
                             </div>
 
-                        </div>
+                        </div> --}}
 
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
                             action="{{ route('verificar.login') }}" method="POST">
