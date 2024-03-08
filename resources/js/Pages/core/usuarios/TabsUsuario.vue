@@ -2,14 +2,14 @@
   <div class="card card-bordered">
     <div class="card-body">
       <TabView :scrollable="true">
-        <TabPanel header="Datos personales" @click="cambiarParametro('todos')">
-          <DatosPersonales />
-        </TabPanel>
         <TabPanel header="Asistencias" @click="cambiarParametro('todos')">
           <AsistenciaGeneral />
         </TabPanel>
         <TabPanel header="Eventos" @click="cambiarParametro('todos')">
           <AsistenciasUsuario />
+        </TabPanel>
+        <TabPanel header="Datos personales" @click="cambiarParametro('todos')">
+          <DatosPersonales />
         </TabPanel>
         <TabPanel header="Documentos">
           <DocumentacionUsuario />

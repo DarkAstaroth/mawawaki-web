@@ -93,6 +93,10 @@ Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMar
 Route::get('eventos/privados', [EventosController::class, 'obtenerEventosPrivados']);
 Route::get('evento/principal', [EventosController::class, 'obtenerEventosPrincipal']);
 
+// Api para asistencias
+Route::post('asistencia/solicitar/registro', [AsistenciasController::class, 'registrarAsistenciaVerificar']);
+Route::delete('asistencia/{id}', [AsistenciasController::class, 'eliminarAsistencia']);
+
 
 
 

@@ -37,6 +37,8 @@ import FileUpload from "primevue/fileupload";
 import Menu from "primevue/menu";
 import ProgressSpinner from "primevue/progressspinner";
 import Card from "primevue/card";
+import { Icon } from "@iconify/vue";
+import ConfirmPopup from "primevue/confirmpopup";
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -74,6 +76,8 @@ export const appComponents = createApp({
     .component("Menu", Menu)
     .component("ProgressSpinner", ProgressSpinner)
     .component("Card", Card)
+    .component("Icon", Icon)
+    .component("ConfirmPopup", ConfirmPopup)
     .directive("badge", BadgeDirective)
 
     .mount("#app");
