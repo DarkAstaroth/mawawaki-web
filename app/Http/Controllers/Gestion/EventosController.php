@@ -181,12 +181,13 @@ class EventosController extends Controller
     {
         $eventos = Evento::whereHas('asistencias', function ($query) use ($id) {
             $query->where('UsuarioID', $id);
-        })->select('id', 'nombre')->get();
+        })->select('id', 'nombre', 'solo_ingreso')->get();
 
         $result = $eventos->map(function ($evento) {
             return [
                 'value' => $evento->id,
                 'name' => $evento->nombre,
+                'solo_ingreso' => $evento->solo_ingreso
             ];
         });
 
