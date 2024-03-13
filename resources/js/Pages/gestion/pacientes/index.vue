@@ -176,9 +176,7 @@ export default {
         .then((response) => {
           this.pacientes = response.data.pacientes;
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     },
     cargarFichasPaciente() {
       const url = `/api/fichasPacientes`;
@@ -191,9 +189,7 @@ export default {
           this.ficha.verificados = response.data.verificados;
           this.ficha.por_verificar = response.data.por_verificar;
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     },
     verificarPaciente(paciente) {
       axios

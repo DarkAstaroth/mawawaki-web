@@ -365,12 +365,9 @@ export default {
       axios
         .get(url)
         .then((response) => {
-          console.log(response);
           this.pacientes = response.data.pacientes;
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     },
     estadoModal: function (estado) {
       this.modalSolicitud = estado;
@@ -394,8 +391,6 @@ export default {
         });
 
         // Manejar la respuesta del servidor
-        console.log(response.data.message); // Mensaje del servidor
-        console.log(response.data.paciente); // Datos del paciente registrado
 
         // Cerrar el modal después de enviar la solicitud
         this.modalSolicitud = false;
@@ -419,7 +414,6 @@ export default {
           contactoEmergenciaTelefono: "",
         };
       } catch (error) {
-        console.error(error);
         // Manejar errores según tus necesidades
       }
     },

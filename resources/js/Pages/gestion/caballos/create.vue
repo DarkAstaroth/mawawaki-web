@@ -229,7 +229,6 @@ export default {
   methods: {
     onAdvancedUpload(event) {
       const uploadedFile = event.files[0];
-      console.log(uploadedFile);
     },
     agregarCaballo: function () {
       axios
@@ -256,9 +255,7 @@ export default {
             window.location.href = route("caballos.index");
           });
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     },
 
     editarCaballo: function () {
@@ -273,7 +270,6 @@ export default {
           fecha_nacimiento: this.fecha_nacimiento,
         })
         .then((response) => {
-          console.log(response.data);
           Swal.fire({
             title: "Éxito",
             text: "Datos modificados correctamente",
@@ -287,9 +283,7 @@ export default {
             window.location.href = route("caballos.index");
           });
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     },
     eliminarCaballo(idCaballo) {
       Swal.fire({

@@ -64,35 +64,27 @@ export default {
       .then((res) => {
         this.eventoPrincipal = res.data.existe;
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
 
     this.store
       .eventosFiltro()
       .then((res) => {
         this.eventosFiltro = res.data;
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   },
   methods: {
     establecerPrincipal() {
       if (!this.selectEvento) {
-        console.error("No se ha seleccionado ningún evento.");
         return;
       }
       this.store
         .establecerPrincipal(this.selectEvento)
         .then((res) => {
-          console.log("Evento principal establecido correctamente:", res.data);
           this.eventoPrincipal = true; // Actualizar la variable eventoPrincipal
           this.selectEvento = null; // Reiniciar el selectEvento después de establecer el evento principal
         })
-        .catch((error) => {
-          console.error("Error al establecer el evento principal:", error);
-        });
+        .catch((error) => {});
     },
   },
 };

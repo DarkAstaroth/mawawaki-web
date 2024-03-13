@@ -227,7 +227,6 @@ export default {
         value: personal.id,
       };
     });
-    console.log(this.personal);
   },
   methods: {
     estadoModal: function (estado) {

@@ -6,7 +6,6 @@ export const useDataAutenticacion = defineStore("dataAutenticacion", {
     persist: true,
     actions: {
         async loginUsuario(email, password) {
-            // console.log("entrando al login");
             axios.post("/api/verificar-login", { email, password });
         },
     },

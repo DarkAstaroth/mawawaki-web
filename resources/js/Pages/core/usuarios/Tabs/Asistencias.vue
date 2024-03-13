@@ -20,39 +20,49 @@
     </Dropdown>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-striped table-sm table-bordered">
-      <thead>
-        <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
-          <th class="min-w-150px">Ingreso</th>
-          <th class="min-w-150px">Salida</th>
-          <th class="min-w-150px">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="asistencia in asistencias" :key="asistencia.id">
-          <td class="align-middle">
-            {{ asistencia.fecha_hora_entrada }}
-          </td>
-          <td class="align-middle">
-            {{ asistencia.fecha_hora_salida }}
-          </td>
-          <td class="align-middle">
-            {{ asistencia.horas }} hora(s) {{ asistencia.minutos }} minuto(s)
-            {{ asistencia.segundos }} segundos
-          </td>
-        </tr>
-        <tr v-if="asistencias.length === 0">
-          <td colspan="4" class="text-center">No hay datos</td>
-        </tr>
-      </tbody>
-    </table>
+  <div v-if="this.selectEvento">
+    <div class="table-responsive" v-if="this.selectEvento.solo_ingreso === 0">
+      <table class="table table-striped table-sm table-bordered">
+        <thead>
+          <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
+            <th class="min-w-150px">Ingreso</th>
+            <th class="min-w-150px">Salida</th>
+            <th class="min-w-150px">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="asistencia in asistencias" :key="asistencia.id">
+            <td class="align-middle">
+              {{ asistencia.fecha_hora_entrada }}
+            </td>
+            <td class="align-middle">
+              {{ asistencia.fecha_hora_salida }}
+            </td>
+            <td class="align-middle">
+              {{ asistencia.horas }} hora(s) {{ asistencia.minutos }} minuto(s)
+              {{ asistencia.segundos }} segundos
+            </td>
+          </tr>
+          <tr v-if="asistencias.length === 0">
+            <td colspan="4" class="text-center">No hay datos</td>
+          </tr>
+        </tbody>
+      </table>
+      <Message :closable="false" severity="info">
+        Total Horas: {{ totalGlobal.horas }} minutos:
+        {{ totalGlobal.minutos }} segundos: {{ totalGlobal.segundos }}</Message
+      >
+    </div>
+    <div v-if="this.selectEvento.solo_ingreso === 1">
+      <Badge value="Solo ingreso"></Badge>
+      <Message severity="success" :closable="false">{{
+        asistencias[0].fecha_hora_entrada
+      }}</Message>
+    </div>
+    <div></div>
   </div>
-  <div>
-    <Message :closable="false" severity="info">
-      Total Horas: {{ totalGlobal.horas }} minutos:
-      {{ totalGlobal.minutos }} segundos: {{ totalGlobal.segundos }}</Message
-    >
+  <div v-else class="bg-light p-10 rounded d-flex justify-content-center">
+    Debes seleccionar un evento
   </div>
 </template>
 
@@ -97,21 +107,17 @@ export default {
     this.obtenerEventos();
   },
   methods: {
-    onChange(value) {
-      console.log("hola");
-    },
+    onChange(value) {},
     obtenerEventos() {
       axios
         .get(`/api/eventos/usuario/${this.store.usuario.id}`)
         .then((response) => {
           this.options = response.data;
+          console.log(response);
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     },
     obtenerAsistencias() {
-      console.log(this.selectEvento.value);
       axios
         .post(`/api/asistencias/usuario/${this.store.usuario.id}`, {
           idEvento: this.selectEvento.value,
@@ -121,11 +127,8 @@ export default {
           this.paginacion = response.data.paginacion;
           this.total = response.data.total;
           this.calcularTiempoTotal();
-          console.log(this.totalGlobal);
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     },
     calcularTiempoTotal() {
       let totalSegundos = 0;

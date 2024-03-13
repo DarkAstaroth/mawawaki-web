@@ -1,21 +1,28 @@
 <template>
   <div ref="mapContainer" style="width: 100%; height: 500px"></div>
   <div>
-    <Button class="mb-5 mt-5" type="button" @click="obtenerDireccion"
-      >Ubicación Actual</Button
-    >
+    <Button class="mb-5 mt-5" type="button" @click="obtenerDireccion">
+      Ubicación Actual
+    </Button>
   </div>
 </template>
   
-  <script>
+<script>
 import { onMounted, ref } from "vue";
 import L from "leaflet";
 
 export default {
   emits: ["obtenerDatos"],
-  setup(_, { emit }) {
-    const lat = ref(0);
-    const lng = ref(0);
+  props: ["latitud", "longitud"],
+  setup(props, { emit }) {
+    const previousLat = ref(-16.5393727); // Coordenada anterior de latitud
+    const previousLng = ref(-68.066687); // Coordenada anterior de longitud
+    const lat = ref(
+      props.latitud !== undefined ? props.latitud : previousLat.value
+    ); // Utiliza las coordenadas proporcionadas o las anteriores si no se proporcionan
+    const lng = ref(
+      props.longitud !== undefined ? props.longitud : previousLng.value
+    ); // Utiliza las coordenadas proporcionadas o las anteriores si no se proporcionan
     const map = ref();
     const mapContainer = ref();
     let marker = null;
@@ -23,10 +30,7 @@ export default {
     let marcadorMovido = false; // Variable para verificar si el marcador se ha movido
 
     onMounted(() => {
-      map.value = L.map(mapContainer.value).setView(
-        [-16.5393727, -68.066687],
-        18
-      );
+      map.value = L.map(mapContainer.value).setView([lat.value, lng.value], 18);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 20,
         attribution:
@@ -89,7 +93,6 @@ export default {
     function enviarDatos(data) {
       // Emitir el evento obtenerDatos con los datos necesarios
       emit("obtenerDatos", data);
-      console.log(data);
     }
 
     function obtenerDireccion() {
@@ -117,4 +120,3 @@ export default {
   },
 };
 </script>
-  

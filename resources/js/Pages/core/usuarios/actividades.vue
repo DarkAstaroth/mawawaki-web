@@ -315,7 +315,6 @@ export default {
       });
     },
     nuevaActividad() {
-      console.log("Dialog");
       this.modalActividad = true;
     },
     async enviarActividad() {

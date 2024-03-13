@@ -116,6 +116,32 @@ class EventosController extends Controller
         return response()->json(['message' => 'Evento creado con éxito'], 201);
     }
 
+    public function update(Request $request, $id)
+    {
+        $evento = Evento::find($id);
+
+        if (!$evento) {
+            return response()->json(['message' => 'El evento no fue encontrado'], 404);
+        }
+
+        // dd($request->input('soloIngreso'));
+        $evento->nombre = $request->input('nombre');
+        $evento->fecha_hora_inicio = strtotime($request->input('fechaInicio'));
+        $evento->fecha_hora_fin = strtotime($request->input('fechaFin'));
+        $evento->lugar = $request->input('lugar');
+        $evento->latitud = strval($request->input('latitud'));
+        $evento->longitud = strval($request->input('longitud'));
+        $evento->descripcion = $request->input('descripcion');
+        $evento->tipo = $request->input('tipoEvento');
+        $evento->solo_ingreso = $request->input('soloIngreso');
+        $evento->solo_ingreso = $request->input('soloIngreso');
+        $evento->usuarios_ids = json_encode($request->input('usuariosFiltro'));
+        $evento->save();
+
+        return response()->json(['message' => 'Evento modificado con éxito'], 200);
+    }
+
+
     /**
      * Display the specified resource.
      */
@@ -135,10 +161,7 @@ class EventosController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -158,12 +181,13 @@ class EventosController extends Controller
     {
         $eventos = Evento::whereHas('asistencias', function ($query) use ($id) {
             $query->where('UsuarioID', $id);
-        })->select('id', 'nombre')->get();
+        })->select('id', 'nombre', 'solo_ingreso')->get();
 
         $result = $eventos->map(function ($evento) {
             return [
                 'value' => $evento->id,
                 'name' => $evento->nombre,
+                'solo_ingreso' => $evento->solo_ingreso
             ];
         });
 
@@ -198,5 +222,27 @@ class EventosController extends Controller
         ]);
 
         return response()->json($evento);
+    }
+
+    public function obtenerEventosPrivados()
+    {
+        $eventos = Evento::where('tipo', 'privado')
+            ->where('principal', false)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+
+        return response()->json($eventos);
+    }
+
+    public function obtenerEventosPrincipal()
+    {
+        $eventoPrincipal = Evento::where('principal', true)->first();
+
+        if (!$eventoPrincipal) {
+            return response()->json(['message' => 'No se encontró ningún evento principal.'], 404);
+        }
+
+        return response()->json($eventoPrincipal, 200);
     }
 }

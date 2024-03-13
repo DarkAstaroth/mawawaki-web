@@ -154,9 +154,7 @@ export default {
             },
           });
         })
-        .catch((error) => {
-          console.log("Hay un error");
-        });
+        .catch((error) => {});
     },
     actualizarRol: function () {
       axios

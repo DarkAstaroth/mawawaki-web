@@ -5,6 +5,7 @@ export const useDataEventos = defineStore("dataEventos", {
     state: () => ({
         eventos: [],
         usuarios: [],
+        eventoPrincipal: {},
     }),
     persist: true,
     actions: {
@@ -15,9 +16,7 @@ export const useDataEventos = defineStore("dataEventos", {
                 .then((response) => {
                     this.usuarios = response.data.usuarios;
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((error) => {});
         },
         cargarEventos(pagina, busqueda) {
             const url = `/api/eventos?page=${pagina}&busqueda=${busqueda}`;
@@ -26,9 +25,7 @@ export const useDataEventos = defineStore("dataEventos", {
                 .then((response) => {
                     this.eventos = response.data.eventos;
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((error) => {});
         },
         async crearEvento(
             nombre,
@@ -60,6 +57,39 @@ export const useDataEventos = defineStore("dataEventos", {
                 })
                 .catch(() => {
                     throw new Error("Error al crear el evento.");
+                });
+        },
+        async modificarEvento(
+            id,
+            nombre,
+            fechaInicio,
+            fechaFin,
+            lugar,
+            descripcion,
+            latitud,
+            longitud,
+            tipoEvento,
+            soloIngreso,
+            usuariosFiltro
+        ) {
+            await axios
+                .put(`/api/evento/${id}`, {
+                    nombre,
+                    fechaInicio,
+                    fechaFin,
+                    lugar,
+                    descripcion,
+                    latitud,
+                    longitud,
+                    tipoEvento,
+                    soloIngreso,
+                    usuariosFiltro,
+                })
+                .then(() => {
+                    return "El evento fue modificado correctamente";
+                })
+                .catch(() => {
+                    throw new Error("Error al modificar evento.");
                 });
         },
         async registarMarcado(usuario, evento, qr) {
@@ -103,6 +133,41 @@ export const useDataEventos = defineStore("dataEventos", {
                 return response;
             } catch (error) {
                 throw new Error("Error al establecer el evento principal");
+            }
+        },
+        async obtenerEventoPrincipal() {
+            try {
+                const response = await axios.get("/api/evento/principal");
+                this.eventoPrincipal = response.data;
+                return response;
+            } catch (error) {
+                throw new Error("Error al establecer el evento principal");
+            }
+        },
+        async calcularTotalAsistencias(idUsuario, idEvento) {
+            try {
+                const response = await axios.post("/api/asistencias/total", {
+                    idUsuario,
+                    idEvento,
+                });
+
+                return response.data;
+            } catch (error) {
+                throw new Error("Error al establecer el evento principal");
+            }
+        },
+        async asistenciasPrincipalPDF(idUsuario, idEvento) {
+            try {
+                const respuesta = await axios.post(
+                    "/api/pdf/asistencias/principal/usuario",
+                    {
+                        idUsuario,
+                        idEvento,
+                    }
+                );
+                return respuesta;
+            } catch (error) {
+                throw error;
             }
         },
     },

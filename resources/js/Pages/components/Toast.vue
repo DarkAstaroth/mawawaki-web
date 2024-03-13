@@ -10,7 +10,6 @@ export default {
   setup() {
     // const toast = ref(null);
     const toast = useToast();
-    console.log("TOAST", toast);
 
     provide("toast", toast);
 

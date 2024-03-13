@@ -22,20 +22,15 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 .then((response) => {
                     this.pacientes = response.data.pacientes;
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((error) => {});
         },
         obtenerPersonal() {
             axios
                 .get(`/api/personal`)
                 .then((response) => {
-                    console.log(response);
                     this.personal = response.data.personales;
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
+                .catch((error) => {});
         },
         async cargarServicios(id, datos) {
             try {

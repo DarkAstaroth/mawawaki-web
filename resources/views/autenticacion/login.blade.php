@@ -4,13 +4,13 @@
         <div class="d-flex flex-column flex-lg-row flex-column-fluid">
             <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
                 <div class="d-flex flex-center flex-column flex-lg-row-fluid">
-                    <div class="w-lg-500px p-10">
+                    <div class="w-lg-500px w-100 mt-20">
 
 
                         <div class="text-center mb-11">
                             <h1 class="text-dark fw-bolder mb-3">Bienvenido</h1>
                         </div>
-                        <div class="row g-3 mb-9">
+                        {{-- <div class="row g-3 mb-9">
                             <div class="col-md-12">
                                 <a href="auth/google"
                                     class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
@@ -18,13 +18,13 @@
                                         class="h-15px me-3" />Ingresar con Google</a>
                             </div>
 
-                        </div>
-                        
+                        </div> --}}
+
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
                             action="{{ route('verificar.login') }}" method="POST">
                             @csrf
                             @method('POST')
-<div class="separator separator-content my-14">
+                            <div class="separator separator-content my-14">
                                 <span class="text-gray-500 fw-semibold fs-7">Ingresar con tu correo</span>
                             </div>
 

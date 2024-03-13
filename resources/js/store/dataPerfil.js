@@ -22,7 +22,6 @@ export const useDataPerfil = defineStore("dataPerfil", {
                     },
                 })
                 .then((response) => {
-                    console.log(response);
                     this.notificaciones = response.data.notificaciones;
                     this.no_visto = response.data.no_visto;
                 })
@@ -34,12 +33,18 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 .then((response) => {
                     this.store.obtenerNotificaciones(1, "", "todos");
                 })
-                .catch((error) => {
-                    console.error(
-                        "Error al marcar notificaciones como leídas:",
-                        error
-                    );
-                });
+                .catch((error) => {});
+        },
+        async modificarDatos(usuario) {
+            try {
+                const respuesta = await axios.put(
+                    `/api/usuario/${this.usuario.id}`,
+                    usuario
+                );
+                return respuesta;
+            } catch (error) {
+                throw error;
+            }
         },
     },
 });
