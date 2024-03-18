@@ -1,6 +1,6 @@
 <template>
   <div class="card card-bordered">
-    <div class="card-body">
+    <div class="p-1">
       <TabView :scrollable="true">
         <TabPanel header="Asistencias" @click="cambiarParametro('todos')">
           <AsistenciaGeneral />

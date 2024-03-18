@@ -1,10 +1,21 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
+const eliminarDocumento = async (id) => {
+    try {
+        const respuesta = await axios.delete(`/api/eliminar/archivo/${id}`);
+        return respuesta.data
+
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 export const useDataPerfil = defineStore("dataPerfil", {
     state: () => ({
         usuario: {},
         notificaciones: [],
+        documentos: [],
         no_visto: 0,
     }),
     persist: true,
@@ -25,7 +36,15 @@ export const useDataPerfil = defineStore("dataPerfil", {
                     this.notificaciones = response.data.notificaciones;
                     this.no_visto = response.data.no_visto;
                 })
-                .catch((error) => {});
+                .catch((error) => { });
+        },
+        async obtenerDocumentosUsuario(id) {
+            try {
+                const respuesta = await axios.get(`/api/obtener-documentacion/${id}`)
+                this.documentos = respuesta.data.data
+            } catch (error) {
+                throw new Error(error)
+            }
         },
         marcarTodasLeidas() {
             axios
@@ -33,7 +52,7 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 .then((response) => {
                     this.store.obtenerNotificaciones(1, "", "todos");
                 })
-                .catch((error) => {});
+                .catch((error) => { });
         },
         async modificarDatos(usuario) {
             try {
@@ -46,5 +65,6 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 throw error;
             }
         },
+        eliminarDocumento
     },
 });
