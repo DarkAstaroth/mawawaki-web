@@ -17,6 +17,10 @@ export const useDataPerfil = defineStore("dataPerfil", {
         notificaciones: [],
         documentos: [],
         no_visto: 0,
+        cargarFoto: false,
+        cargarDocumento: false,
+        cargarNotificaciones: false,
+
     }),
     persist: true,
     actions: {
@@ -42,7 +46,9 @@ export const useDataPerfil = defineStore("dataPerfil", {
             try {
                 const respuesta = await axios.get(`/api/obtener-documentacion/${id}`)
                 this.documentos = respuesta.data.data
+                this.cargarDocumento = false
             } catch (error) {
+                this.cargarDocumento = false
                 throw new Error(error)
             }
         },

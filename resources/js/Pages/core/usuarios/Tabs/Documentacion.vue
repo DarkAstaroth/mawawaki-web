@@ -13,18 +13,24 @@
             </Dropdown>
 
             <div class="d-flex flex-row w-100">
-                <div :class="['input-group d-flex align-items-center gap-2']">
+                <div :class="['d-flex input-group d-flex align-items-center gap-2']">
                     <div class="">
                         <input type="file" class="form-control flex-1" id="inputArchivo"
                             @change="manejarCambioArchivo($event, 'carnet')" accept="application/pdf" />
                     </div>
-                    <Button icon="pi pi-upload" :class="[
+
+                    <Button v-if="!this.store.cargarDocumento" icon="pi pi-upload" :class="[
                 'rounded d-flex justify-content-center p-button-label gap-2',
                 esResponsivo ? 'p-2' : '',
             ]" @click="subirArchivo('carnet')">
                         <Icon icon="material-symbols:upload" width="20" height="20" />
                         Subir
                     </Button>
+
+                    <div v-else class="d-flex flex-grow-1 p-1">
+                        <ProgressSpinner style="width: 30px; height: 30px" strokeWidth="5" />
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -196,6 +202,7 @@ export default {
             }
 
             if (archivo) {
+                this.store.cargarDocumento = true
                 const url = `/api/subir-archivo/${this.store.usuario.id}`;
 
                 const formData = new FormData();
