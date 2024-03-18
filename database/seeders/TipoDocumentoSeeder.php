@@ -17,6 +17,7 @@ class TipoDocumentoSeeder extends Seeder
             'nombre' => 'Carnet',
             'descripcion' => 'Un carnet es un documento que sirve como identificación oficial de una persona en una organización, institución o grupo particular.',
             'estado' => 1,
+            'unico' => 1,
         ]);
 
         TipoDocumento::create([
