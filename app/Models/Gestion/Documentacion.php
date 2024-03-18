@@ -3,6 +3,7 @@
 namespace App\Models\Gestion;
 
 use App\Models\User;
+use App\Models\Gestion\TipoDocumento;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,7 @@ class Documentacion extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $table = 'documento';
+    protected $table = 'documentos';
 
     protected $fillable = [
         'user_id',
@@ -34,6 +35,7 @@ class Documentacion extends Model
         'fecha_vencimiento',
         'estado_revision',
         'etiquetas',
+        'tipo_documento_id'
 
     ];
 
@@ -42,14 +44,8 @@ class Documentacion extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function tiposDocumento()
-    // {
-    //     return $this->belongsToMany(TipoDocumento::class, 'documento_tipo_documento', 'documento_id', 'tipo_documento_id')
-    //         ->withPivot(['completado', 'nombre_archivo', 'ruta_archivo', 'tamano_archivo', 'formato_archivo']);
-    // }
-
-    public function tiposDocumento()
+    public function tipoDocumento()
     {
-        return $this->belongsToMany(TipoDocumento::class, 'documento_tipo_documento', 'documento_id', 'tipo_documento_id');
+        return $this->belongsTo(TipoDocumento::class);
     }
 }

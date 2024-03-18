@@ -24,9 +24,8 @@ class TipoDocumento extends Model
         'estado',
     ];
 
-
     public function documentos()
     {
-        return $this->belongsToMany(Documento::class, 'documento_tipo_documento', 'tipo_documento_id', 'documento_id');
+        return $this->hasMany(Documentacion::class);
     }
 }

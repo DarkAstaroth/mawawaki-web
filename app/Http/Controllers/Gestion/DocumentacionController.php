@@ -14,34 +14,133 @@ use Illuminate\Validation\ValidationException;
 
 class DocumentacionController extends Controller
 {
+    // public function subirArchivo(Request $request, $usuarioId)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'archivo' => 'required|mimes:pdf|max:2048',
+    //             'tipo_documento_id' => 'required',
+    //         ]);
+
+    //         $archivo = $request->file('archivo');
+    //         $nombreUnico = 'archivo' . '_' . time() . '.' . $archivo->getClientOriginalExtension();
+    //         $rutaArchivo = $archivo->storeAs('documentos', $nombreUnico, 'public');
+    //         $usuario = User::findOrFail($usuarioId);
+    //         // Crear un nuevo documento
+    //         $documento = new Documentacion([
+    //             'user_id' => $usuarioId,
+    //             'nombre_archivo' => $nombreUnico,
+    //             'ruta_archivo' => $rutaArchivo,
+    //             'completado' => true,
+    //             'tamano_archivo' => $archivo->getSize(),
+    //             'formato_archivo' => $archivo->getClientOriginalExtension(),
+    //             'tipo_documento_id' => $request->tipo_documento_id
+    //         ]);
+
+    //         $documento->save();
+    //         return response()->json(['message' => 'Archivo subido exitosamente']);
+    //     } catch (ValidationException $e) {
+    //         return response()->json(['error' => $e->validator->errors()], 400);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+
+    // public function subirArchivo(Request $request, $usuarioId)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'archivo' => 'required|mimes:pdf|max:3024',
+    //             'tipo_documento_id' => 'required',
+    //         ]);
+
+    //         $usuario = User::findOrFail($usuarioId);
+    //         $tipoDocumentoId = $request->tipo_documento_id;
+
+    //         // Verificar si el tipo de documento es único
+    //         $tipoDocumento = TipoDocumento::findOrFail($tipoDocumentoId);
+    //         if ($tipoDocumento->unico) {
+    //             // Verificar si el usuario ya tiene un archivo con este tipo de documento
+    //             $documentoExistente = Documentacion::where('user_id', $usuarioId)
+    //                 ->where('tipo_documento_id', $tipoDocumentoId)
+    //                 ->exists();
+
+    //             if ($documentoExistente) {
+    //                 return response()->json(['error' => 'El usuario ya tiene un archivo con este tipo de documento.'], 400);
+    //             }
+    //         }
+
+    //         $archivo = $request->file('archivo');
+    //         $nombreUnico = 'archivo' . '_' . time() . '.' . $archivo->getClientOriginalExtension();
+    //         $rutaArchivo = $archivo->storeAs('documentos', $nombreUnico, 'public');
+
+    //         // Crear un nuevo documento
+    //         $documento = new Documentacion([
+    //             'user_id' => $usuarioId,
+    //             'nombre_archivo' => $nombreUnico,
+    //             'ruta_archivo' => $rutaArchivo,
+    //             'completado' => true,
+    //             'tamano_archivo' => $archivo->getSize(),
+    //             'formato_archivo' => $archivo->getClientOriginalExtension(),
+    //             'tipo_documento_id' => $tipoDocumentoId
+    //         ]);
+
+    //         $documento->save();
+
+    //         return response()->json(['message' => 'Archivo subido exitosamente']);
+    //     } catch (ValidationException $e) {
+    //         return response()->json(['error' => $e->validator->errors()], 400);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage()], 500);
+    //     }
+    // }
+
+
     public function subirArchivo(Request $request, $usuarioId)
     {
         try {
             $request->validate([
-                'archivo' => 'required|mimes:pdf|max:2048',
-                'tipo_documento_id' => 'required|exists:tipo_documento,id',
+                'archivo' => 'required|mimes:pdf|max:3024',
+                'tipo_documento_id' => 'required',
             ]);
+
+            $usuario = User::findOrFail($usuarioId);
+            $tipoDocumentoId = $request->tipo_documento_id;
+
+            // Verificar si el tipo de documento es único
+            $tipoDocumento = TipoDocumento::findOrFail($tipoDocumentoId);
+            if ($tipoDocumento->unico) {
+                // Verificar si el usuario ya tiene un archivo con este tipo de documento
+                $documentoExistente = Documentacion::where('user_id', $usuarioId)
+                    ->where('tipo_documento_id', $tipoDocumentoId)
+                    ->exists();
+
+                if ($documentoExistente) {
+                    return response()->json(['error' => 'El usuario ya tiene un archivo con este tipo de documento.'], 400);
+                }
+            }
 
             $archivo = $request->file('archivo');
             $nombreUnico = 'archivo' . '_' . time() . '.' . $archivo->getClientOriginalExtension();
             $rutaArchivo = $archivo->storeAs('documentos', $nombreUnico, 'public');
 
-            // Crear un nuevo documento
+            // Obtener el nombre original del archivo
+            $nombreOriginal = $archivo->getClientOriginalName();
+
+            // Crear un nuevo documento con la descripción que contiene el nombre original del archivo
             $documento = new Documentacion([
+                'user_id' => $usuarioId,
                 'nombre_archivo' => $nombreUnico,
                 'ruta_archivo' => $rutaArchivo,
                 'completado' => true,
                 'tamano_archivo' => $archivo->getSize(),
                 'formato_archivo' => $archivo->getClientOriginalExtension(),
+                'descripcion' =>  $nombreOriginal,
+                'tipo_documento_id' => $tipoDocumentoId,
+                'estado_revision' => 0
             ]);
 
-            // Asociar el documento con el usuario
-            $usuario = User::findOrFail($usuarioId);
-            $usuario->documentos()->save($documento);
-
-            // Asociar el documento con el tipo de documento
-            $tipoDocumento = TipoDocumento::find($request->tipo_documento_id);
-            $documento->tiposDocumento()->attach($tipoDocumento);
+            $documento->save();
 
             return response()->json(['message' => 'Archivo subido exitosamente']);
         } catch (ValidationException $e) {
@@ -93,10 +192,7 @@ class DocumentacionController extends Controller
     {
         try {
             $usuario = User::findOrFail($usuarioId);
-            // $documentos = $usuario->documentos;
-            $documentos = $usuario->documentos()->with('tiposDocumento')->get();
-
-
+            $documentos = $usuario->documentos()->with('tipoDocumento')->get();
             return response()->json(['data' => $documentos], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -108,5 +204,24 @@ class DocumentacionController extends Controller
         $tiposDocumento = TipoDocumento::all(['id', 'nombre']);
 
         return response()->json($tiposDocumento);
+    }
+
+
+    public function destroy($id)
+    {
+        $archivo = Documentacion::findOrFail($id);
+        $nombreArchivo = $archivo->nombre_archivo;
+
+        if (Storage::exists('public/documentos/' . $nombreArchivo)) {
+
+            Storage::delete('public/documentos/' . $nombreArchivo);
+        } else {
+
+            return response()->json(['error' => 'El archivo no existe']);
+        }
+
+        $archivo->delete();
+
+        return response()->json(['message' => 'Archivo eliminado correctamente']);
     }
 }

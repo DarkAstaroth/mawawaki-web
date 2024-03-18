@@ -10,18 +10,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('tipo_documento', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->boolean('estado')->default(false);
+            $table->boolean('unico')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('documento', function (Blueprint $table) {
+        Schema::create('documentos', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->constrained('users');
             $table->string('nombre_archivo')->nullable();
@@ -38,13 +39,7 @@ return new class extends Migration
             $table->json('etiquetas')->nullable();
             $table->timestamps();
             $table->softDeletes();
-        });
-
-        Schema::create('documento_tipo_documento', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(DB::raw('UUID()'));
-            $table->foreignUuid('documento_id')->constrained('documento');
             $table->foreignUuid('tipo_documento_id')->constrained('tipo_documento');
-            $table->timestamps();
         });
     }
 
@@ -53,13 +48,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documento_tipo_documento');
-
-        Schema::table('documento', function (Blueprint $table) {
-            $table->dropForeign(['tipo_id']);
-        });
-
-        Schema::dropIfExists('documento');
+        Schema::dropIfExists('documentos');
         Schema::dropIfExists('tipo_documento');
     }
 };

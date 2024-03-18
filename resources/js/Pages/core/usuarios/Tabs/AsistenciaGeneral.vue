@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-end mb-5 gap-2">
     <Button type="button" @click="estadoModal(true)">
       <i class="text-white far fa-plus me-3"></i>
-      Nuevo registro
+      <strong>Nuevo registro</strong>
     </Button>
     <Button type="button" class="btn btn-sm btn-danger" @click="generarPDF">
       <i class="text-white far fa-file"></i>
@@ -438,8 +438,6 @@ export default {
             "Ya existe una asistencia en esa fecha"
           );
         });
-
-      
     },
 
     generarPDF() {
