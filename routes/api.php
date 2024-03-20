@@ -92,6 +92,8 @@ Route::get('eventos/usuario/{id}', [EventosController::class, 'obtenerEventosUsu
 Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMarcado'])->name('registrar.marcado');
 Route::get('eventos/privados', [EventosController::class, 'obtenerEventosPrivados']);
 Route::get('evento/principal', [EventosController::class, 'obtenerEventosPrincipal']);
+Route::get('eventos/{id}/asistentes', [EventosController::class, 'getAsistentes']);
+
 
 // Api para asistencias
 Route::post('asistencia/solicitar/registro', [AsistenciasController::class, 'registrarAsistenciaVerificar']);

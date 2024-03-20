@@ -40,6 +40,11 @@ import ProgressSpinner from "primevue/progressspinner";
 import Card from "primevue/card";
 import { Icon } from "@iconify/vue";
 import ConfirmPopup from "primevue/confirmpopup";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';
+import Row from 'primevue/row';
+
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -79,6 +84,10 @@ export const appComponents = createApp({
     .component("Card", Card)
     .component("Icon", Icon)
     .component("ConfirmPopup", ConfirmPopup)
+    .component("DataTable", DataTable)
+    .component("Column", Column)
+    .component("ColumnGroup", ColumnGroup)
+    .component('Row', Row)
     .directive("badge", BadgeDirective)
 
     .mount("#app");

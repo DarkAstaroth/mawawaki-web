@@ -16,7 +16,7 @@ export const useDataEventos = defineStore("dataEventos", {
                 .then((response) => {
                     this.usuarios = response.data.usuarios;
                 })
-                .catch((error) => {});
+                .catch((error) => { });
         },
         cargarEventos(pagina, busqueda) {
             const url = `/api/eventos?page=${pagina}&busqueda=${busqueda}`;
@@ -25,7 +25,7 @@ export const useDataEventos = defineStore("dataEventos", {
                 .then((response) => {
                     this.eventos = response.data.eventos;
                 })
-                .catch((error) => {});
+                .catch((error) => { });
         },
         async crearEvento(
             nombre,
@@ -109,7 +109,7 @@ export const useDataEventos = defineStore("dataEventos", {
         async verificarEvento() {
             try {
                 const response = await axios.get("/api/eventos/principal");
-                return response; // Devuelve la respuesta si la solicitud es exitosa
+                return response;
             } catch (error) {
                 throw new Error("Error al verificar el evento");
             }
@@ -170,5 +170,13 @@ export const useDataEventos = defineStore("dataEventos", {
                 throw error;
             }
         },
+        async obtenerUsuariosEvento(id) {
+            try {
+                const respuesta = await axios.get(`/api/eventos/${id}/asistentes`)
+                return respuesta.data.usuarios
+            } catch (error) {
+                throw error
+            }
+        }
     },
 });
