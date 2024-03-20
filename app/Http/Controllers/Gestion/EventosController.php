@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Gestion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Gestion\EventosResource;
+use App\Models\Gestion\Asistencia;
 use App\Models\Gestion\Evento;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -244,5 +245,21 @@ class EventosController extends Controller
         }
 
         return response()->json($eventoPrincipal, 200);
+    }
+
+    public function getAsistentes($id)
+    {
+        $asistentes = Asistencia::where('EventoID', $id)->with('usuario.persona')->get();
+
+        $nombres_apellidos = $asistentes->map(function ($asistencia) {
+            return [
+                'ci' => $asistencia->usuario->persona->ci,
+                'nombres' => $asistencia->usuario->persona->nombre,
+                'paterno' => $asistencia->usuario->persona->paterno,
+                'materno' => $asistencia->usuario->persona->materno
+            ];
+        });
+
+        return response()->json(['usuarios' => $nombres_apellidos]);
     }
 }
