@@ -241,11 +241,64 @@
                                 <span class="menu-title">Todos los usuarios</span>
                             </a>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-bookmark fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+
+                        <span class="menu-title">Eventos</span><span class="menu-arrow"></span>
+
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
                             <a class="menu-link" href="{{ route('eventos.index') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title">Eventos</span>
+                                <span class="menu-title">Todos los eventos</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endrole
+
+            @role('admin')
+                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Sistema</span></div>
+            @endrole
+
+
+            @role('admin')
+                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-message-programming fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                            </i>
+                        </span>
+
+
+                        <span class="menu-title">Avisos</span><span class="menu-arrow"></span>
+                    </span>
+
+                    <div class="menu-sub menu-sub-accordion">
+                        <div class="menu-item">
+                            <a class="menu-link " href="{{ route('avisos.gestion') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Todos los avisos</span>
                             </a>
                         </div>
                     </div>
@@ -254,7 +307,6 @@
 
 
             @role('admin')
-                <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Sistema</span></div>
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -289,6 +341,7 @@
                     </div>
                 </div>
             @endrole
+
 
 
             @role('admin')

@@ -19,9 +19,9 @@ class PDFController extends Controller
         foreach ($usuarios as $usuario) {
             $roles = $usuario->roles->pluck('name')->implode(', ');
             $usersData[] = [
-                $usuario->persona->paterno,
-                $usuario->persona->materno,
-                $usuario->persona->nombre,
+                strtoupper($usuario->persona->paterno),
+                strtoupper($usuario->persona->materno),
+                strtoupper($usuario->persona->nombre),
                 $usuario->email,
                 $roles
             ];

@@ -7,6 +7,7 @@ use App\Http\Controllers\Configuraciones\PermisoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
+use App\Http\Controllers\Gestion\AvisoController;
 use App\Http\Controllers\Gestion\ClienteController;
 use App\Http\Controllers\Gestion\EventosController;
 use App\Http\Controllers\Gestion\PacientesController;
@@ -64,6 +65,9 @@ Route::middleware([
     'check.estado'
 ])->group(function () {
     Route::resource('dashboard/modulos', ModuloController::class);
+    Route::get('dashboard/avisos', [ModuloController::class, 'verAvisos'])->name('avisos.index');
+    Route::get('dashboard/gestion/avisos', [AvisoController::class, 'index'])->name('avisos.gestion');
+    Route::get('avisos/crear', [AvisoController::class, 'crearAviso'])->name('avisos.crear');;
 });
 
 // Rutas de permisos (requieren autenticación)
@@ -184,7 +188,7 @@ Route::middleware([
 });
 
 
-// PERSONAL 
+// PERSONAL
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
