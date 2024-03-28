@@ -1,26 +1,34 @@
 <template>
-    <div class="d-flex w-100 justify-content-center flex-column align-items-center gap-5">
-        <Card v-for="evento in eventos" :key="evento.id" style="width: 25rem; overflow: hidden">
-            <template #header> </template>
-            <template #title>{{ evento.nombre }}</template>
-            <template #subtitle>
-                <Badge :value="evento.tipo.toLowerCase() === 'privado' ? 'Privado' : 'Público'
-            " :severity="evento.tipo.toLowerCase() === 'privado' ? 'info' : 'warning'
-            "></Badge>
-                <Badge v-if="!haFinalizado(evento.fecha_hora_fin)" value="Programado" severity="warning"></Badge>
-                <Badge v-else value="Finalizado" severity="danger"></Badge>
-            </template>
-            <template #content>
-                <strong>Fecha: {{ fechaHoraLegible(evento.fecha_hora_inicio) }}</strong>
-                <p class="m-0">{{ evento.descripcion }}</p>
-            </template>
-            <template #footer>
-                <div class="d-flex justify-content-between align-items-center">
-                    <Badge v-if="evento.solo_ingreso === 1" value="Solo ingreso" severity="success"></Badge>
-                    <Button @click="buscarAsistentes(evento.id)">Asistentes</Button>
-                </div>
-            </template>
-        </Card>
+
+    <Avisos />
+
+    <h3></h3>
+    <h2>Eventos</h2>
+    <div class="row align-items-stretch">
+        <div v-for="evento in eventos" :key="evento.id" class="col-md-3 mb-3">
+            <Card class="h-100">
+                <template #header> </template>
+                <template #title>{{ evento.nombre }}</template>
+                <template #subtitle>
+                    <Badge :value="evento.tipo.toLowerCase() === 'privado' ? 'Privado' : 'Público'"
+                        :severity="evento.tipo.toLowerCase() === 'privado' ? 'info' : 'warning'">
+                    </Badge>
+                    <Badge v-if="!haFinalizado(evento.fecha_hora_fin)" value="Programado" severity="warning">
+                    </Badge>
+                    <Badge v-else value="Finalizado" severity="danger"></Badge>
+                </template>
+                <template #content>
+                    <strong>Fecha: {{ fechaHoraLegible(evento.fecha_hora_inicio) }}</strong>
+                    <p class="m-0">{{ evento.descripcion }}</p>
+                </template>
+                <template #footer>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <Badge v-if="evento.solo_ingreso === 1" value="Solo ingreso" severity="success"></Badge>
+                        <Button @click="buscarAsistentes(evento.id)">Asistentes</Button>
+                    </div>
+                </template>
+            </Card>
+        </div>
     </div>
     <Dialog v-model:visible="visible" modal header="Lista de asistentes" :style="{ width: '50vw' }"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
@@ -36,10 +44,8 @@
                             <th class="min-w-150px">Paterno</th>
                             <th class="min-w-150px">Materno</th>
                             <th class="min-w-150px">Nombres</th>
-
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr v-for="(usuario, index) in usuariosFiltrados" :key="usuario.ci">
                             <td>{{ index + 1 }}</td>
@@ -65,21 +71,29 @@ import axios from "axios";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { useDataEventos } from "@/store/dataEventos";
-
+import Avisos from './../Pages/dashboard/avisos.vue';
 export default {
     name: "EventosDashboard",
+    components: { Avisos },
     data() {
         return {
             usuariosEvento: [],
             eventos: [],
             visible: false,
-            busqueda: ''
-
+            busqueda: '',
+            esResponsivo: false,
         };
     },
     setup() {
         const store = useDataEventos();
         return { store }
+    },
+    created() {
+        this.verificarResponsivo();
+        window.addEventListener("resize", this.verificarResponsivo);
+    },
+    destroyed() {
+        window.removeEventListener("resize", this.verificarResponsivo);
     },
     mounted() {
         this.obtenerEventos();
@@ -98,6 +112,9 @@ export default {
         }
     },
     methods: {
+        verificarResponsivo() {
+            this.esResponsivo = window.innerWidth < 768;
+        },
         obtenerEventos() {
             axios
                 .get("api/eventos/privados")
@@ -115,11 +132,11 @@ export default {
             return dayjs().isAfter(dayjs.unix(fechaFin));
         },
         buscarAsistentes(evento) {
-            this.visible = true
+            this.visible = true;
             this.store.obtenerUsuariosEvento(evento).then((respuesta) => {
-                this.usuariosEvento = respuesta
-            })
-        }
+                this.usuariosEvento = respuesta;
+            });
+        },
     },
 };
 </script>

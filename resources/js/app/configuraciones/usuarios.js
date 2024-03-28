@@ -5,6 +5,8 @@ import UsuarioControl from "../../Pages/core/usuarios/control.vue";
 import UsuarioActividades from "../../Pages/core/usuarios/actividades.vue";
 import ConfigGeneral from "../../Pages/configuraciones/general/index.vue";
 import DashboardEventos from "../../Pages/Dashboard.vue";
+import DashboardAvisos from "../../Pages/dashboard/avisos.vue";
+
 
 export default {
     "usuarios-index": UsuariosIndex,
@@ -14,4 +16,7 @@ export default {
     "usuario-actividades": UsuarioActividades,
     "config-general": ConfigGeneral,
     "dashboard-eventos": DashboardEventos,
+    "dashboard-avisos": DashboardAvisos,
+
+
 };

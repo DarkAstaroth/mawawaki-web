@@ -7,6 +7,7 @@ use App\Http\Controllers\core\InvitadoController;
 use App\Http\Controllers\core\UsuarioController;
 use App\Http\Controllers\Gestion\CaballosController;
 use App\Http\Controllers\Gestion\AsistenciasController;
+use App\Http\Controllers\Gestion\AvisoController;
 use App\Http\Controllers\Gestion\ClienteController;
 use App\Http\Controllers\Gestion\DocumentacionController;
 use App\Http\Controllers\Gestion\EventosController;
@@ -46,6 +47,11 @@ Route::get('modulos/{id}', [ModuloController::class, 'edit']);
 Route::post('modulos/agregar', [ModuloController::class, 'store']);
 Route::put('modulos/{id}', [ModuloController::class, 'update']);
 Route::delete('modulos/{id}', [ModuloController::class, 'destroy']);
+
+Route::get('avisos/globales', [ModuloController::class, 'obtenerAvisosGlobales']);
+Route::get('avisos', [AvisoController::class, 'obtenerAvisos']);
+Route::delete('avisos/{id}', [AvisoController::class, 'eliminarAviso']);
+
 
 // Lista de modulos con sus respectivos permisos
 Route::get('modulo/permisos', [ModuloController::class, 'modulosPermisos']);

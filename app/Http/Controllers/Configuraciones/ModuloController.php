@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Configuraciones;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Configuraciones\RolResource;
 use App\Models\Configuraciones\Modulo;
+use App\Models\Gestion\Aviso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -130,5 +131,15 @@ class ModuloController extends Controller
     {
         $modulos = Modulo::with('permisos')->get();
         return response()->json($modulos);
+    }
+    public function verAvisos()
+    {
+        return view('gestion.avisos.index');
+    }
+
+    public function obtenerAvisosGlobales()
+    {
+        $avisosGlobales = Aviso::where('global', true)->where('estado', true)->get();
+        return response()->json($avisosGlobales);
     }
 }

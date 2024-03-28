@@ -22,14 +22,11 @@
         }
 
         if (!empty($cssFiles)) {
-            // Ordenar el array de archivos CSS por tamaño en orden descendente
             arsort($cssFiles);
-            // Seleccionar el archivo CSS más grande
             $largestCss = key($cssFiles);
         }
 
         if (!empty($jsFiles)) {
-            // Seleccionar el primer archivo JavaScript que comience con "app"
             $firstJs = reset($jsFiles);
         }
     }
@@ -55,6 +52,17 @@
     @if (!empty($largestCss))
         <link rel="stylesheet" href="/build/assets/{{ $largestCss }}">
     @endif
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true"
@@ -111,6 +119,27 @@
 
     {{-- estilos de componentes vue --}}
     <style>
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Urbanist';
+            font-weight: 600
+        }
+
+        p {
+            font-family: 'Quicksand';
+            font-size: 15px;
+        }
+
+        button {
+            font-family: 'Urbanist';
+            font-weight: 600;
+            font-size: 15px;
+        }
+
         .dp__input {
             font-family: 'Inter';
             font-weight: 500;
@@ -130,7 +159,7 @@
 
         .p-button {
             padding: 0.5rem 1rem;
-            font-size: 1rem;
+            font-size: 1.1rem;
             transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, outline-color 0.2s;
             border-radius: 6px;
             outline-color: transparent;
