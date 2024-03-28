@@ -116,6 +116,10 @@
                                     <input class="form-check-input" type="checkbox" name="toc" value="1" />
                                     <span class="text-gray-700 form-check-label fw-semibold fs-base ms-1">Acepto los
                                         <a href="#" class="ms-1 link-primary">Terminos y Condiciones</a></span>
+                                    @error('toc')
+                                        <div class="text-danger"> Debes Aceptar los terminos y condiciones
+                                        </div>
+                                    @enderror
                                 </label>
                             </div>
 

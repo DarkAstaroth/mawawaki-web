@@ -7,6 +7,7 @@ use App\Http\Resources\core\UsuarioResource;
 use App\Http\Resources\Gestion\ActividadResource;
 use App\Models\Gestion\Actividad;
 use App\Models\Gestion\Personal;
+use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -460,5 +461,20 @@ class UsuarioController extends Controller
         }
 
         return response()->json(['message' => 'Datos modificados correctamente']);
+    }
+
+    public function convertirMayusculas()
+    {
+        $personas = Persona::all();
+
+        foreach ($personas as $persona) {
+            $persona->nombre = mb_strtoupper($persona->nombre, 'UTF-8');
+            $persona->paterno = mb_strtoupper($persona->paterno, 'UTF-8');
+            $persona->materno = mb_strtoupper($persona->materno, 'UTF-8');
+            $persona->save();
+        }
+
+
+        return response()->json(['message' => 'Campos convertidos a mayúsculas correctamente'], 200);
     }
 }

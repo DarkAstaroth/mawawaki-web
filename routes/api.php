@@ -83,6 +83,9 @@ Route::post('asistencias/total', [AsistenciasController::class, 'calcularTotalAs
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
 Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);
+Route::get('convertir-mayusculas', [UsuarioController::class, 'convertirMayusculas']);
+
+
 
 // Api para caballos
 Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);
