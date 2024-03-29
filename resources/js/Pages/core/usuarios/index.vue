@@ -3,7 +3,7 @@
     <div class="card card-bordered">
         <div class="card-header">
             <h3 class="card-title">Listado de usuarios</h3>
-            <div class="div card-toolbar">
+            <div class="div card-toolbar" v-if="is('admin')">
                 <button type="button" class="btn btn-sm btn-success me-5">
                     <i class="text-white far fa-plus"></i>
                     Nuevo
@@ -53,7 +53,9 @@
                             <th class="min-w-150px">Nombre</th>
                             <th class="min-w-150px">Rol</th>
                             <th class="min-w-200px">Creado en</th>
-                            <th class="max-w-100px">Estado</th>
+                            <th class="max-w-100px" v-if="is('admin')">
+                                Estado
+                            </th>
                             <th class="min-w-10px">Acciones</th>
                         </tr>
                     </thead>
@@ -109,7 +111,7 @@
                                     )
                                 }}
                             </td>
-                            <td class="align-middle">
+                            <td class="align-middle" v-if="is('admin')">
                                 <InputSwitch
                                     v-model="usuario.estado"
                                     @click="cambiarEstado(usuario)"
@@ -149,7 +151,7 @@
                                                     Ver Perfil</a
                                                 >
                                             </li>
-                                            <li>
+                                            <li v-if="is('admin')">
                                                 <a
                                                     href="#"
                                                     class="dropdown-item"
@@ -162,7 +164,7 @@
                                                     Editar</a
                                                 >
                                             </li>
-                                            <li>
+                                            <li v-if="is('admin')">
                                                 <a
                                                     href="#"
                                                     class="dropdown-item"
