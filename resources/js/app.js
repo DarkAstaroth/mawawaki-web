@@ -44,6 +44,8 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
+import Tooltip from "primevue/tooltip";
+
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [{ path: "/dashboard/gestion/avisos" }];
@@ -96,6 +98,7 @@ export const appComponents = createApp({
     .component("Column", Column)
     .component("ColumnGroup", ColumnGroup)
     .component("Row", Row)
+    .directive("tooltip", Tooltip)
     .directive("badge", BadgeDirective)
 
     .mount("#app");

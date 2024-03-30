@@ -224,4 +224,13 @@ class DocumentacionController extends Controller
 
         return response()->json(['message' => 'Archivo eliminado correctamente']);
     }
+
+    public function cambiarEstadoRevision($id)
+    {
+        $documento = Documentacion::findOrFail($id);
+        $documento->estado_revision = true;
+        $documento->save();
+
+        return response()->json(['message' => 'Estado de revisión cambiado correctamente'], 200);
+    }
 }

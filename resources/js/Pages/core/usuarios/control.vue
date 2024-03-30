@@ -9,19 +9,39 @@
                                 <h2>Datos Solicitud</h2>
                             </div>
 
-                            <div class="card-toolbar">
-                                <button
-                                    type="button"
-                                    class="btn btn-sm btn-flex btn-success"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#kt_modal_add_payment"
-                                    @click="verificarCuenta(usuario.id)"
+                            <div class="d-flex gap-2">
+                                <div
+                                    class="card-toolbar"
+                                    v-if="!usuario?.personal?.codigo_personal"
                                 >
-                                    <i class="ki-duotone ki-check-square">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span> </i
-                                    >Verificar cuenta
-                                </button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-flex btn-info"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#kt_modal_add_payment"
+                                        @click="generarCodigo(usuario.id)"
+                                    >
+                                        <i class="ki-duotone ki-check-square">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span> </i
+                                        >Otorgar código
+                                    </button>
+                                </div>
+
+                                <div class="card-toolbar">
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-flex btn-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#kt_modal_add_payment"
+                                        @click="verificarCuenta(usuario.id)"
+                                    >
+                                        <i class="ki-duotone ki-check-square">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span> </i
+                                        >Verificar cuenta
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -276,6 +296,18 @@
                 <div class="col-12 mb-5" v-if="is('admin')">
                     <div class="card card-bordered">
                         <div class="card-header">
+                            <h3 class="card-title">Asistencia</h3>
+                        </div>
+
+                        <div class="card-body">
+                            <AsistenciaGeneral :usuario="usuario" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 mb-5" v-if="is('admin')">
+                    <div class="card card-bordered">
+                        <div class="card-header">
                             <h3 class="card-title">Documentos</h3>
                         </div>
 
@@ -298,11 +330,17 @@ import { useVuelidate } from "@vuelidate/core";
 import VueMultiselect from "vue-multiselect";
 import DocumentacionUsuario from "./Tabs/Documentacion.vue";
 import ActividadesUsuario from "./actividades.vue";
+import AsistenciaGeneral from "./Tabs/AsistenciaGeneral.vue";
 
 export default {
     name: "UsuarioControl",
     props: ["usuario"],
-    components: { VueMultiselect, DocumentacionUsuario, ActividadesUsuario },
+    components: {
+        VueMultiselect,
+        DocumentacionUsuario,
+        ActividadesUsuario,
+        AsistenciaGeneral,
+    },
 
     setup() {
         return { v$: useVuelidate() };
@@ -328,7 +366,7 @@ export default {
         verificarCuenta(usuarioId) {
             Swal.fire({
                 title: "¿Estás seguro?",
-                text: "¡Esta habilitará al usuario!",
+                text: "¡Esta acción habilitará al usuario!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -386,6 +424,37 @@ export default {
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+
+        generarCodigo(usuarioId) {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "¡Esta acción otorgara un código único!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, continuar",
+                cancelButtonText: "Cancelar",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios
+                        .post(`/api/personal/generar-codigo/${usuarioId}`)
+                        .then((response) => {
+                            Swal.fire({
+                                title: "Éxito",
+                                text: "¡Codigo asignado correctamente!",
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Aceptar",
+                                customClass: {
+                                    confirmButton: "btn btn-primary",
+                                },
+                            });
+                        })
+                        .catch((error) => {});
+                }
+            });
         },
     },
 };

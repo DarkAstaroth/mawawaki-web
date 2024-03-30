@@ -79,12 +79,14 @@ Route::put('usuario/{id}', [UsuarioController::class, 'modificarUsuario']);
 Route::get('fichasUsuarios', [UsuarioController::class, 'fichasUsuarios']);
 Route::post('/asistencias/usuario/{id}', [AsistenciasController::class, 'obtenerAsistencias']);
 Route::post('asistencias/total', [AsistenciasController::class, 'calcularTotalAsistencias']);
+Route::post('asistencias/verificar/{id}', [AsistenciasController::class, 'verificarAsistencia']);
 
 
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
 Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);
 Route::get('convertir-mayusculas', [UsuarioController::class, 'convertirMayusculas']);
+Route::post('personal/generar-codigo/{id}', [UsuarioController::class, 'generarCodigo']);
 
 
 
@@ -124,6 +126,7 @@ Route::post('subir-archivo/{usuarioId}', [DocumentacionController::class, 'subir
 Route::get('obtener-documentacion/{usuario_id}', [DocumentacionController::class, 'obtenerDocumentosUsuario']);
 Route::get('tipos-documento', [DocumentacionController::class, 'obtenerTiposDocumento']);
 Route::delete('eliminar/archivo/{id}', [DocumentacionController::class, 'destroy']);
+Route::put('documentos/{id}/revision', [DocumentacionController::class, 'cambiarEstadoRevision']);
 
 
 // Api para clientes
