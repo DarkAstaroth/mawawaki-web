@@ -117,12 +117,12 @@
                         <td>
                             <Badge
                                 :value="
-                                    documento.estado_revision === 1
+                                    documento.estado_revision === '1'
                                         ? 'Aprobado'
                                         : 'Pendiente'
                                 "
                                 :severity="
-                                    documento.estado_revision === 1
+                                    documento.estado_revision === '1'
                                         ? 'success'
                                         : 'warning'
                                 "
@@ -140,6 +140,25 @@
                         </td>
                         <td>
                             <Button
+                                v-if="is('admin')"
+                                v-tooltip.bottom="{
+                                    value: 'Verificar',
+                                    showDelay: 300,
+                                    hideDelay: 300,
+                                }"
+                                @click="verificarDocumento(documento.id)"
+                                icon="pi pi-check"
+                                severity="success"
+                                text
+                                rounded
+                                aria-label="Cancel"
+                            />
+                            <Button
+                                v-tooltip.bottom="{
+                                    value: 'Eliminar',
+                                    showDelay: 300,
+                                    hideDelay: 300,
+                                }"
                                 @click="confirm2($event, documento.id)"
                                 icon="pi pi-times"
                                 severity="danger"
@@ -178,7 +197,23 @@ import.meta.env.VITE_APP_BASE_URL;
 
 export default {
     name: "DocumentacionUsuario",
+    props: ["usuario"],
     components: { Dropdown },
+    data() {
+        return {
+            usuario: this.usuario,
+            tiposDocumento: [],
+            esResponsivo: false,
+            valorDominio: import.meta.env.VITE_APP_BASE_URL,
+        };
+    },
+    mounted() {
+        this.obtenerTiposDocumento();
+        // this.obtenerDocumentos();
+        this.store.obtenerDocumentosUsuario(
+            this.usuario.id ? this.usuario.id : this.store.usuario.id
+        );
+    },
     created() {
         this.verificarResponsivo();
         window.addEventListener("resize", this.verificarResponsivo);
@@ -233,18 +268,7 @@ export default {
             confirm2,
         };
     },
-    data() {
-        return {
-            tiposDocumento: [],
-            esResponsivo: false,
-            valorDominio: import.meta.env.VITE_APP_BASE_URL,
-        };
-    },
-    mounted() {
-        this.obtenerTiposDocumento();
-        this.obtenerDocumentos();
-        this.store.obtenerDocumentosUsuario(this.store.usuario.id);
-    },
+
     methods: {
         verificarResponsivo() {
             this.esResponsivo = window.innerWidth < 768;
@@ -330,22 +354,35 @@ export default {
                 });
             }
         },
-
-        obtenerDocumentos() {
-            const url = `/api/obtener-documentacion/${this.store.usuario.id}`;
-
-            axios
-                .get(url)
-                .then((response) => {
-                    this.documentos = response.data.data;
-                })
-                .catch((error) => {
-                    console.error(
-                        "Error al obtener documentos",
-                        error.response.data
-                    );
+        verificarDocumento(id) {
+            this.store.verificarDocumento(id).then(() => {
+                this.toast.add({
+                    severity: "success",
+                    summary: "Confirmado",
+                    detail: "Archivo verificado correctamente",
+                    life: 3000,
                 });
+            });
+            this.store.obtenerDocumentosUsuario(
+                this.usuario.id ? this.usuario.id : this.store.usuario.id
+            );
         },
+
+        // obtenerDocumentos() {
+        //     const url = `/api/obtener-documentacion/${this.store.usuario.id}`;
+
+        //     axios
+        //         .get(url)
+        //         .then((response) => {
+        //             this.documentos = response.data.data;
+        //         })
+        //         .catch((error) => {
+        //             console.error(
+        //                 "Error al obtener documentos",
+        //                 error.response.data
+        //             );
+        //         });
+        // },
     },
 };
 </script>

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Expr\BinaryOp\BooleanOr;
+use Illuminate\Support\Str;
 
 class UsuarioController extends Controller
 {
@@ -476,5 +477,20 @@ class UsuarioController extends Controller
 
 
         return response()->json(['message' => 'Campos convertidos a mayúsculas correctamente'], 200);
+    }
+
+    public function generarCodigo($id)
+    {
+        // Generar un código único de 6 caracteres (números y letras)
+        $codigo = Str::random(6);
+
+        // Verificar que el código sea único
+        while (Personal::where('codigo_personal', $codigo)->exists()) {
+            $codigo = Str::random(6);
+        }
+
+        // Actualizar el campo codigo_personal en la fila correspondiente al usuario
+        Personal::where('UsuarioID', $id)->update(['codigo_personal' => $codigo]);
+        return response()->json(['codigo' => $codigo], 201);
     }
 }

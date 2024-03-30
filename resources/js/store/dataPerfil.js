@@ -4,12 +4,11 @@ import axios from "axios";
 const eliminarDocumento = async (id) => {
     try {
         const respuesta = await axios.delete(`/api/eliminar/archivo/${id}`);
-        return respuesta.data
-
+        return respuesta.data;
     } catch (error) {
         throw new Error(error);
     }
-}
+};
 
 export const useDataPerfil = defineStore("dataPerfil", {
     state: () => ({
@@ -20,7 +19,6 @@ export const useDataPerfil = defineStore("dataPerfil", {
         cargarFoto: false,
         cargarDocumento: false,
         cargarNotificaciones: false,
-
     }),
     persist: true,
     actions: {
@@ -40,16 +38,19 @@ export const useDataPerfil = defineStore("dataPerfil", {
                     this.notificaciones = response.data.notificaciones;
                     this.no_visto = response.data.no_visto;
                 })
-                .catch((error) => { });
+                .catch((error) => {});
         },
         async obtenerDocumentosUsuario(id) {
             try {
-                const respuesta = await axios.get(`/api/obtener-documentacion/${id}`)
-                this.documentos = respuesta.data.data
-                this.cargarDocumento = false
+                console.log(id);
+                const respuesta = await axios.get(
+                    `/api/obtener-documentacion/${id}`
+                );
+                this.documentos = respuesta.data.data;
+                this.cargarDocumento = false;
             } catch (error) {
-                this.cargarDocumento = false
-                throw new Error(error)
+                this.cargarDocumento = false;
+                throw new Error(error);
             }
         },
         marcarTodasLeidas() {
@@ -58,7 +59,7 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 .then((response) => {
                     this.store.obtenerNotificaciones(1, "", "todos");
                 })
-                .catch((error) => { });
+                .catch((error) => {});
         },
         async modificarDatos(usuario) {
             try {
@@ -71,6 +72,16 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 throw error;
             }
         },
-        eliminarDocumento
+        async verificarDocumento(id) {
+            try {
+                const respuesta = await axios.put(
+                    `/api/documentos/${id}/revision`
+                );
+                return respuesta;
+            } catch (error) {
+                throw new Error(Error);
+            }
+        },
+        eliminarDocumento,
     },
 });

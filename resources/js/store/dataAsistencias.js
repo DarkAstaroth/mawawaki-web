@@ -33,6 +33,15 @@ const eliminarAsistencia = async (id) => {
     }
 };
 
+const verificarAsistencia = async (id) => {
+    try {
+        const respuesta = await axios.post(`/api/asistencias/verificar/${id}`);
+        return respuesta.data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 export const useDataAsistencias = defineStore("dataAsistencias", {
     state: () => ({
         asistencias: [],
@@ -50,6 +59,7 @@ export const useDataAsistencias = defineStore("dataAsistencias", {
     actions: {
         registrarAsistencias,
         eliminarAsistencia,
+        verificarAsistencia,
         async obtenerAsistencias(idUsuario, idEvento, page) {
             try {
                 const respuesta = await axios.post(

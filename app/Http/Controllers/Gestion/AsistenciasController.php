@@ -385,4 +385,25 @@ class AsistenciasController extends Controller
             return response()->json(['error' => 'No se pudo eliminar la asistencia'], 500);
         }
     }
+
+    public function verificarAsistencia($id)
+    {
+        $asistencia = Asistencia::findOrFail($id);
+
+        if (!$asistencia->ingreso_verificado || !$asistencia->salida_verificado) {
+            if (!$asistencia->ingreso_verificado) {
+                $asistencia->ingreso_verificado = true;
+            }
+
+            if (!$asistencia->salida_verificado) {
+                $asistencia->salida_verificado = true;
+            }
+
+            $asistencia->save();
+
+            return response()->json(['message' => 'Asistencia verificada correctamente'], 200);
+        } else {
+            return response()->json(['message' => 'La asistencia ya ha sido verificada'], 400);
+        }
+    }
 }
