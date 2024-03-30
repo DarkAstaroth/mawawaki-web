@@ -49,6 +49,7 @@ Route::put('modulos/{id}', [ModuloController::class, 'update']);
 Route::delete('modulos/{id}', [ModuloController::class, 'destroy']);
 
 Route::get('avisos/globales', [ModuloController::class, 'obtenerAvisosGlobales']);
+Route::post('aviso/crear', [AvisoController::class, 'crearNuevoAviso']);
 Route::get('avisos', [AvisoController::class, 'obtenerAvisos']);
 Route::delete('avisos/{id}', [AvisoController::class, 'eliminarAviso']);
 
@@ -83,6 +84,9 @@ Route::post('asistencias/total', [AsistenciasController::class, 'calcularTotalAs
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
 Route::put('estado/usuario/{id}', [UsuarioController::class, 'cambiarEstado']);
 Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincronizarRoles']);
+Route::get('convertir-mayusculas', [UsuarioController::class, 'convertirMayusculas']);
+
+
 
 // Api para caballos
 Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);

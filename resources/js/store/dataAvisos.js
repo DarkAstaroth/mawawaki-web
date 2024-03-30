@@ -1,12 +1,38 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 
+const crearAviso = async (data) => {
+    console.log(data);
+    try {
+        const formData = new FormData();
+        // Agrega los datos del aviso al FormData
+        Object.keys(data).forEach((key) => {
+            if (key === "archivo") {
+                // Si es el archivo, lo agrega al FormData
+                formData.append(key, data[key]);
+            } else {
+                // Para otros datos, simplemente los agrega
+                formData.append(key, data[key]);
+            }
+        });
+        console.log(formData);
+
+        const respuesta = await axios.post("/api/aviso/crear", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        return respuesta.data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 const obtenerAvisos = async (pagina, busqueda) => {
     try {
         const respuesta = await axios.get(
             `/api/avisos?page=${pagina}&busqueda=${busqueda}`
         );
-        console.log(respuesta);
         return respuesta.data;
     } catch (error) {
         throw new Error(error);
@@ -55,6 +81,14 @@ export const useDataAvisos = defineStore("dataAvisos", {
         async eliminarAviso(id) {
             const respuesta = await eliminarAviso(id);
             return respuesta;
+        },
+        async crearAviso(data) {
+            try {
+                const respuesta = await crearAviso(data);
+                return respuesta;
+            } catch (error) {
+                throw new Error(error);
+            }
         },
     },
 });

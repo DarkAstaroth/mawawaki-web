@@ -4,6 +4,6 @@
 @endsection
 @section('contenido')
     <div id="avisos-component">
-        <avisos-crear></avisos-crear>
+        <avisos-crear :usuario="{{ json_encode(auth()->user()) }}"></avisos-crear>
     </div>
 @endsection

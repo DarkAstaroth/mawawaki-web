@@ -217,7 +217,7 @@
                 </div>
             @endrole
 
-            @role('admin')
+            @role('admin|Asistente')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -244,7 +244,9 @@
                         </div>
                     </div>
                 </div>
+            @endrole
 
+            @role('admin|Asistente')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">

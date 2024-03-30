@@ -10,11 +10,17 @@
                             </div>
 
                             <div class="card-toolbar">
-                                <button type="button" class="btn btn-sm btn-flex btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#kt_modal_add_payment" @click="verificarCuenta(usuario.id)">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-flex btn-success"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#kt_modal_add_payment"
+                                    @click="verificarCuenta(usuario.id)"
+                                >
                                     <i class="ki-duotone ki-check-square">
                                         <span class="path1"></span>
-                                        <span class="path2"></span> </i>Verificar cuenta
+                                        <span class="path2"></span> </i
+                                    >Verificar cuenta
                                 </button>
                             </div>
                         </div>
@@ -26,76 +32,148 @@
                                         <tr>
                                             <td>Nombres:</td>
                                             <td>
-                                                <span v-if="usuario?.persona?.nombre">{{
-                                        usuario?.persona?.nombre
-                                    }}</span>
-                                                <span v-else>No se registraron nombres</span>
+                                                <span
+                                                    v-if="
+                                                        usuario?.persona?.nombre
+                                                    "
+                                                    >{{
+                                                        usuario?.persona?.nombre
+                                                    }}</span
+                                                >
+                                                <span v-else
+                                                    >No se registraron
+                                                    nombres</span
+                                                >
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td>Apellido Paterno:</td>
                                             <td>
-                                                <span v-if="usuario?.persona?.paterno">{{
-                                        usuario?.persona?.paterno
-                                    }}</span>
-                                                <span v-else>No se registró apellido paterno</span>
+                                                <span
+                                                    v-if="
+                                                        usuario?.persona
+                                                            ?.paterno
+                                                    "
+                                                    >{{
+                                                        usuario?.persona
+                                                            ?.paterno
+                                                    }}</span
+                                                >
+                                                <span v-else
+                                                    >No se registró apellido
+                                                    paterno</span
+                                                >
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td>Apellido Materno:</td>
                                             <td>
-                                                <span v-if="usuario?.persona?.materno">{{
-                                        usuario?.persona?.materno
-                                    }}</span>
-                                                <span v-else>No se registró apellido materno</span>
+                                                <span
+                                                    v-if="
+                                                        usuario?.persona
+                                                            ?.materno
+                                                    "
+                                                    >{{
+                                                        usuario?.persona
+                                                            ?.materno
+                                                    }}</span
+                                                >
+                                                <span v-else
+                                                    >No se registró apellido
+                                                    materno</span
+                                                >
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td>Email:</td>
                                             <td>
-                                                <span v-if="usuario.email">{{ usuario.email }}</span>
-                                                <span v-else>No se registró email</span>
+                                                <span v-if="usuario.email">{{
+                                                    usuario.email
+                                                }}</span>
+                                                <span v-else
+                                                    >No se registró email</span
+                                                >
                                             </td>
                                         </tr>
 
                                         <tr v-if="usuario.personal">
                                             <td>Universidad:</td>
                                             <td>
-                                                <span v-if="usuario.personal.universidad">{{
-                                        usuario.personal.universidad
-                                    }}</span>
-                                                <span v-else>No se registró universidad</span>
+                                                <span
+                                                    v-if="
+                                                        usuario.personal
+                                                            .universidad
+                                                    "
+                                                    >{{
+                                                        usuario.personal
+                                                            .universidad
+                                                    }}</span
+                                                >
+                                                <span v-else
+                                                    >No se registró
+                                                    universidad</span
+                                                >
                                             </td>
                                         </tr>
 
                                         <tr v-if="usuario.personal">
                                             <td>Facultad:</td>
                                             <td>
-                                                <span v-if="usuario.personal.facultad">{{
-                                        usuario.personal.facultad
-                                    }}</span>
-                                                <span v-else>No se registró facultad</span>
+                                                <span
+                                                    v-if="
+                                                        usuario.personal
+                                                            .facultad
+                                                    "
+                                                    >{{
+                                                        usuario.personal
+                                                            .facultad
+                                                    }}</span
+                                                >
+                                                <span v-else
+                                                    >No se registró
+                                                    facultad</span
+                                                >
                                             </td>
                                         </tr>
 
                                         <tr v-if="usuario.personal">
                                             <td>Carrera:</td>
                                             <td>
-                                                <span v-if="usuario.personal.carrera">{{
-                                        usuario.personal.carrera
-                                    }}</span>
-                                                <span v-else>No se registró carrera</span>
+                                                <span
+                                                    v-if="
+                                                        usuario.personal.carrera
+                                                    "
+                                                    >{{
+                                                        usuario.personal.carrera
+                                                    }}</span
+                                                >
+                                                <span v-else
+                                                    >No se registró
+                                                    carrera</span
+                                                >
                                             </td>
                                         </tr>
 
-                                        <tr v-if="usuario.tipo_solicitud === 'cliente'">
+                                        <tr
+                                            v-if="
+                                                usuario.tipo_solicitud ===
+                                                'cliente'
+                                            "
+                                        >
                                             <td>Ocupación:</td>
                                             <td>
-                                                <span class="badge badge-success" v-if="usuario.tipo_solicitud">{{
-                                        usuario.tipo_solicitud }}</span>
+                                                <span
+                                                    class="badge badge-success"
+                                                    v-if="
+                                                        usuario.tipo_solicitud
+                                                    "
+                                                    >{{
+                                                        usuario.tipo_solicitud
+                                                    }}</span
+                                                >
                                                 <span v-else>Sin Registro</span>
                                             </td>
                                         </tr>
@@ -103,8 +181,15 @@
                                         <tr>
                                             <td>Tipo Solicitud:</td>
                                             <td>
-                                                <span class="badge badge-success" v-if="usuario.tipo_solicitud">{{
-                                        usuario.tipo_solicitud }}</span>
+                                                <span
+                                                    class="badge badge-success"
+                                                    v-if="
+                                                        usuario.tipo_solicitud
+                                                    "
+                                                    >{{
+                                                        usuario.tipo_solicitud
+                                                    }}</span
+                                                >
                                                 <span v-else>Sin Registro</span>
                                             </td>
                                         </tr>
@@ -112,18 +197,36 @@
                                         <tr>
                                             <td>Estado:</td>
                                             <td>
-                                                <span v-if="usuario.estado"><span
-                                                        class="badge badge-success">Activo</span>
+                                                <span v-if="usuario.estado"
+                                                    ><span
+                                                        class="badge badge-success"
+                                                        >Activo</span
+                                                    >
                                                 </span>
                                                 <span v-else>
                                                     <div class="d-flex gap-3">
-                                                        <span v-if="usuario.solicitud === 1 &&
-                                        usuario.verificada === 0
-                              ">
-                                                            <span class="badge badge-warning">En espera</span>
+                                                        <span
+                                                            v-if="
+                                                                usuario.solicitud ===
+                                                                    1 &&
+                                                                usuario.verificada ===
+                                                                    0
+                                                            "
+                                                        >
+                                                            <span
+                                                                class="badge badge-warning"
+                                                                >En espera</span
+                                                            >
                                                         </span>
-                                                        <span v-if="usuario.estado === 0"><span
-                                                                class="badge badge-danger">Inactivo</span>
+                                                        <span
+                                                            v-if="
+                                                                usuario.estado ===
+                                                                0
+                                                            "
+                                                            ><span
+                                                                class="badge badge-danger"
+                                                                >Inactivo</span
+                                                            >
                                                         </span>
                                                     </div>
                                                 </span>
@@ -135,12 +238,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 mb-5">
+                <div class="col-12 mb-5" v-if="is('admin')">
                     <div class="card card-bordered">
                         <div class="card-header">
                             <h3 class="card-title">Roles</h3>
                             <div class="div card-toolbar">
-                                <button type="button" class="btn btn-sm btn-info" @click="actualizarRoles()">
+                                <button
+                                    type="button"
+                                    class="btn btn-sm btn-info"
+                                    @click="actualizarRoles()"
+                                >
                                     <i class="fa-solid fa-arrows-rotate"></i>
                                     Actualizar Roles
                                 </button>
@@ -148,9 +255,16 @@
                         </div>
 
                         <div class="card-body">
-                            <VueMultiselect :multiple="true" :close-on-select="true" v-model="rolesSeleccionados"
-                                :options="roles" selectLabel="Selecionar rol" placeholder="Buscar rol..."
-                                selectedLabel="Seleccionado" :show-labels="false">
+                            <VueMultiselect
+                                :multiple="true"
+                                :close-on-select="true"
+                                v-model="rolesSeleccionados"
+                                :options="roles"
+                                selectLabel="Selecionar rol"
+                                placeholder="Buscar rol..."
+                                selectedLabel="Seleccionado"
+                                :show-labels="false"
+                            >
                                 <template v-slot:noResult>
                                     <span>No se encontraron resultados</span>
                                 </template>
@@ -159,7 +273,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 mb-5">
+                <div class="col-12 mb-5" v-if="is('admin')">
                     <div class="card card-bordered">
                         <div class="card-header">
                             <h3 class="card-title">Documentos</h3>
@@ -171,7 +285,7 @@
                     </div>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12" v-if="is('admin')">
                     <ActividadesUsuario :usuario="usuario" />
                 </div>
             </div>
@@ -238,7 +352,7 @@ export default {
                                 },
                             });
                         })
-                        .catch((error) => { });
+                        .catch((error) => {});
                 }
             });
         },

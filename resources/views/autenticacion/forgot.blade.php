@@ -11,7 +11,7 @@
                     <div class="w-lg-500px p-10">
 
                         <form novalidate="novalidate" id="kt_sign_in_form" class="form w-100"
-                            action="{{ route('password.email') }}" method="POST">
+                            action="{{ route('password.email.reset') }}" method="POST">
                             @csrf
                             <div class="text-center mb-10">
                                 <h1 class="text-dark fw-bolder mb-3">¿Reestablecer contraseña?</h1>

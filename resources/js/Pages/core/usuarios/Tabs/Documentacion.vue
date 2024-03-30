@@ -1,10 +1,18 @@
 <template>
     <div class="col-12 col-md-12 mb-5">
         <div class="d-flex gap-2 flex-sm-row flex-column">
-            <Dropdown v-model="selectedTipoDocumento" :options="tiposDocumento" filter optionLabel="nombre"
-                placeholder="Selecciona tipo de documento" class="w-100 md:w-14rem">
+            <Dropdown
+                v-model="selectedTipoDocumento"
+                :options="tiposDocumento"
+                filter
+                optionLabel="nombre"
+                placeholder="Selecciona tipo de documento"
+                class="w-100 md:w-14rem"
+            >
                 <template #value="slotProps">
-                    <div v-if="slotProps.value">{{ slotProps.value.nombre }}</div>
+                    <div v-if="slotProps.value">
+                        {{ slotProps.value.nombre }}
+                    </div>
                     <span v-else>{{ slotProps.placeholder }}</span>
                 </template>
                 <template #option="slotProps">
@@ -13,34 +21,59 @@
             </Dropdown>
 
             <div class="d-flex flex-row w-100">
-                <div :class="['d-flex input-group d-flex align-items-center gap-2']">
+                <div
+                    :class="[
+                        'd-flex input-group d-flex align-items-center gap-2',
+                    ]"
+                >
                     <div class="">
-                        <input type="file" class="form-control flex-1" id="inputArchivo"
-                            @change="manejarCambioArchivo($event, 'carnet')" accept="application/pdf" />
+                        <input
+                            type="file"
+                            class="form-control flex-1"
+                            id="inputArchivo"
+                            @change="manejarCambioArchivo($event, 'carnet')"
+                            accept="application/pdf"
+                        />
                     </div>
 
-                    <Button v-if="!this.store.cargarDocumento" icon="pi pi-upload" :class="[
-                'rounded d-flex justify-content-center p-button-label gap-2',
-                esResponsivo ? 'p-2' : '',
-            ]" @click="subirArchivo('carnet')">
-                        <Icon icon="material-symbols:upload" width="20" height="20" />
+                    <Button
+                        v-if="!this.store.cargarDocumento"
+                        icon="pi pi-upload"
+                        :class="[
+                            'rounded d-flex justify-content-center p-button-label gap-2',
+                            esResponsivo ? 'p-2' : '',
+                        ]"
+                        @click="subirArchivo('carnet')"
+                    >
+                        <Icon
+                            icon="material-symbols:upload"
+                            width="20"
+                            height="20"
+                        />
                         Subir
                     </Button>
 
                     <div v-else class="d-flex flex-grow-1 p-1">
-                        <ProgressSpinner style="width: 30px; height: 30px" strokeWidth="5" />
+                        <ProgressSpinner
+                            style="width: 30px; height: 30px"
+                            strokeWidth="5"
+                        />
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
     <div class="col-12 col-md-12">
         <div class="table-responsive">
-            <table v-if="this.store.documentos.length > 0" class="table table-bordered">
+            <table
+                v-if="this.store.documentos.length > 0"
+                class="table table-bordered"
+            >
                 <!-- Encabezado de la tabla -->
                 <thead>
-                    <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
+                    <tr
+                        class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
+                    >
                         <th class="min-w-150px">Tipo</th>
                         <th class="min-w-150px">Nombre original</th>
                         <th class="min-w-150px">Nombre asignado</th>
@@ -52,38 +85,80 @@
                 </thead>
                 <!-- Cuerpo de la tabla -->
                 <tbody>
-                    <tr v-for="documento in this.store.documentos" :key="documento.id">
+                    <tr
+                        v-for="documento in this.store.documentos"
+                        :key="documento.id"
+                    >
                         <!-- Contenido de cada fila -->
-                        <td>{{ documento.tipo_documento.nombre }}
-                            <Badge v-if="documento.tipo_documento.unico" value="único" severity="info"></Badge>
+                        <td>
+                            {{ documento.tipo_documento.nombre }}
+                            <Badge
+                                v-if="documento.tipo_documento.unico"
+                                value="único"
+                                severity="info"
+                            ></Badge>
                         </td>
                         <td>{{ documento.descripcion }}</td>
                         <td>{{ documento.nombre_archivo }}</td>
                         <td>
-                            <Badge :value="documento.completado === 1 ? 'Cargado' : 'Sin presentar'"
-                                :severity="documento.completado === 1 ? 'success' : 'danger'"></Badge>
+                            <Badge
+                                :value="
+                                    documento.completado === 1
+                                        ? 'Cargado'
+                                        : 'Sin presentar'
+                                "
+                                :severity="
+                                    documento.completado === 1
+                                        ? 'success'
+                                        : 'danger'
+                                "
+                            ></Badge>
                         </td>
                         <td>
-                            <Badge :value="documento.estado_revision === 1 ? 'Aprobado' : 'Pendiente'"
-                                :severity="documento.estado_revision === 1 ? 'success' : 'warning'"></Badge>
+                            <Badge
+                                :value="
+                                    documento.estado_revision === 1
+                                        ? 'Aprobado'
+                                        : 'Pendiente'
+                                "
+                                :severity="
+                                    documento.estado_revision === 1
+                                        ? 'success'
+                                        : 'warning'
+                                "
+                            ></Badge>
                         </td>
                         <td>
-                            <a :href="`${this.valorDominio}/storage/${documento.ruta_archivo}`" target="_blank"
-                                class="btn btn-danger btn-sm">
+                            <a
+                                :href="`${this.valorDominio}/storage/${documento.ruta_archivo}`"
+                                target="_blank"
+                                class="btn btn-danger btn-sm"
+                            >
                                 <i class="fi fi-rr-file"></i>
                                 Ver
                             </a>
                         </td>
                         <td>
-                            <Button @click="confirm2($event, documento.id)" icon="pi pi-times" severity="danger" text
-                                rounded aria-label="Cancel" />
+                            <Button
+                                @click="confirm2($event, documento.id)"
+                                icon="pi pi-times"
+                                severity="danger"
+                                text
+                                rounded
+                                aria-label="Cancel"
+                            />
                         </td>
                     </tr>
                 </tbody>
             </table>
             <!-- Mensaje cuando no hay documentos -->
             <div v-else class="text-center py-4">
-                <img src="/assets/ilustraciones/sin_doc.svg" alt="" width="150" height="150" />
+                <img
+                    src="/assets/ilustraciones/sin_doc.svg"
+                    alt=""
+                    width="150"
+                    height="150"
+                />
                 <p>No hay documentos.</p>
             </div>
         </div>
@@ -100,7 +175,6 @@ import Dropdown from "primevue/dropdown";
 import { ref } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 import.meta.env.VITE_APP_BASE_URL;
-
 
 export default {
     name: "DocumentacionUsuario",
@@ -119,19 +193,19 @@ export default {
         const store = useDataPerfil();
         const confirm = useConfirm();
 
-
         const confirm2 = (event, idArchivo) => {
             confirm.require({
                 target: event.currentTarget,
                 message: "¿Quieres borrar el registro?",
                 icon: "pi pi-info-circle",
-                rejectClass: "p-button-secondary p-button-outlined p-button-sm me-5",
+                rejectClass:
+                    "p-button-secondary p-button-outlined p-button-sm me-5",
                 acceptClass: "p-button-danger p-button-sm",
                 rejectLabel: "Cancelar",
                 acceptLabel: "Borrar",
                 accept: () => {
                     store.eliminarDocumento(idArchivo).then(() => {
-                        store.obtenerDocumentosUsuario(store.usuario.id)
+                        store.obtenerDocumentosUsuario(store.usuario.id);
                         toast.add({
                             severity: "success",
                             summary: "Confirmado",
@@ -151,19 +225,25 @@ export default {
             });
         };
 
-        return { store, toast, selectedTipoDocumento, archivoSeleccionado, confirm2 };
+        return {
+            store,
+            toast,
+            selectedTipoDocumento,
+            archivoSeleccionado,
+            confirm2,
+        };
     },
     data() {
         return {
             tiposDocumento: [],
             esResponsivo: false,
-            valorDominio: import.meta.env.VITE_APP_BASE_URL
+            valorDominio: import.meta.env.VITE_APP_BASE_URL,
         };
     },
     mounted() {
         this.obtenerTiposDocumento();
         this.obtenerDocumentos();
-        this.store.obtenerDocumentosUsuario(this.store.usuario.id)
+        this.store.obtenerDocumentosUsuario(this.store.usuario.id);
     },
     methods: {
         verificarResponsivo() {
@@ -202,7 +282,7 @@ export default {
             }
 
             if (archivo) {
-                this.store.cargarDocumento = true
+                this.store.cargarDocumento = true;
                 const url = `/api/subir-archivo/${this.store.usuario.id}`;
 
                 const formData = new FormData();
@@ -222,8 +302,9 @@ export default {
                             detail: "el archivo se subió correctamente",
                             life: 3000,
                         });
-                        this.store.obtenerDocumentosUsuario(this.store.usuario.id);
-
+                        this.store.obtenerDocumentosUsuario(
+                            this.store.usuario.id
+                        );
                     })
                     .catch((error) => {
                         this.toast.add({
@@ -232,7 +313,6 @@ export default {
                             detail: "El archivo seleccionado ya se subió",
                             life: 3000,
                         });
-
                     });
                 this.selectedTipoDocumento = null;
                 this.archivoSeleccionado = null;
@@ -260,7 +340,10 @@ export default {
                     this.documentos = response.data.data;
                 })
                 .catch((error) => {
-                    console.error("Error al obtener documentos", error.response.data);
+                    console.error(
+                        "Error al obtener documentos",
+                        error.response.data
+                    );
                 });
         },
     },
