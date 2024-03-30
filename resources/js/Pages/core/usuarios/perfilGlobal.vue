@@ -114,6 +114,7 @@
 
                         <div
                             class="d-flex justify-content-center mb-5 mt-2 px-5"
+                            v-if="this.store.usuario.personal.codigo_personal"
                         >
                             <qrcode-vue
                                 :value="
