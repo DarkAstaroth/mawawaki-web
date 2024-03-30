@@ -57,4 +57,38 @@ class AvisoController extends Controller
         $aviso->delete();
         return response()->json(['mensaje' => 'Aviso eliminado correctamente'], 200);
     }
+
+    public function crearNuevoAviso(Request $request)
+    {
+        $validatedData = $request->validate([
+            'usuario_id' => 'required',
+            'titulo' => 'required|string',
+            'descripcion' => 'required|string',
+            'archivo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'global' => 'required',
+            'principal' => 'required',
+        ]);
+
+        // Crea un nuevo aviso con los datos validados
+        $aviso = new Aviso();
+        $aviso->usuario_id = $validatedData['usuario_id'];
+        $aviso->titulo = $validatedData['titulo'];
+        $aviso->descripcion = $validatedData['descripcion'];
+        $aviso->tipo = 'success';
+        $aviso->global = true;
+
+        // Sube la imagen si se proporciona
+        if ($request->hasFile('archivo')) {
+            $archivo = $request->file('archivo');
+            $nombreArchivo = time() . '_' . $archivo->getClientOriginalName();
+            $archivo->storeAs('public/avisos', $nombreArchivo);
+            $aviso->imagen = 'storage/avisos/' . $nombreArchivo;
+        }
+
+        // Guarda el aviso en la base de datos
+        $aviso->save();
+
+        // Retorna el aviso creado
+        return response()->json($aviso, 201);
+    }
 }

@@ -49,6 +49,7 @@ Route::put('modulos/{id}', [ModuloController::class, 'update']);
 Route::delete('modulos/{id}', [ModuloController::class, 'destroy']);
 
 Route::get('avisos/globales', [ModuloController::class, 'obtenerAvisosGlobales']);
+Route::post('aviso/crear', [AvisoController::class, 'crearNuevoAviso']);
 Route::get('avisos', [AvisoController::class, 'obtenerAvisos']);
 Route::delete('avisos/{id}', [AvisoController::class, 'eliminarAviso']);
 

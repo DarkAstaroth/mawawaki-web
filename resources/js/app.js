@@ -40,11 +40,18 @@ import ProgressSpinner from "primevue/progressspinner";
 import Card from "primevue/card";
 import { Icon } from "@iconify/vue";
 import ConfirmPopup from "primevue/confirmpopup";
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';
-import Row from 'primevue/row';
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import ColumnGroup from "primevue/columngroup";
+import Row from "primevue/row";
+import { createRouter, createWebHistory } from "vue-router";
 
+const routes = [{ path: "/dashboard/gestion/avisos" }];
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -53,6 +60,7 @@ export const appComponents = createApp({
         ...componentesApp,
     },
 })
+    .use(router)
     .use(pinia)
     .use(Ziggy)
     .use(LaravelPermissionToVueJS)
@@ -87,7 +95,7 @@ export const appComponents = createApp({
     .component("DataTable", DataTable)
     .component("Column", Column)
     .component("ColumnGroup", ColumnGroup)
-    .component('Row', Row)
+    .component("Row", Row)
     .directive("badge", BadgeDirective)
 
     .mount("#app");
