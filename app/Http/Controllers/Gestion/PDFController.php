@@ -12,12 +12,22 @@ class PDFController extends Controller
 {
     public function usuariosSistema()
     {
-        $usuarios = User::with('persona', 'roles')->get();
+        $usuarios = User::with('persona', 'roles')
+            ->where('estado', true)
+            ->whereHas('roles', function ($query) {
+                $query->where('name', '!=', 'admin');
+            })
+            ->get();
+
+
         $usersData = [];
-        $fila = 1; // Inicializar el contador de fila
+        $fila = 1;
 
         foreach ($usuarios as $usuario) {
-            $roles = $usuario->roles->pluck('name')->implode(', ');
+            $roles = $usuario->roles->reject(function ($role) {
+                return $role->name === 'personal' || $role->name === 'invitado';
+            })->pluck('name')->implode(', ');
+
             $usersData[] = [
                 strtoupper($usuario->persona->paterno),
                 strtoupper($usuario->persona->materno),
@@ -27,20 +37,16 @@ class PDFController extends Controller
             ];
         }
 
-        // Ordenar la colección de usuarios por apellido paterno
         $usersData = collect($usersData)->sortBy(function ($user) {
-            return $user[0]; // apellido paterno
+            return $user[0];
         })->values()->all();
 
-        // Cabecera
         $cabecera = [["Nro", "Paterno", "Materno", "Nombre", "Correo", "Roles"]];
 
-        // Añadir número de fila y agregar cabecera a los datos de usuarios
         foreach ($usersData as $key => &$userData) {
-            array_unshift($userData, $fila++); // Agregar número de fila al principio del array
+            array_unshift($userData, $fila++);
         }
 
-        // Devolver la cabecera y los datos de usuarios
         $resultado = [
             'cabecera' => $cabecera,
             'usuarios' => $usersData,
