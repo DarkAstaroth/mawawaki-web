@@ -181,7 +181,7 @@
                 v-model="horaIngreso"
                 iconDisplay="input"
                 timeOnly
-                hourFormat="12"
+                hourFormat="24"
             >
             </Calendar>
         </div>
@@ -194,7 +194,7 @@
                 v-model="horaSalida"
                 iconDisplay="input"
                 timeOnly
-                hourFormat="12"
+                hourFormat="24"
             >
                 <template #inputicon="{ clickCallback }">
                     <InputIcon
