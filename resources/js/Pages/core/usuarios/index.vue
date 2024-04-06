@@ -510,13 +510,8 @@ export default {
         },
         generarPDF() {
             this.store.usuariosPDF().then((respuesta) => {
-                var doc = new jsPDF();
-
-                var img = new Image();
-                img.src =
-                    "http://localhost:8000/assets/media/logos/logo-equino.png";
-                doc.addImage(img, "JPEG", 10, 10, 25, 6);
-
+                var doc = new jsPDF("l", "pt", "letter");
+                doc.setFontSize(10);
                 var titulo = "Usuarios del sistema";
                 var tituloWidth =
                     (doc.getStringUnitWidth(titulo) *
@@ -528,7 +523,6 @@ export default {
                 var startY = 30;
 
                 var footer = function (data) {
-                    var pageCount = doc.internal.getNumberOfPages();
                     var str = "Página " + data.pageNumber;
                     var pageWidth = doc.internal.pageSize.getWidth();
                     var textWidth =
@@ -555,17 +549,15 @@ export default {
                     body: respuesta.data.usuarios,
                     margin: { top: 20, bottom: 20 },
                     theme: "grid",
+                    styles: { fontSize: 10 }, // Establecer el tamaño de letra
                     didDrawPage: footer,
                 };
 
-                // Obtener la fecha actual
                 var today = new Date();
                 var dd = String(today.getDate()).padStart(2, "0");
                 var mm = String(today.getMonth() + 1).padStart(2, "0"); // Enero es 0
                 var yyyy = today.getFullYear();
                 var fecha = dd + "-" + mm + "-" + yyyy;
-
-                // Generar el nombre del archivo PDF con la fecha actual
                 var nombreArchivo = "Reporte_usuario_" + fecha + ".pdf";
 
                 doc.autoTable(options);

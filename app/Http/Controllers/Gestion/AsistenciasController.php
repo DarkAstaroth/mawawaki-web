@@ -406,4 +406,30 @@ class AsistenciasController extends Controller
             return response()->json(['message' => 'La asistencia ya ha sido verificada'], 400);
         }
     }
+
+    public function modificarSalida(Request $request, $id)
+    {
+        $asistencia = Asistencia::findOrFail($id);
+
+        $request->validate([
+            'fecha_hora_salida' => 'required',
+        ]);
+
+        $fechaIngreso = date('Y-m-d', $asistencia->fecha_hora_entrada);
+        $fechaHoraSalida = $fechaIngreso . ' ' . $request->input('fecha_hora_salida');
+        $horaSalida = date('H:i:s', strtotime($request->input('fecha_hora_salida')));
+
+
+        $fechaHoraSalida = $fechaIngreso . ' ' . $horaSalida;
+
+        $marcaTiempoSalida = strtotime($fechaHoraSalida);
+        $asistencia->update([
+            'fecha_hora_salida' => $marcaTiempoSalida,
+        ]);
+
+        return response()->json([
+            'message' => 'Asistencia actualizada exitosamente',
+            'asistencia' => $asistencia
+        ]);
+    }
 }

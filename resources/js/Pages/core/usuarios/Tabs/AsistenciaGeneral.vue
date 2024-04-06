@@ -96,8 +96,24 @@
                     </td>
                     <td>
                         <Button
+                            v-if="!asistencia.fecha_hora_salida && is('admin')"
+                            v-tooltip.bottom="{
+                                value: 'Verificar',
+                                showDelay: 300,
+                                hideDelay: 300,
+                            }"
+                            @click="estadoModalModificar(true, asistencia.id)"
+                            icon="pi pi-calendar"
+                            severity="success"
+                            text
+                            rounded
+                            aria-label="Cancel"
+                        />
+                        <Button
                             v-if="
-                                asistencia.ingreso_verificado === 0 &&
+                                (asistencia.ingreso_verificado === 0 ||
+                                    asistencia.salida_verificado === 0) &&
+                                asistencia.fecha_hora_salida &&
                                 is('admin')
                             "
                             v-tooltip.bottom="{
@@ -112,8 +128,9 @@
                             rounded
                             aria-label="Cancel"
                         />
+
                         <Button
-                            v-if="asistencia.ingreso_verificado === 0"
+                            v-if="is('admin')"
                             v-tooltip.bottom="{
                                 value: 'Eliminar',
                                 showDelay: 300,
@@ -164,7 +181,7 @@
                 v-model="horaIngreso"
                 iconDisplay="input"
                 timeOnly
-                hourFormat="12"
+                hourFormat="24"
             >
             </Calendar>
         </div>
@@ -177,7 +194,7 @@
                 v-model="horaSalida"
                 iconDisplay="input"
                 timeOnly
-                hourFormat="12"
+                hourFormat="24"
             >
                 <template #inputicon="{ clickCallback }">
                     <InputIcon
@@ -193,6 +210,46 @@
                 class="d-flex justify-content-center"
                 @click="registrarAsistencia"
                 >Registrar</Button
+            >
+        </div>
+    </Dialog>
+
+    <Dialog
+        v-model:visible="modalModificar"
+        modal
+        header="Modificar Salida"
+        position="center"
+        :style="{ width: '50rem' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+    >
+        <Message severity="warn" :closable="false"
+            >Modificar una salida requiere verificación previa</Message
+        >
+
+        <div class="d-flex flex-column mb-5">
+            <label for="calendar-12h" class="font-bold block mb-2">
+                Hora de salida
+            </label>
+            <Calendar
+                v-model="horaSalida"
+                iconDisplay="input"
+                timeOnly
+                hourFormat="24"
+            >
+                <template #inputicon="{ clickCallback }">
+                    <InputIcon
+                        class="pi pi-clock cursor-pointer"
+                        @click="clickCallback"
+                    />
+                </template>
+            </Calendar>
+        </div>
+
+        <div class="d-flex flex-column">
+            <Button
+                class="d-flex justify-content-center"
+                @click="modificarSalida"
+                >Modificar</Button
             >
         </div>
     </Dialog>
@@ -331,9 +388,11 @@ export default {
             total: {},
             totalGlobal: { horas: 0, minutos: 0, segundos: 0 },
             modalRegistro: false,
+            modalModificar: false,
             fechaAsistencia: null,
             horaIngreso: null,
             horaSalida: null,
+            asistenciaSeleccionada: null,
         };
     },
     setup() {
@@ -461,6 +520,10 @@ export default {
         },
         estadoModal(estado) {
             this.modalRegistro = estado;
+        },
+        estadoModalModificar(estado, id) {
+            this.modalModificar = estado;
+            this.asistenciaSeleccionada = id;
         },
         registrarAsistencia() {
             const fechaActual = new Date();
@@ -620,6 +683,26 @@ export default {
                 detail: texto,
                 life: 3000,
             });
+        },
+        modificarSalida() {
+            this.storeAsistencias
+                .modificarSalida(this.asistenciaSeleccionada, this.horaSalida)
+                .then(() => {
+                    this.toast.add({
+                        severity: "success",
+                        summary: "Confirmado",
+                        detail: "Asistencia modificada con éxito",
+                        life: 3000,
+                    });
+                    this.storeAsistencias.obtenerAsistencias(
+                        this.storeUsuarios.usuario.id,
+                        this.storeEventos.eventoPrincipal.id,
+                        this.paginacion.paginaActual
+                    );
+                    this.modalModificar = false;
+                    this.asistenciaSeleccionada = null;
+                    this.horaSalida = null;
+                });
         },
     },
 };

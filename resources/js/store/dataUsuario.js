@@ -26,6 +26,7 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
             axios
                 .get(url)
                 .then((response) => {
+                    this.ficha.total = response.data.total_usuarios;
                     this.ficha.activos = response.data.activos;
                     this.ficha.no_activos = response.data.no_activos;
                     this.ficha.solicitudes = response.data.solicitudes;

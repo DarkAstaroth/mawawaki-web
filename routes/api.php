@@ -110,6 +110,7 @@ Route::get('eventos/{id}/asistentes', [EventosController::class, 'getAsistentes'
 // Api para asistencias
 Route::post('asistencia/solicitar/registro', [AsistenciasController::class, 'registrarAsistenciaVerificar']);
 Route::delete('asistencia/{id}', [AsistenciasController::class, 'eliminarAsistencia']);
+Route::put('asistencias/modificar/salida/{id}', [AsistenciasController::class, 'modificarSalida']);
 
 
 

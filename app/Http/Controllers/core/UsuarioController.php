@@ -51,10 +51,7 @@ class UsuarioController extends Controller
 
         if ($parametro === 'inactivos') {
             $usuariosQuery = User::query()
-                ->where('estado', 0)
-                ->where('solicitud', 1)
-                ->where('verificada', 1)
-                ->whereNotNull('email_verified_at');
+                ->where('estado', 0);
         }
 
         if ($parametro === 'solicitudes') {
@@ -90,6 +87,7 @@ class UsuarioController extends Controller
                     ->orWhereRaw("REPLACE(email, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
             });
         }
+
 
         $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
         $usuariosIds = $usuarios->pluck('id')->toArray();
@@ -216,6 +214,9 @@ class UsuarioController extends Controller
     {
         $response = [];
 
+        $totalUsuarios = User::count();
+        $response['total_usuarios'] = $totalUsuarios;
+        // dd($totalUsuarios);
 
         $activos = User::where('estado', 1)
             ->where('solicitud', 1)
@@ -225,9 +226,6 @@ class UsuarioController extends Controller
         $response['activos'] = $activos;
 
         $no_activos = User::where('estado', 0)
-            ->where('solicitud', 1)
-            ->where('verificada', 1)
-            ->whereNotNull('email_verified_at')
             ->count();
         $response['no_activos'] = $no_activos;
 

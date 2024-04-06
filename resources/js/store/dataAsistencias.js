@@ -42,6 +42,17 @@ const verificarAsistencia = async (id) => {
     }
 };
 
+const modificarSalida = async (id) => {
+    try {
+        const respuesta = await axios.post(
+            `/api/asistencias/modificar/salida/${id}`
+        );
+        return respuesta.data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 export const useDataAsistencias = defineStore("dataAsistencias", {
     state: () => ({
         asistencias: [],
@@ -57,6 +68,19 @@ export const useDataAsistencias = defineStore("dataAsistencias", {
     }),
     persist: true,
     actions: {
+        async modificarSalida(id, horaSalida) {
+            try {
+                const respuesta = await axios.put(
+                    `/api/asistencias/modificar/salida/${id}`,
+                    {
+                        fecha_hora_salida: horaSalida,
+                    }
+                );
+                return respuesta;
+            } catch (error) {
+                throw new Error(error);
+            }
+        },
         registrarAsistencias,
         eliminarAsistencia,
         verificarAsistencia,
