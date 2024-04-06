@@ -305,7 +305,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 mb-5" v-if="is('admin')">
+                <div class="col-12 mb-5" v-if="is('admin|Asistente')">
                     <div class="card card-bordered">
                         <div class="card-header">
                             <h3 class="card-title">Documentos</h3>
