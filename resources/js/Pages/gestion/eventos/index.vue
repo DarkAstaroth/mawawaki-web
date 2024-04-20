@@ -34,7 +34,7 @@
                             <th class="min-w-200px">Lugar</th>
                             <th class="min-w-150px">Tipo Ingreso</th>
                             <th class="min-w-150px">Visibilidad</th>
-                            <th class="min-w-50px">Acciones</th>
+                            <th class="min-w-150px">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -136,15 +136,43 @@
                                 </div>
                             </td>
 
-                            <td
-                                class="align-items-center"
-                                v-if="
-                                    evento.principal
-                                        ? is('admin')
-                                        : is('Asistente')
-                                "
-                            >
-                                <div class="d-flex">
+                            <td class="align-items-center">
+                                <Button
+                                    v-if="is('admin|Asistente')"
+                                    v-tooltip.bottom="{
+                                        value: 'Scannear',
+                                        showDelay: 300,
+                                        hideDelay: 300,
+                                    }"
+                                    icon="fi fi-br-qr-scan"
+                                    severity="success"
+                                    text
+                                    rounded
+                                    @click="estadoModalScanner(true, evento)"
+                                />
+
+                                <a
+                                    :href="
+                                        route('evento.detalle', {
+                                            id: evento.id,
+                                        })
+                                    "
+                                    v-if="is('admin')"
+                                >
+                                    <Button
+                                        v-tooltip.bottom="{
+                                            value: 'Editar',
+                                            showDelay: 300,
+                                            hideDelay: 300,
+                                        }"
+                                        icon="fi fi-br-file-edit"
+                                        severity="info"
+                                        text
+                                        rounded
+                                        aria-label="Cancel"
+                                /></a>
+
+                                <!-- <div class="d-flex">
                                     <div class="dropdown">
                                         <button
                                             class="btn btn-secondary dropdown-toggle btn-sm"
@@ -177,7 +205,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                             </td>
                         </tr>
                         <tr v-if="store.eventos.length === 0">
@@ -191,6 +219,31 @@
         </div>
     </div>
     <Toast />
+    <Dialog
+        v-model:visible="modalScanner"
+        modal
+        header="Scannear Qr"
+        position="center"
+        :style="{ width: '50rem' }"
+        :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+    >
+        <div>
+            <div class="d-flex flex-column">
+                <span>
+                    <strong>Evento:</strong> {{ eventoSeleccionado.nombre }}
+                </span>
+                <span>
+                    <strong>Fecha Inicio</strong>
+                    {{ fechaHoraLegible(eventoSeleccionado.fecha_hora_inicio) }}
+                </span>
+                <span>
+                    <strong>Fecha Fin</strong>
+                    {{ fechaHoraLegible(eventoSeleccionado.fecha_hora_fin) }}
+                </span>
+            </div>
+        </div>
+        <LectorQR @codigoQR="registrarQR" />
+    </Dialog>
 </template>
 
 <script>
@@ -211,10 +264,13 @@ import {
     LCircleMarker,
     LMarker,
 } from "@vue-leaflet/vue-leaflet";
+import LectorQR from "@/Pages/dashboard/lectorqr.vue";
+import { useDataAsistencias } from "@/store/dataAsistencias";
 
 export default {
     name: "EventosIndex",
     components: {
+        LectorQR,
         VueDatePicker,
         LMap,
         LTileLayer,
@@ -224,9 +280,10 @@ export default {
     },
     setup() {
         const store = useDataEventos();
+        const storeAsistencias = useDataAsistencias();
         const toast = useToast();
 
-        return { store, toast };
+        return { store, toast, storeAsistencias };
     },
     data() {
         return {
@@ -253,6 +310,8 @@ export default {
             modalCrearEvento: false,
             latitud: null,
             longitud: null,
+            modalScanner: false,
+            eventoSeleccionado: null,
         };
     },
 
@@ -314,6 +373,16 @@ export default {
         },
         estadoModal() {
             this.modalCrearEvento = !this.modalCrearEvento;
+        },
+        estadoModalScanner(estado, evento) {
+            this.modalScanner = estado;
+            this.eventoSeleccionado = evento;
+        },
+        registrarQR(obj) {
+            this.storeAsistencias.registrarAsistencia(
+                this.eventoSeleccionado,
+                obj[0]
+            );
         },
     },
 };

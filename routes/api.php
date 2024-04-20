@@ -111,6 +111,7 @@ Route::get('eventos/{id}/asistentes', [EventosController::class, 'getAsistentes'
 Route::post('asistencia/solicitar/registro', [AsistenciasController::class, 'registrarAsistenciaVerificar']);
 Route::delete('asistencia/{id}', [AsistenciasController::class, 'eliminarAsistencia']);
 Route::put('asistencias/modificar/salida/{id}', [AsistenciasController::class, 'modificarSalida']);
+Route::post('/asistencia/registro/qr', [AsistenciasController::class, 'RegistrarAsistenciaQR']);
 
 
 

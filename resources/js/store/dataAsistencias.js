@@ -84,6 +84,18 @@ export const useDataAsistencias = defineStore("dataAsistencias", {
         registrarAsistencias,
         eliminarAsistencia,
         verificarAsistencia,
+        async registrarAsistencia(evento, codigoQR) {
+            try {
+                const respuesta = await axios.post(
+                    `/api/asistencia/registro/qr`,
+                    {
+                        codigoQR,
+                        evento: evento.id,
+                    }
+                );
+                console.log(respuesta);
+            } catch (error) {}
+        },
         async obtenerAsistencias(idUsuario, idEvento, page) {
             try {
                 const respuesta = await axios.post(

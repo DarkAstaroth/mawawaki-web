@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Gestion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gestion\Asistencia;
+use App\Models\Gestion\Evento;
+use App\Models\Gestion\Personal;
 use App\Models\Gestion\QR;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -130,7 +133,7 @@ class AsistenciasController extends Controller
                 $asistencia->save();
             } else {
                 // Si es otro día, crear una nueva asistencia con la hora de entrada
-                $asistencia2 = Asistencia::create([
+                Asistencia::create([
                     'UsuarioID' => $usuarioId,
                     'EventoID' => $eventoId,
                     'fecha_hora_entrada' => $fechaHoraActual,
@@ -431,5 +434,73 @@ class AsistenciasController extends Controller
             'message' => 'Asistencia actualizada exitosamente',
             'asistencia' => $asistencia
         ]);
+    }
+    public function RegistrarAsistenciaQR(Request $request)
+    {
+        $codigoQR = $request->input('codigoQR');
+        $eventoID = $request->input('evento');
+
+        // Buscar al usuario asociado al código QR proporcionado
+        $personal = Personal::where('codigo_personal', $codigoQR)->first();
+        if (!$personal) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+
+        // Obtener el usuario completo basado en el ID del usuario asociado al personal
+        $usuarioCompleto = User::find($personal->UsuarioID);
+        if (!$usuarioCompleto) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+        // Verificar si el evento existe
+        $evento = Evento::find($eventoID);
+        if (!$evento) {
+            return response()->json(['error' => 'Evento no encontrado'], 404);
+        }
+
+        $fechaHoraActual = now()->timestamp;
+
+        // Verificar si el usuario ya ha marcado asistencia en este evento hoy
+        $asistencia = Asistencia::where('UsuarioID', $usuarioCompleto->id)
+            ->where('EventoID', $eventoID)
+            ->whereDate('created_at', today())
+            ->latest()
+            ->first();
+
+        if ($asistencia) {
+            // Verificar si la fecha de entrada de la asistencia es la misma que la fecha actual
+            $fechaEntrada = $asistencia->fecha_hora_entrada;
+            if (date('Y-m-d', $fechaEntrada) === date('Y-m-d', $fechaHoraActual)) {
+                // Si es el mismo día, actualizar la hora de salida en la asistencia existente
+                $asistencia->fecha_hora_salida = $fechaHoraActual;
+                $asistencia->salida_verificado = 1;
+                $asistencia->save();
+            } else {
+                // Si es otro día, crear una nueva asistencia con la hora de entrada
+                Asistencia::create([
+                    'UsuarioID' => $usuarioCompleto->id,
+                    'EventoID' => $eventoID,
+                    'fecha_hora_entrada' => $fechaHoraActual,
+                    'global' => false, // Puedes configurar esto según tus necesidades
+                    'CodigoQR' => $codigoQR,
+                    'ingreso_verificado' => 1,
+                    'salida_verificado' => 0,
+                ]);
+            }
+        } else {
+            // Si no existe asistencia, crear una nueva asistencia con la hora de entrada
+            Asistencia::create([
+                'UsuarioID' => $usuarioCompleto->id,
+                'EventoID' => $eventoID,
+                'fecha_hora_entrada' => $fechaHoraActual,
+                'global' => false, // Puedes configurar esto según tus necesidades
+                'CodigoQR' => $codigoQR,
+                'ingreso_verificado' => 1,
+                'salida_verificado' => 0,
+            ]);
+        }
+
+        return response()->json(['success' => 'Marcado registrado correctamente'], 200);
     }
 }

@@ -1,7 +1,7 @@
 @extends('plantilla.masterLogin')
 @section('contenido')
     <div class="d-flex flex-column flex-root" id="kt_app_root">
-        <div class="d-flex flex-column flex-lg-row flex-column-fluid">
+        <div class="d-flex flex-column flex-md-row flex-column-fluid">
             <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
                 <div class="d-flex flex-center flex-column flex-lg-row-fluid">
                     <div class="w-lg-500px w-100 mt-20">
