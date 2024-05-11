@@ -17,7 +17,7 @@
                 <div class="card flex justify-content-center">
                     <div class="d-flex flex-column gap-2">
                         <label for="titulo">Nombre del evento</label>
-                        <InputText v-model="nombre" class="text-capitalize" />
+                        <InputText v-model="nombre" />
                         <div
                             v-if="v$?.nombre.$error"
                             class="fv-plugins-message-container invalid-feedback"
@@ -122,7 +122,7 @@
                 <div class="card flex justify-content-center">
                     <div class="d-flex flex-column gap-2">
                         <label for="titulo">Lugar del evento</label>
-                        <InputText v-model="lugar" class="text-capitalize" />
+                        <InputText v-model="lugar" />
                         <div
                             v-if="v$?.lugar.$error"
                             class="fv-plugins-message-container invalid-feedback"
@@ -142,7 +142,7 @@
                         Descripcion
                     </label>
                     <Textarea
-                        class="w-100 text-capitalize"
+                        class="w-100"
                         v-model="descripcion"
                         rows="5"
                         placeholder="Descripción"

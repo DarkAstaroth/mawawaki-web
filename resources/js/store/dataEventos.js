@@ -6,6 +6,14 @@ export const useDataEventos = defineStore("dataEventos", {
         eventos: [],
         usuarios: [],
         eventoPrincipal: {},
+        paginacion: {
+            total: 0,
+            porPagina: 10,
+            paginaActual: 1,
+            ultimaPagina: 1,
+            desde: 0,
+            hasta: 0,
+        },
     }),
     persist: true,
     actions: {
@@ -16,7 +24,7 @@ export const useDataEventos = defineStore("dataEventos", {
                 .then((response) => {
                     this.usuarios = response.data.usuarios;
                 })
-                .catch((error) => { });
+                .catch((error) => {});
         },
         cargarEventos(pagina, busqueda) {
             const url = `/api/eventos?page=${pagina}&busqueda=${busqueda}`;
@@ -24,9 +32,24 @@ export const useDataEventos = defineStore("dataEventos", {
                 .get(url)
                 .then((response) => {
                     this.eventos = response.data.eventos;
+                    this.paginacion = response.data.paginacion;
+                    console.log(paginacion);
                 })
-                .catch((error) => { });
+                .catch((error) => {});
         },
+        async eliminarEvento(idEvento) {
+            try {
+                console.log("eliminando");
+                const respuesta = await axios.delete(
+                    `/api/evento/eliminar/${idEvento}`
+                );
+                console.log(respuesta);
+                return respuesta.data;
+            } catch (error) {
+                throw new Error(error);
+            }
+        },
+
         async crearEvento(
             nombre,
             fechaInicio,
@@ -172,11 +195,13 @@ export const useDataEventos = defineStore("dataEventos", {
         },
         async obtenerUsuariosEvento(id) {
             try {
-                const respuesta = await axios.get(`/api/eventos/${id}/asistentes`)
-                return respuesta.data.usuarios
+                const respuesta = await axios.get(
+                    `/api/eventos/${id}/asistentes`
+                );
+                return respuesta.data.usuarios;
             } catch (error) {
-                throw error
+                throw error;
             }
-        }
+        },
     },
 });

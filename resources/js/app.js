@@ -13,6 +13,9 @@ import "@flaticon/flaticon-uicons/css/all/all.css";
 import componentesApp from "./componentes";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
@@ -71,6 +74,7 @@ export const appComponents = createApp({
     .use(ToastService)
     .use(DialogService)
     .mixin({ methods: { route } })
+    .component("VueDatePicker", VueDatePicker)
     .component("Dialog", Dialog)
     .component("InputText", InputText)
     .component("Password", Password)
