@@ -122,6 +122,7 @@ Route::middleware([
 ])->group(function () {
     Route::resource('dashboard/eventos', EventosController::class);
     Route::get('dashboard/evento/{id}', [EventosController::class, 'DetalleEvento'])->name('evento.detalle');
+    Route::get('dashboard/evento/qrs/{id}', [EventosController::class, 'DetalleEventoQR'])->name('evento.qrs');
 });
 
 //Ruta para asistencias

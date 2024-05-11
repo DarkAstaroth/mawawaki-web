@@ -195,6 +195,7 @@
                       :size="200"
                       level="Q"
                       :ref="`codigoQR${qr.CodigoQR}`"
+                      render-as="svg"
                     />
                     <div class="mx-10">
                       <table class="table table-bordered">
@@ -317,7 +318,7 @@ export default {
     cargarQRS(pagina) {
       axios
         .get(
-          `/api/qr/evento/${this.idEvento}?page=${pagina}&busqueda=${this.busqueda}`
+          `/api/qr/evento/9b69f998-3dfd-46ae-9533-8e40c949114a?page=${pagina}&busqueda=${this.busqueda}`
         )
         .then((response) => {
           this.qrs = response.data.qrs;

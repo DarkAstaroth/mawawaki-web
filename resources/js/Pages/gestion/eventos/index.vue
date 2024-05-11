@@ -153,11 +153,32 @@
 
                                 <a
                                     :href="
+                                        route('evento.qrs', {
+                                            id: evento.id,
+                                        })
+                                    "
+                                    v-if="is('admin|Asistente')"
+                                >
+                                    <Button
+                                        v-tooltip.bottom="{
+                                            value: 'QR',
+                                            showDelay: 300,
+                                            hideDelay: 300,
+                                        }"
+                                        icon="fi fi-sr-qrcode"
+                                        severity="secondary"
+                                        text
+                                        rounded
+                                        aria-label="Cancel"
+                                /></a>
+
+                                <a
+                                    :href="
                                         route('evento.detalle', {
                                             id: evento.id,
                                         })
                                     "
-                                    v-if="is('admin')"
+                                    v-if="is('admin|Asistente')"
                                 >
                                     <Button
                                         v-tooltip.bottom="{
@@ -171,41 +192,22 @@
                                         rounded
                                         aria-label="Cancel"
                                 /></a>
-
-                                <!-- <div class="d-flex">
-                                    <div class="dropdown">
-                                        <button
-                                            class="btn btn-secondary dropdown-toggle btn-sm"
-                                            type="button"
-                                            id="dropdownMenuButton1"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                            data-boundary="viewport"
-                                        ></button>
-                                        <ul
-                                            class="dropdown-menu"
-                                            aria-labelledby="dropdownMenuButton1"
-                                        >
-                                            <li></li>
-                                            <li>
-                                                <a
-                                                    :href="
-                                                        route(
-                                                            'evento.detalle',
-                                                            { id: evento.id }
-                                                        )
-                                                    "
-                                                    class="dropdown-item"
-                                                    ><i
-                                                        class="bi bi-pencil-square fs-4"
-                                                    ></i>
-
-                                                    Detalles</a
-                                                >
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div> -->
+                                <Button
+                                    v-if="is('admin|Asistente')"
+                                    v-tooltip.bottom="{
+                                        value: 'Eliminar',
+                                        showDelay: 300,
+                                        hideDelay: 300,
+                                    }"
+                                    @click="
+                                        confirmarEliminar($event, evento.id)
+                                    "
+                                    icon="pi pi-times"
+                                    severity="danger"
+                                    text
+                                    rounded
+                                    aria-label="Cancel"
+                                />
                             </td>
                         </tr>
                         <tr v-if="store.eventos.length === 0">
@@ -216,6 +218,94 @@
                     </tbody>
                 </table>
             </div>
+
+            <nav>
+                <ul class="pagination">
+                    <li
+                        class="page-item"
+                        :class="{
+                            disabled: this.store.paginacion.paginaActual === 1,
+                        }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click="cambiarPaginacion(1)"
+                            >Primera</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        :class="{
+                            disabled: this.store.paginacion.paginaActual === 1,
+                        }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click="
+                                cambiarPaginacion(
+                                    this.store.paginacion.paginaActual - 1
+                                )
+                            "
+                            >Anterior</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        v-for="page in this.store.paginacion.ultimaPagina"
+                        :key="page"
+                        :class="{
+                            active: this.store.paginacion.paginaActual === page,
+                        }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click="cambiarPaginacion(page)"
+                            >{{ page }}</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        :class="{
+                            disabled:
+                                this.store.paginacion.paginaActual ===
+                                this.store.paginacion.ultimaPagina,
+                        }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click="
+                                cambiarPaginacion(
+                                    this.store.paginacion.paginaActual + 1
+                                )
+                            "
+                            >Siguiente</a
+                        >
+                    </li>
+                    <li
+                        class="page-item"
+                        :class="{
+                            disabled:
+                                this.store.paginacion.paginaActual ===
+                                this.store.paginacion.ultimaPagina,
+                        }"
+                    >
+                        <a
+                            class="page-link"
+                            href="#"
+                            @click="
+                                cambiarPaginacion(
+                                    this.store.paginacion.ultimaPagina
+                                )
+                            "
+                            >Última</a
+                        >
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
     <Toast />
@@ -244,6 +334,7 @@
         </div>
         <LectorQR @codigoQR="registrarQR" />
     </Dialog>
+    <ConfirmPopup></ConfirmPopup>
 </template>
 
 <script>
@@ -266,6 +357,7 @@ import {
 } from "@vue-leaflet/vue-leaflet";
 import LectorQR from "@/Pages/dashboard/lectorqr.vue";
 import { useDataAsistencias } from "@/store/dataAsistencias";
+import { useConfirm } from "primevue/useconfirm";
 
 export default {
     name: "EventosIndex",
@@ -282,8 +374,41 @@ export default {
         const store = useDataEventos();
         const storeAsistencias = useDataAsistencias();
         const toast = useToast();
+        const confirm = useConfirm();
 
-        return { store, toast, storeAsistencias };
+        const confirmarEliminar = (event, idAsistencia) => {
+            confirm.require({
+                target: event.currentTarget,
+                message: "¿Quieres borrar el registro?",
+                icon: "pi pi-info-circle",
+                rejectClass:
+                    "p-button-secondary p-button-outlined p-button-sm me-5",
+                acceptClass: "p-button-danger p-button-sm",
+                rejectLabel: "Cancelar",
+                acceptLabel: "Borrar",
+                accept: () => {
+                    store.eliminarEvento(idAsistencia).then(() => {
+                        store.cargarEventos(1, "");
+                        toast.add({
+                            severity: "success",
+                            summary: "Confirmado",
+                            detail: "Se registro se elimino con éxito",
+                            life: 3000,
+                        });
+                    });
+                },
+                reject: () => {
+                    toast.add({
+                        severity: "error",
+                        summary: "Cancelado",
+                        detail: "No se realizó la acción",
+                        life: 3000,
+                    });
+                },
+            });
+        };
+
+        return { store, toast, storeAsistencias, confirmarEliminar };
     },
     data() {
         return {
@@ -383,6 +508,9 @@ export default {
                 this.eventoSeleccionado,
                 obj[0]
             );
+        },
+        cambiarPaginacion(pagina) {
+            this.store.cargarEventos(pagina, this.busqueda, this.parametro);
         },
     },
 };

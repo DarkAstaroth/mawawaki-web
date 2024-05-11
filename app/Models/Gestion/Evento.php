@@ -25,7 +25,7 @@ class Evento extends Model
         'solo_ingreso',
         'principal',
         'descripcion',
-        'usuarios_ids', 
+        'usuarios_ids',
     ];
     public function qrs()
     {

@@ -178,6 +178,12 @@ class EventosController extends Controller
         return view('gestion.eventos.detalle', compact('evento'));
     }
 
+    public function DetalleEventoQR(string $id)
+    {
+        $evento = Evento::findOrFail($id);
+        return view('gestion.eventos.qr', compact('evento'));
+    }
+
     public function obtenerEventosUsuario(string $id)
     {
         $eventos = Evento::whereHas('asistencias', function ($query) use ($id) {
@@ -261,5 +267,18 @@ class EventosController extends Controller
         });
 
         return response()->json(['usuarios' => $nombres_apellidos]);
+    }
+
+    public function eliminarEvento($id)
+    {
+        $evento = Evento::find($id);
+
+        if (!$evento) {
+            return response()->json(['error' => 'El evento no existe'], 404);
+        }
+
+        $evento->delete();
+
+        return response()->json(['message' => 'Evento eliminado correctamente'], 200);
     }
 }
