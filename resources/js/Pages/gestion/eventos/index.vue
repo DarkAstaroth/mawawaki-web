@@ -193,7 +193,10 @@
                                         aria-label="Cancel"
                                 /></a>
                                 <Button
-                                    v-if="is('admin|Asistente')"
+                                    v-if="
+                                        is('admin|Asistente') &&
+                                        !evento.principal
+                                    "
                                     v-tooltip.bottom="{
                                         value: 'Eliminar',
                                         showDelay: 300,
