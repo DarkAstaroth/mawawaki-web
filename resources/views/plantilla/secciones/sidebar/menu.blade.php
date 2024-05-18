@@ -176,9 +176,9 @@
 
 
 
-            @role('admin')
+            @unless (Auth::user()->hasRole('admin') || Auth::user()->hasRole('invitado'))
                 <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Personal</span></div>
-
+                {{--
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -189,7 +189,7 @@
                         </span>
                         <span class="menu-title">Calendario</span>
                     </span>
-                </div>
+                </div> --}}
 
 
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
@@ -210,12 +210,12 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title">Todas las actividades</span>
+                                <span class="menu-title">Todas mis actividades</span>
                             </a>
                         </div>
                     </div>
                 </div>
-            @endrole
+            @endunless
 
             @role('admin|Asistente')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
