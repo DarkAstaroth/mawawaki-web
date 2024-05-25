@@ -34,7 +34,7 @@
                             <th class="min-w-200px">Lugar</th>
                             <th class="min-w-150px">Tipo Ingreso</th>
                             <th class="min-w-150px">Visibilidad</th>
-                            <th class="min-w-150px">Acciones</th>
+                            <th class="min-w-200px">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -234,8 +234,13 @@
                             class="page-link"
                             href="#"
                             @click="cambiarPaginacion(1)"
-                            >Primera</a
                         >
+                            <Icon
+                                icon="material-symbols:keyboard-double-arrow-left"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                     <li
                         class="page-item"
@@ -251,8 +256,13 @@
                                     this.store.paginacion.paginaActual - 1
                                 )
                             "
-                            >Anterior</a
                         >
+                            <Icon
+                                icon="iconamoon:arrow-left-2"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                     <li
                         class="page-item"
@@ -285,8 +295,13 @@
                                     this.store.paginacion.paginaActual + 1
                                 )
                             "
-                            >Siguiente</a
                         >
+                            <Icon
+                                icon="iconamoon:arrow-right-2"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                     <li
                         class="page-item"
@@ -304,8 +319,13 @@
                                     this.store.paginacion.ultimaPagina
                                 )
                             "
-                            >Última</a
                         >
+                            <Icon
+                                icon="material-symbols:keyboard-double-arrow-right"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                 </ul>
             </nav>

@@ -273,7 +273,8 @@ export default {
     InputText,
     Checkbox,
   },
-  setup() {},
+  setup() {
+  },
   data() {
     return {
       imageData: null,
@@ -318,7 +319,7 @@ export default {
     cargarQRS(pagina) {
       axios
         .get(
-          `/api/qr/evento/9b69f998-3dfd-46ae-9533-8e40c949114a?page=${pagina}&busqueda=${this.busqueda}`
+          `/api/qr/evento/${this.evento.id}?page=${pagina}&busqueda=${this.busqueda}`
         )
         .then((response) => {
           this.qrs = response.data.qrs;

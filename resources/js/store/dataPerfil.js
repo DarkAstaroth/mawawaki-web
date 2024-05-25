@@ -22,6 +22,9 @@ export const useDataPerfil = defineStore("dataPerfil", {
     }),
     persist: true,
     actions: {
+        estadoDocumento(estado) {
+            this.cargarDocumento = estado;
+        },
         obtenerUsuario(usuario) {
             this.usuario = usuario;
         },
@@ -46,9 +49,11 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 const respuesta = await axios.get(
                     `/api/obtener-documentacion/${id}`
                 );
+                console.log(respuesta);
                 this.documentos = respuesta.data.data;
                 this.cargarDocumento = false;
             } catch (error) {
+                console.log(error);
                 this.cargarDocumento = false;
                 throw new Error(error);
             }

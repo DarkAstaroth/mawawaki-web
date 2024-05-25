@@ -118,74 +118,64 @@
                                 />
                             </td>
                             <td class="align-middle">
-                                <div class="d-flex">
-                                    <div class="dropdown">
-                                        <button
-                                            class="btn btn-secondary dropdown-toggle btn-sm"
-                                            type="button"
-                                            id="dropdownMenuButton1"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                            data-boundary="viewport"
-                                        ></button>
-                                        <ul
-                                            class="dropdown-menu"
-                                            aria-labelledby="dropdownMenuButton1"
-                                        >
-                                            <li>
-                                                <a
-                                                    class="dropdown-item"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-custom-class="tooltip-inverse"
-                                                    data-bs-placement="bottom"
-                                                    title="Ver perfil"
-                                                    :href="
-                                                        route(
-                                                            'usuario.control',
-                                                            { id: usuario.id }
-                                                        )
-                                                    "
-                                                    ><i
-                                                        class="bi bi-eye-fill fs-4"
-                                                    ></i>
-                                                    Ver Perfil</a
-                                                >
-                                            </li>
-                                            <li v-if="is('admin')">
-                                                <a
-                                                    href="#"
-                                                    class="dropdown-item"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1"
-                                                    ><i
-                                                        class="bi bi-pencil-square fs-4"
-                                                    ></i>
+                                <a
+                                    :href="
+                                        route('usuario.control', {
+                                            id: usuario.id,
+                                        })
+                                    "
+                                    v-if="is('admin|Asistente')"
+                                >
+                                    <Button
+                                        v-tooltip.bottom="{
+                                            value: 'Perfíl',
+                                            showDelay: 300,
+                                            hideDelay: 300,
+                                        }"
+                                        icon="fi fi-rr-chart-user fs-1"
+                                        severity="info"
+                                        text
+                                        rounded
+                                        aria-label="Cancel"
+                                /></a>
 
-                                                    Editar</a
-                                                >
+                                <!-- <div class="d-flex">
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
+                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
+                                            data-boundary="viewport"></button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li>
+                                                <a class="dropdown-item" data-bs-toggle="tooltip"
+                                                    data-bs-custom-class="tooltip-inverse" data-bs-placement="bottom"
+                                                    title="Ver perfil" :href="route(
+                                                        'usuario.control',
+                                                        { id: usuario.id }
+                                                    )
+                                                        "><i class="bi bi-eye-fill fs-4"></i>
+                                                    Ver Perfil</a>
                                             </li>
                                             <li v-if="is('admin')">
-                                                <a
-                                                    href="#"
-                                                    class="dropdown-item"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1"
-                                                    @click="
+                                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#kt_modal_1"><i
+                                                        class="bi bi-pencil-square fs-4"></i>
+
+                                                    Editar</a>
+                                            </li>
+                                            <li v-if="is('admin')">
+                                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#kt_modal_1" @click="
                                                         resetModalData(
                                                             true,
                                                             usuario
                                                         )
-                                                    "
-                                                    ><i
-                                                        class="bi bi-envelope fs-4"
-                                                    ></i>
+                                                        "><i class="bi bi-envelope fs-4"></i>
 
-                                                    Notificar</a
-                                                >
+                                                    Notificar</a>
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> -->
                             </td>
                         </tr>
                         <tr v-if="store.usuarios.length === 0">
@@ -206,8 +196,13 @@
                             class="page-link"
                             href="#"
                             @click="cambiarPaginacion(1)"
-                            >Primera</a
                         >
+                            <Icon
+                                icon="material-symbols:keyboard-double-arrow-left"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                     <li
                         class="page-item"
@@ -219,8 +214,13 @@
                             @click="
                                 cambiarPaginacion(paginacion.paginaActual - 1)
                             "
-                            >Anterior</a
                         >
+                            <Icon
+                                icon="iconamoon:arrow-left-2"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                     <li
                         class="page-item"
@@ -249,8 +249,13 @@
                             @click="
                                 cambiarPaginacion(paginacion.paginaActual + 1)
                             "
-                            >Siguiente</a
                         >
+                            <Icon
+                                icon="iconamoon:arrow-right-2"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                     <li
                         class="page-item"
@@ -264,8 +269,13 @@
                             class="page-link"
                             href="#"
                             @click="cambiarPaginacion(paginacion.ultimaPagina)"
-                            >Última</a
                         >
+                            <Icon
+                                icon="material-symbols:keyboard-double-arrow-right"
+                                width="24"
+                                height="24"
+                            />
+                        </a>
                     </li>
                 </ul>
             </nav>
