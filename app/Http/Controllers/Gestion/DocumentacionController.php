@@ -102,6 +102,11 @@ class DocumentacionController extends Controller
             $request->validate([
                 'archivo' => 'required|mimes:pdf|max:3024',
                 'tipo_documento_id' => 'required',
+            ], [
+                'archivo.required' => 'El archivo es obligatorio.',
+                'archivo.mimes' => 'El archivo debe ser de tipo PDF.',
+                'archivo.max' => 'El tamaño del archivo no debe superar los 3 MB.',
+                'tipo_documento_id.required' => 'El tipo de documento es obligatorio.',
             ]);
 
             $usuario = User::findOrFail($usuarioId);
@@ -144,11 +149,13 @@ class DocumentacionController extends Controller
 
             return response()->json(['message' => 'Archivo subido exitosamente']);
         } catch (ValidationException $e) {
-            return response()->json(['error' => $e->validator->errors()], 400);
+            $errores = $e->validator->errors()->all();
+            return response()->json(['error' => $errores], 400);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
 
     private function actualizarDocumentacion($tipoDocumento, $usuarioId, $nombreUnico, $rutaArchivo, $archivo, $extension)
     {

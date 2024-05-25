@@ -53,7 +53,10 @@
                         Subir
                     </Button>
 
-                    <div v-else class="d-flex flex-grow-1 p-1">
+                    <div
+                        v-if="this.store.cargarDocumento"
+                        class="d-flex flex-grow-1 p-1"
+                    >
                         <ProgressSpinner
                             style="width: 30px; height: 30px"
                             strokeWidth="5"
@@ -209,7 +212,6 @@ export default {
     },
     mounted() {
         this.obtenerTiposDocumento();
-        // this.obtenerDocumentos();
         this.store.obtenerDocumentosUsuario(
             this.usuario.id ? this.usuario.id : this.store.usuario.id
         );
@@ -291,7 +293,8 @@ export default {
         manejarCambioArchivo(event) {
             this.archivoSeleccionado = event.target.files[0];
         },
-        subirArchivo() {
+        async subirArchivo() {
+            console.log("subiendo");
             const tipoDocumento = this.selectedTipoDocumento;
             const archivo = this.archivoSeleccionado;
 
@@ -306,38 +309,57 @@ export default {
             }
 
             if (archivo) {
-                this.store.cargarDocumento = true;
+                this.store.estadoDocumento(true);
+                console.log("entrando");
                 const url = `/api/subir-archivo/${this.store.usuario.id}`;
 
                 const formData = new FormData();
                 formData.append("tipo_documento_id", tipoDocumento.id);
                 formData.append("archivo", archivo);
 
-                axios
+                await axios
                     .post(url, formData, {
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
                     })
                     .then((response) => {
+                        console.log(this.store.cargarDocumento);
+                        console.log(response);
                         this.toast.add({
                             severity: "success",
                             summary: "Confirmado",
                             detail: "el archivo se subió correctamente",
                             life: 3000,
                         });
-                        this.store.obtenerDocumentosUsuario(
-                            this.store.usuario.id
-                        );
                     })
-                    .catch((error) => {
+                    .catch((respuesta) => {
+                        const errorData = respuesta.response.data.error;
+                        let errorMessage = "";
+
+                        if (Array.isArray(errorData) && errorData.length > 0) {
+                            errorMessage = errorData[0];
+                        } else if (typeof errorData === "string") {
+                            errorMessage = errorData;
+                        } else if (
+                            typeof errorData === "object" &&
+                            errorData !== null
+                        ) {
+                            errorMessage =
+                                errorData.error || "Ocurrió un error";
+                        } else {
+                            errorMessage = "Ocurrió un error";
+                        }
+
                         this.toast.add({
                             severity: "error",
                             summary: "Cancelado",
-                            detail: "El archivo seleccionado ya se subió",
+                            detail: errorMessage,
                             life: 3000,
                         });
                     });
+                this.store.obtenerDocumentosUsuario(this.store.usuario.id);
+                this.store.estadoDocumento(false);
                 this.selectedTipoDocumento = null;
                 this.archivoSeleccionado = null;
                 const input = document.getElementById("inputArchivo");
