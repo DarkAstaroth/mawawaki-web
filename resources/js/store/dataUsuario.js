@@ -10,9 +10,24 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
             verificados: 0,
             por_verificar: 0,
         },
+        fichaActividad: {
+            total: 0,
+            verificados: 0,
+            destacados: 0,
+        },
         usuarios: [],
         actividades: [],
         mensaje: { success: "", error: "", warning: "" },
+        paginacion: {
+            actividades: {
+                total: 0,
+                porPagina: 10,
+                paginaActual: 1,
+                ultimaPagina: 1,
+                desde: 0,
+                hasta: 0,
+            },
+        },
     }),
     persist: true,
     mutations: {
@@ -21,8 +36,13 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
         },
     },
     actions: {
-        cargarFichasUsuario() {
-            const url = "/api/fichasUsuarios";
+        cargarFichasUsuario(rol) {
+            let url = "";
+            if (rol) {
+                url = "/api/fichasUsuarios?rol=cliente";
+            } else {
+                url = "/api/fichasUsuarios";
+            }
             axios
                 .get(url)
                 .then((response) => {
@@ -35,12 +55,36 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                 })
                 .catch((error) => {});
         },
+        cargarFichasActividad(id) {
+            const url = `/api/fichas/actividad/usuario/${id}`;
+            axios
+                .get(url)
+                .then((response) => {
+                    console.log(response.data.fichaActividad);
+                    this.fichaActividad = response.data.fichaActividad;
+                })
+                .catch((error) => {});
+        },
         async cargarUsuarios(pagina, busqueda, parametro) {
             const respuesta = await axios.get("/api/usuarios", {
                 params: {
                     page: pagina,
                     busqueda: busqueda,
                     parametro: parametro,
+                },
+            });
+            console.log(respuesta)
+            this.usuarios = respuesta.data.usuarios;
+
+            return respuesta.data.paginacion;
+        },
+        async cargarClientes(pagina, busqueda, parametro) {
+            const respuesta = await axios.get("/api/usuarios", {
+                params: {
+                    page: pagina,
+                    busqueda: busqueda,
+                    parametro: parametro,
+                    rol: "cliente",
                 },
             });
             this.usuarios = respuesta.data.usuarios;
@@ -81,6 +125,7 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                         },
                     }
                 );
+                this.paginacion.actividades = respuesta.data.paginacion;
                 this.actividades = respuesta.data.actividades;
             } catch (error) {
                 return error;

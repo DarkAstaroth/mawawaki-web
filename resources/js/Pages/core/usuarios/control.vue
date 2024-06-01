@@ -10,22 +10,28 @@
                             </div>
 
                             <div class="d-flex gap-2">
-                                <div
-                                    class="card-toolbar"
-                                    v-if="!usuario?.personal?.codigo_personal"
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn btn-sm btn-flex btn-info"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#kt_modal_add_payment"
-                                        @click="generarCodigo(usuario.id)"
+                                <div v-if="is('admin')">
+                                    <div
+                                        class="card-toolbar"
+                                        v-if="
+                                            !usuario?.personal?.codigo_personal
+                                        "
                                     >
-                                        <i class="ki-duotone ki-check-square">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span> </i
-                                        >Otorgar código
-                                    </button>
+                                        <button
+                                            type="button"
+                                            class="btn btn-sm btn-flex btn-info"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#kt_modal_add_payment"
+                                            @click="generarCodigo(usuario.id)"
+                                        >
+                                            <i
+                                                class="ki-duotone ki-check-square"
+                                            >
+                                                <span class="path1"></span>
+                                                <span class="path2"></span> </i
+                                            >Otorgar código
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div class="card-toolbar">
@@ -188,10 +194,10 @@
                                                 <span
                                                     class="badge badge-success"
                                                     v-if="
-                                                        usuario.tipo_solicitud
+                                                        usuario.cliente.ocupacion
                                                     "
                                                     >{{
-                                                        usuario.tipo_solicitud
+                                                        usuario.cliente.ocupacion
                                                     }}</span
                                                 >
                                                 <span v-else>Sin Registro</span>

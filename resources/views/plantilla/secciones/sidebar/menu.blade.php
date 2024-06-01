@@ -176,21 +176,8 @@
 
 
 
-            @unless (Auth::user()->hasRole('admin') || Auth::user()->hasRole('invitado'))
+            @unless (Auth::user()->hasRole('admin') || Auth::user()->hasRole('invitado') || Auth::user()->hasRole('cliente'))
                 <div class="menu-content"><span class="menu-heading fw-bold text-uppercase fs-7">Personal</span></div>
-                {{--
-                <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="ki-duotone ki-calendar fs-1">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                        </span>
-                        <span class="menu-title">Calendario</span>
-                    </span>
-                </div> --}}
-
 
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
@@ -217,7 +204,7 @@
                 </div>
             @endunless
 
-            @role('admin|Asistente')
+            @unless (Auth::user()->hasRole('cliente'))
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -232,19 +219,39 @@
 
                     </span>
 
+
+                    @role('admin|Asistente')
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item">
+                                <a class="menu-link" href="{{ route('usuarios.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Todos los usuarios</span>
+                                </a>
+
+                            </div>
+                        </div>
+                    @endrole
+
+
                     <div class="menu-sub menu-sub-accordion">
                         <div class="menu-item">
-                            <a class="menu-link" href="{{ route('usuarios.index') }}">
+                            <a class="menu-link" href="{{ route('clientes.index') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title">Todos los usuarios</span>
+                                <span class="menu-title">Todos los clientes</span>
                             </a>
 
                         </div>
                     </div>
+
                 </div>
-            @endrole
+
+            @endunless
+
+
 
             @role('admin|Asistente')
                 <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">

@@ -1,4 +1,5 @@
 <template>
+    Fichas
     <div class="d-flex justify-content-end mb-5 gap-2">
         <Button type="button" @click="estadoModal(true)">
             <i class="text-white far fa-plus me-3"></i>
@@ -170,39 +171,35 @@
             <label for="calendar-12h" class="font-bold block mb-2">
                 Fecha asistencia
             </label>
-            <Calendar v-model="fechaAsistencia" dateFormat="dd/mm/yy" />
+            <VueDatePicker
+                v-model="fechaAsistencia"
+                :enable-time-picker="false"
+                select-text="Seleccionar"
+                cancel-text="Cancelar"
+                locale="es"
+                format="dd/MM/yyyy"
+            />
         </div>
 
         <div class="d-flex flex-column mb-5">
             <label for="calendar-12h" class="font-bold block mb-2">
                 Hora de ingreso
             </label>
-            <Calendar
+            <VueDatePicker
                 v-model="horaIngreso"
-                iconDisplay="input"
-                timeOnly
-                hourFormat="24"
-            >
-            </Calendar>
+                time-picker
+                select-text="Seleccionar"
+                cancel-text="Cancelar"
+                locale="es"
+            />
         </div>
 
         <div class="d-flex flex-column mb-5">
             <label for="calendar-12h" class="font-bold block mb-2">
                 Hora de salida
             </label>
-            <Calendar
-                v-model="horaSalida"
-                iconDisplay="input"
-                timeOnly
-                hourFormat="24"
-            >
-                <template #inputicon="{ clickCallback }">
-                    <InputIcon
-                        class="pi pi-clock cursor-pointer"
-                        @click="clickCallback"
-                    />
-                </template>
-            </Calendar>
+
+            <VueDatePicker v-model="horaSalida" time-picker />
         </div>
 
         <div class="d-flex flex-column">
@@ -230,19 +227,11 @@
             <label for="calendar-12h" class="font-bold block mb-2">
                 Hora de salida
             </label>
-            <Calendar
-                v-model="horaSalida"
-                iconDisplay="input"
-                timeOnly
-                hourFormat="24"
-            >
-                <template #inputicon="{ clickCallback }">
-                    <InputIcon
-                        class="pi pi-clock cursor-pointer"
-                        @click="clickCallback"
-                    />
-                </template>
-            </Calendar>
+            contenido
+
+            <div class="z-3">
+                <VueDatePicker v-model="horaSalida" time-picker />
+            </div>
         </div>
 
         <div class="d-flex flex-column">
@@ -531,14 +520,14 @@ export default {
             const fechaSalida = new Date(this.fechaAsistencia);
 
             fechaIngreso.setHours(
-                this.horaIngreso.getHours(),
-                this.horaIngreso.getMinutes(),
-                this.horaIngreso.getSeconds()
+                this.horaIngreso.hours,
+                this.horaIngreso.minutes,
+                this.horaIngreso.seconds
             );
             fechaSalida.setHours(
-                this.horaSalida.getHours(),
-                this.horaSalida.getMinutes(),
-                this.horaSalida.getSeconds()
+                this.horaSalida.hours,
+                this.horaSalida.minutes,
+                this.horaSalida.seconds
             );
 
             if (fechaIngreso > fechaActual) {

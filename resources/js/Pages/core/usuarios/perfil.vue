@@ -8,7 +8,7 @@
     </template>
   </div>
 </template>
-  
+
 
 <script>
 import { useDataPerfil } from "../../../store/dataPerfil";
@@ -43,6 +43,7 @@ export default {
 
   mounted() {
     if (Object.keys(this.usuario).length > 0) {
+        console.log(this.usuario)
       this.store.obtenerUsuario(this.usuario);
       this.cargando = false;
     } else {
