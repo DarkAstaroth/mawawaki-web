@@ -40,15 +40,7 @@
                             </span>
                         </div>
 
-
-
-
-
-
-
-
                         <div class="mb-1 d-flex flex-column  w-100 mb-5 align-items-center">
-
                             <span class="mb-5">
                                 <div class="p-2">
                                     <div class="d-flex">
