@@ -9,6 +9,7 @@ use App\Models\Gestion\Actividad;
 use App\Models\Gestion\Personal;
 use App\Models\Persona;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -36,45 +37,41 @@ class UsuarioController extends Controller
         $pagina = $request->get('page', 1);
         $busqueda = $request->get('busqueda');
         $parametro = $request->get('parametro');
+        $rol = $request->get('rol'); // Nuevo parámetro para el rol
 
-        if ($parametro === 'todos') {
-            $usuariosQuery = User::query();
-        }
+        // Base query
+        $usuariosQuery = User::query();
 
+        // Filtrar por parámetro
         if ($parametro === 'activos') {
-            $usuariosQuery = User::query()
-                ->where('estado', 1)
+            $usuariosQuery->where('estado', 1)
                 ->where('solicitud', 1)
                 ->where('verificada', 1)
                 ->whereNotNull('email_verified_at');
-        }
-
-        if ($parametro === 'inactivos') {
-            $usuariosQuery = User::query()
-                ->where('estado', 0);
-        }
-
-        if ($parametro === 'solicitudes') {
-            $usuariosQuery = User::query()
-                ->where('estado', 0)
+        } elseif ($parametro === 'inactivos') {
+            $usuariosQuery->where('estado', 0);
+        } elseif ($parametro === 'solicitudes') {
+            $usuariosQuery->where('estado', 0)
                 ->where('solicitud', 1)
                 ->where('verificada', 0)
                 ->whereNotNull('email_verified_at');
-        }
-
-        if ($parametro === 'verificados') {
-            $usuariosQuery = User::query()
-                ->whereNotNull('email_verified_at');
-        }
-
-        if ($parametro === 'porVerificar') {
-            $usuariosQuery = User::query()
-                ->where('estado', 0)
+        } elseif ($parametro === 'verificados') {
+            $usuariosQuery->whereNotNull('email_verified_at');
+        } elseif ($parametro === 'porVerificar') {
+            $usuariosQuery->where('estado', 0)
                 ->where('solicitud', 0)
                 ->where('verificada', 0)
                 ->whereNull('email_verified_at');
         }
 
+        // Filtrar por rol si se proporciona
+        if ($rol) {
+            $usuariosQuery->whereHas('roles', function ($query) use ($rol) {
+                $query->where('name', $rol);
+            });
+        }
+
+        // Filtrar por búsqueda
         if ($busqueda) {
             $busquedaSinEspacios = str_replace(' ', '', $busqueda);
             $usuariosQuery->where(function ($query) use ($busquedaSinEspacios) {
@@ -88,14 +85,14 @@ class UsuarioController extends Controller
             });
         }
 
-
+        // Paginar los resultados
         $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
         $usuariosIds = $usuarios->pluck('id')->toArray();
 
+        // Cargar roles y persona para los usuarios paginados
         $usuariosConRoles = User::with(['roles', 'persona'])->whereIn('id', $usuariosIds)->get();
 
-        $usuariosConRoles->load('persona');
-
+        // Agregar campos adicionales a los usuarios
         $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
             $usuario->profile_photo_path = env('APP_URL') . '/' . $usuario->profile_photo_path;
             $usuario->nuevo_campo = "Valor del nuevo campo para este usuario";
@@ -104,9 +101,11 @@ class UsuarioController extends Controller
             return $usuario;
         });
 
+        // Convertir usuarios a recursos
         $usuariosResource = UsuarioResource::collection($usuariosConCamposAdicionales);
         $resultadoBusqueda = $usuariosResource->isEmpty() ? [] : $usuariosResource;
 
+        // Responder con datos paginados
         return response()->json([
             'usuarios' => $resultadoBusqueda,
             'paginacion' => [
@@ -119,6 +118,7 @@ class UsuarioController extends Controller
             ]
         ]);
     }
+
 
     public function obtenerUsuariosSinPaginacion()
     {
@@ -210,45 +210,79 @@ class UsuarioController extends Controller
         return view('autenticacion.cuenta');
     }
 
-    public function fichasUsuarios()
+    public function fichasUsuarios(Request $request)
     {
-        $response = [];
+        $rol = $request->query('rol');
+        $query = User::query();
 
-        $totalUsuarios = User::count();
-        $response['total_usuarios'] = $totalUsuarios;
-        // dd($totalUsuarios);
+        if ($rol === 'cliente') {
+            // Filtrar solo usuarios con el rol 'cliente'
+            $query->whereHas('roles', function ($query) {
+                $query->where('name', 'cliente');
+            });
+        } else {
+            // Filtrar todos los usuarios menos los que tienen el rol 'cliente'
+            $query->whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'cliente');
+            });
+        }
 
-        $activos = User::where('estado', 1)
+        $totalUsuarios = $query->count();
+
+        $activos = $query->where('estado', 1)
             ->where('solicitud', 1)
             ->where('verificada', 1)
             ->whereNotNull('email_verified_at')
             ->count();
-        $response['activos'] = $activos;
 
-        $no_activos = User::where('estado', 0)
+        $no_activos = $query->where('estado', 0)
             ->count();
-        $response['no_activos'] = $no_activos;
 
-
-        $solicitudes = User::where('estado', 0)
+        $solicitudes = $query->where('estado', 0)
             ->where('solicitud', 1)
             ->where('verificada', 0)
             ->whereNotNull('email_verified_at')
             ->count();
-        $response['solicitudes'] = $solicitudes;
 
+        $verificados = $query->whereNotNull('email_verified_at')->count();
 
-        $verificados = User::whereNotNull('email_verified_at')->count();
-        $response['verificados'] = $verificados;
-
-        $porVerificados = User::where('estado', 0)
+        $porVerificados = $query->where('estado', 0)
             ->where('solicitud', 0)
             ->where('verificada', 0)
             ->whereNull('email_verified_at')
             ->count();
-        $response['por_verificar'] = $porVerificados;
+
+        $response = [
+            'total_usuarios' => $totalUsuarios,
+            'activos' => $activos,
+            'no_activos' => $no_activos,
+            'solicitudes' => $solicitudes,
+            'verificados' => $verificados,
+            'por_verificar' => $porVerificados,
+        ];
 
         return response()->json($response);
+    }
+
+    public function fichasActividad($id)
+    {
+        // Consultar las actividades del usuario
+        $actividades = Actividad::where('id_usuario', $id)->get();
+
+        // Calcular los totales
+        $total = $actividades->count();
+        $verificados = $actividades->where('verificada', true)->count();
+        $destacados = $actividades->where('destacada', true)->count();
+
+        // Preparar la respuesta
+        $fichaActividad = [
+            'total' => $total,
+            'verificados' => $verificados,
+            'destacados' => $destacados,
+        ];
+
+        // Retornar la respuesta en formato JSON
+        return response()->json(['fichaActividad' => $fichaActividad]);
     }
 
 
@@ -263,7 +297,7 @@ class UsuarioController extends Controller
     public function UsuarioControl(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions', 'persona', 'personal');
+        $usuario->load('roles', 'permissions', 'persona', 'personal','cliente');
         return view('core.usuarios.control', compact('usuario'));
     }
 
@@ -446,8 +480,11 @@ class UsuarioController extends Controller
         $personaData = $userData['persona'] ?? [];
         $personalData = $userData['personal'] ?? [];
 
-
         if (!empty($personaData)) {
+            if (isset($personaData['fecha_nacimiento'])) {
+                $personaData['fecha_nacimiento'] = Carbon::parse($personaData['fecha_nacimiento'])->timestamp;
+            }
+
             if ($user->persona) {
                 $user->persona()->update($personaData);
             }

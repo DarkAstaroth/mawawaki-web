@@ -9,7 +9,7 @@ use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use PhpParser\Node\Stmt\TryCatch;
 
 class InvitadoController extends Controller
 {
@@ -92,11 +92,12 @@ class InvitadoController extends Controller
     public function crearUsuarioEmail(Request $request)
     {
         try {
+            // Validación de los datos de entrada
             $request->validate([
                 'nombres' => 'required',
                 'paterno' => 'required',
                 'materno' => 'required',
-                'email' => 'required|email|unique:users,email',
+                'email' => 'required|email',
                 'password' => 'required|min:8|confirmed',
                 'toc' => 'accepted',
             ], [
@@ -104,20 +105,20 @@ class InvitadoController extends Controller
                 'toc.accepted' => 'Debe aceptar los términos y condiciones.',
             ]);
 
+            // Verificar si el correo electrónico ya está registrado
             if (User::where('email', $request->email)->exists()) {
-                return redirect()->back()->with('error', 'El correo electronico ya existe')->withInput();;
+                dd("ya existe");
+                return redirect()->back()->withErrors(['email' => 'El correo electrónico ya está registrado.']);
             }
 
-            $nombres = strtoupper($request->nombres);
-            $paterno = strtoupper($request->paterno);
-            $materno = strtoupper($request->materno);
-
+            // Creación de la nueva persona
             $nuevaPersona = Persona::create([
-                'nombre' => $nombres,
-                'paterno' => $paterno,
-                'materno' => $materno,
+                'nombre' => $request->nombres,
+                'paterno' => $request->paterno,
+                'materno' => $request->materno,
             ]);
 
+            // Creación del nuevo usuario
             $nuevoUsuario = User::create([
                 'email' => $request->email,
                 'gauth_type' => 'email',
@@ -125,12 +126,19 @@ class InvitadoController extends Controller
                 'persona_id' => $nuevaPersona->id,
             ]);
 
+            // Asignación del rol al nuevo usuario
             $nuevoUsuario->assignRole('invitado');
+
+            // Redireccionar con un mensaje de éxito
             return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Hubo un problema al registrar el usuario. Intenta nuevamente'])->withInput();;
+            // Manejo de la excepción y redirección con un mensaje de error
+            return redirect()->back()->withErrors(['error' => 'Hubo un problema al registrar el usuario: ' . $e->getMessage()]);
         }
     }
+
+
+
 
     public function resetPass()
     {

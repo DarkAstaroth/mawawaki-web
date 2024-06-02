@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
+
+    public function index()
+    {
+        return view('core.usuarios.clientes.index');
+    }
+
     public function listaPacientes(string $id)
     {
         $usuario = User::with('persona', 'cliente')->findOrFail($id);

@@ -190,6 +190,15 @@
             min-height: 100%;
             min-width: 100%;
         }
+
+        .dp--menu-wrapper {}
+
+        .p-dialog-content {
+            overflow-y: visible;
+        }
+        .dp__input {
+            height:45px;
+        }
     </style>
 
     <style>

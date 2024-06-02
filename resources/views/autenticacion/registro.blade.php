@@ -1,7 +1,7 @@
 @extends('plantilla.masterLogin')
 @section('contenido')
     <div class="d-flex flex-column flex-root" id="kt_app_root">
-        <div class="d-flex  flex-lg-row flex-column-fluid">
+        <div class="d-flex flex-column  flex-lg-row flex-column-fluid">
             <div class="order-2 p-10 d-flex flex-column flex-lg-row-fluid w-lg-50 order-lg-1">
                 <div class="d-flex flex-center flex-column flex-lg-row-fluid">
                     <div class="p-10 w-lg-500px">
@@ -148,7 +148,6 @@
                 </div>
             </div>
 
-
             <div class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 bg-dark">
 
                 <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
@@ -178,8 +177,6 @@
                 </div>
 
             </div>
-
-
         </div>
 
     </div>

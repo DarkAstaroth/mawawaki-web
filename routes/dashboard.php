@@ -93,6 +93,7 @@ Route::middleware([
     'check.estado'
 ])->group(function () {
     Route::resource('dashboard/usuarios', UsuarioController::class);
+    Route::resource('dashboard/clientes', ClienteController::class);
     Route::get('dashboard/usuario/control/{id}', [UsuarioController::class, 'UsuarioControl'])->name('usuario.control');
     Route::get('dashboard/usuario/perfil/{id}', [UsuarioController::class, 'PerfilUsuario'])->name('usuario.perfil');
 });
