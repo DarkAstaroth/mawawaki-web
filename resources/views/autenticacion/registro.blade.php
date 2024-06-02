@@ -17,12 +17,11 @@
                         <form class="form w-100" novalidate="novalidate" id="kt_sign_up_form" method="POST"
                             action="{{ route('usuario.crear') }}">
                             @csrf
-
                             <div class="mb-8 fv-row">
                                 <label class="form-label">Nombres:</label>
                                 <input type="text" placeholder="Ej: Juan Carlos" name="nombres" autocomplete="off"
                                     class="bg-transparent form-control" value="{{ old('nombres') }}"
-                                    style="text-transform: capitalize;" />
+                                    style="text-transform: uppercase;" />
                                 @error('nombres')
                                     <div class="text-danger"> El campo nombres es obligatorio. </div>
                                 @enderror
@@ -34,7 +33,7 @@
                                     <label class="form-label">Apellido Paterno:</label>
                                     <input type="text" placeholder="Ej: Perez" name="paterno" autocomplete="off"
                                         class="bg-transparent form-control" value="{{ old('paterno') }}"
-                                        style="text-transform: capitalize;" />
+                                        style="text-transform: uppercase;" />
                                     @error('paterno')
                                         <div class="text-danger"> El campo apellido paterno es obligatorio. </div>
                                     @enderror
@@ -44,7 +43,7 @@
                                     <label class="form-label">Apellido Materno:</label>
                                     <input type="text" placeholder="Ej: Torrez" name="materno" autocomplete="off"
                                         class="bg-transparent form-control" value="{{ old('materno') }}"
-                                        style="text-transform: capitalize;" />
+                                        style="text-transform: uppercase;" />
                                     @error('materno')
                                         <div class="text-danger"> El campo apellido materno es obligatorio. </div>
                                     @enderror
