@@ -427,6 +427,12 @@ export default {
                         "Operación Exitosa",
                         "Actividad registrada con éxito"
                     );
+                    this.store.cargarActividades(
+                        1,
+                        this.busqueda,
+                        this.parametro,
+                        this.usuario.id
+                    );
                 })
                 .catch((error) => {
                     this.mostrarMensaje(
