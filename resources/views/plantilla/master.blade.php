@@ -171,13 +171,44 @@
             color: #101820
         }
 
+        .avatar_usuario {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            overflow: hidden;
+            border-radius: 50%;
+
+        }
+
         .container_usuario {
             width: 100px;
             height: 100px;
             overflow: hidden;
             margin: 10px;
             position: relative;
+            border-radius: 50%;
+            background-color: red;
+        }
+
+        .credencial {
             border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .fondo_credencial img {
+            width: 100%;
+            height: 480px;
+            object-fit: fill;
+        }
+
+        .container_credencial {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 10%;
         }
 
         .container_usuario>.crop {
@@ -196,8 +227,9 @@
         .p-dialog-content {
             overflow-y: visible;
         }
+
         .dp__input {
-            height:45px;
+            height: 45px;
         }
     </style>
 

@@ -50,7 +50,7 @@
                         <tr
                             class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
                         >
-                            <th class="min-w-150px">Nombre</th>
+                            <th class="min-w-400px">Nombre</th>
                             <th class="min-w-150px">Rol</th>
                             <th class="min-w-200px">Creado en</th>
                             <th class="max-w-100px" v-if="is('admin')">
@@ -63,12 +63,15 @@
                         <tr v-for="usuario in store.usuarios" :key="usuario.id">
                             <td class="align-middle">
                                 <div class="d-flex align-items-center">
-                                    <img
-                                        :src="usuario.profile_photo_path"
-                                        alt="foto"
-                                        class="p-1 rounded-pill"
-                                        width="50"
-                                    />
+                                    <div class="avatar_usuario">
+                                        <img
+                                            :src="usuario.profile_photo_path"
+                                            alt="foto"
+                                            class="crop"
+                                            :width="usuario.profile_photo_path.includes('user-default.jpg') ? 50 : 70"
+
+                                        />
+                                    </div>
                                     <div class="px-2 d-flex flex-column">
                                         <div>
                                             {{ usuario.persona.nombre }}

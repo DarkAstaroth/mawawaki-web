@@ -107,15 +107,19 @@ class InvitadoController extends Controller
 
             // Verificar si el correo electrónico ya está registrado
             if (User::where('email', $request->email)->exists()) {
-                dd("ya existe");
-                return redirect()->back()->withErrors(['email' => 'El correo electrónico ya está registrado.']);
+                return redirect()->back()->withInput()->with('error', 'El correo electronico ya existe');
             }
+
+            // Convertir nombres y apellidos a mayúsculas
+            $nombres = strtoupper($request->nombres);
+            $paterno = strtoupper($request->paterno);
+            $materno = strtoupper($request->materno);
 
             // Creación de la nueva persona
             $nuevaPersona = Persona::create([
-                'nombre' => $request->nombres,
-                'paterno' => $request->paterno,
-                'materno' => $request->materno,
+                'nombre' => $nombres,
+                'paterno' => $paterno,
+                'materno' => $materno,
             ]);
 
             // Creación del nuevo usuario
@@ -128,12 +132,9 @@ class InvitadoController extends Controller
 
             // Asignación del rol al nuevo usuario
             $nuevoUsuario->assignRole('invitado');
-
-            // Redireccionar con un mensaje de éxito
             return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
         } catch (\Exception $e) {
-            // Manejo de la excepción y redirección con un mensaje de error
-            return redirect()->back()->withErrors(['error' => 'Hubo un problema al registrar el usuario: ' . $e->getMessage()]);
+            return redirect()->back()->withInput()->with(['error' => 'Hubo un problema al registrar el usuario']);
         }
     }
 

@@ -1,5 +1,4 @@
 <template>
-    Fichas
     <div class="d-flex justify-content-end mb-5 gap-2">
         <Button type="button" @click="estadoModal(true)">
             <i class="text-white far fa-plus me-3"></i>

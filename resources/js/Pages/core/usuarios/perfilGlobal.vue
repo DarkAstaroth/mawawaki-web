@@ -2,133 +2,177 @@
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-xxl">
             <div class="card mb-6">
-                <div class="card-body">
-                    <div
-                        :class="[
-                            'd-flex ',
-                            'flex-wrap',
-                            'justify-content-center',
-                            esResponsivo ? 'flex-column' : 'flex-row',
-                        ]"
-                    >
-                        <div
-                            :class="[
-                                'd-flex flex-grow-1 justify-content-center',
-                                esResponsivo &&
-                                    'flex-column align-items-center',
-                            ]"
-                        >
-                            <div
-                                :class="[
-                                    'd-flex justify-content-center',
-                                    esResponsivo ? 'w-100 mb-5' : 'me-10',
-                                ]"
-                            >
-                                <div class="container_usuario">
-                                    <img
-                                        :src="
-                                            '/'.concat(
-                                                this.store.usuario
-                                                    .profile_photo_path
-                                            )
-                                        "
-                                        alt=""
-                                        class="crop"
-                                        width="150"
-                                    />
-                                </div>
-                            </div>
-
-                            <div
-                                :class="[
-                                    'd-flex flex-column justify-content-center  flex-grow-1',
-                                    esResponsivo
-                                        ? 'align-items-center'
-                                        : 'align-items-start',
-                                ]"
-                            >
-                                <div
-                                    :class="[
-                                        'd-flex align-items-center justify-content-center text-center ',
-                                        esResponsivo
-                                            ? 'flex-column gap-0'
-                                            : 'gap-2',
-                                    ]"
-                                >
-                                    <a
-                                        href="#"
-                                        class="text-gray-900 text-hover-primary fs-2 fw-bold"
-                                    >
-                                        {{ this.store.usuario.persona.nombre }}
-                                    </a>
-
-                                    <a
-                                        href="#"
-                                        class="text-gray-900 text-hover-primary fs-2 fw-bold"
-                                    >
-                                        {{ this.store.usuario.persona.paterno }}
-                                        {{ this.store.usuario.persona.materno }}
-                                        <a href="#">
-                                            <i
-                                                class="ki-duotone ki-verify fs-1 text-primary"
-                                            >
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </a>
-                                    </a>
-                                </div>
-
-                                <div
-                                    class="d-flex justify-content-center flex-wrap fw-semibold fs-6 pe-2"
-                                >
-                                    <a
-                                        href="#"
-                                        class="d-flex align-items-center text-gray-400 text-hover-primary mb-3"
-                                    >
-                                        <i class="ki-duotone ki-sms fs-4 me-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                        {{ this.store.usuario.email }}
-                                    </a>
-                                </div>
-
-                                <div
-                                    :class="[
-                                        'd-flex flex-row w-100 gap-2 flex-wrap',
-                                        esResponsivo &&
-                                            'justify-content-center mb-5',
-                                    ]"
-                                >
-                                    <Badge
-                                        v-for="(rol, index) in this.store
-                                            .usuario.roles"
-                                        :key="index"
-                                        :value="rol.name"
-                                        severity="secondary"
-                                    ></Badge>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            class="d-flex justify-content-center mb-5 mt-2 px-5"
-                            v-if="this.store.usuario.personal.codigo_personal"
-                        >
-                            <qrcode-vue
-                                :value="
-                                    this.store.usuario.personal.codigo_personal
-                                "
-                                :size="80"
-                                level="L"
-                                foreground="#102820"
-                                background="transparent"
+                <div class="">
+                    <div class="credencial" id="credencial">
+                        <div class="fondo_credencial">
+                            <img
+                                src="/assets/ilustraciones/credencial.png"
+                                alt=""
                             />
                         </div>
 
-                        <div class="d-flex flex-column gap-3">
-                            <div class="w-full">
+                        <div class="container_credencial w-100">
+                            <div class="d-flex justify-content-center">
+                                <div
+                                    :class="[
+                                        'd-flex position-relative',
+                                        'flex-wrap',
+                                        'justify-content-center',
+                                        esResponsivo
+                                            ? 'flex-column'
+                                            : 'flex-row',
+                                    ]"
+                                >
+                                    <div
+                                        :class="[
+                                            'd-flex flex-grow-1 justify-content-center',
+                                            esResponsivo &&
+                                                'flex-column align-items-center',
+                                        ]"
+                                    >
+                                        <div
+                                            :class="[
+                                                'd-flex justify-content-center',
+                                                esResponsivo
+                                                    ? 'w-100 mb-5'
+                                                    : 'me-10',
+                                            ]"
+                                        >
+                                            <div class="container_usuario">
+                                                <img
+                                                    :src="
+                                                        '/'.concat(
+                                                            this.store.usuario
+                                                                .profile_photo_path
+                                                        )
+                                                    "
+                                                    alt=""
+                                                    class="crop"
+                                                    width="150"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            :class="[
+                                                'd-flex flex-column justify-content-center  flex-grow-1',
+                                                esResponsivo
+                                                    ? 'align-items-center'
+                                                    : 'align-items-start',
+                                            ]"
+                                        >
+                                            <div
+                                                :class="[
+                                                    'd-flex align-items-center justify-content-center text-center ',
+                                                    esResponsivo
+                                                        ? 'flex-column gap-0'
+                                                        : 'gap-2',
+                                                ]"
+                                            >
+                                                <a
+                                                    href="#"
+                                                    class="text-gray-900 text-hover-primary fs-2 fw-bold"
+                                                >
+                                                    {{
+                                                        this.store.usuario
+                                                            .persona.nombre
+                                                    }}
+                                                </a>
+
+                                                <a
+                                                    href="#"
+                                                    class="text-gray-900 text-hover-primary fs-2 fw-bold"
+                                                >
+                                                    {{
+                                                        this.store.usuario
+                                                            .persona.paterno
+                                                    }}
+                                                    {{
+                                                        this.store.usuario
+                                                            .persona.materno
+                                                    }}
+                                                </a>
+                                            </div>
+
+                                            <div
+                                                class="d-flex justify-content-center flex-wrap fw-semibold fs-6 pe-2"
+                                            >
+                                                <a
+                                                    href="#"
+                                                    class="d-flex align-items-center text-gray-400 text-hover-primary mb-3"
+                                                >
+                                                    <i
+                                                        class="ki-duotone ki-sms fs-4 me-1"
+                                                    >
+                                                        <span
+                                                            class="path1"
+                                                        ></span>
+                                                        <span
+                                                            class="path2"
+                                                        ></span>
+                                                    </i>
+                                                    {{
+                                                        this.store.usuario.email
+                                                    }}
+                                                </a>
+                                                <a href="#">
+                                                    <i
+                                                        class="ki-duotone ki-verify fs-1 text-primary"
+                                                    >
+                                                        <span
+                                                            class="path1"
+                                                        ></span>
+                                                        <span
+                                                            class="path2"
+                                                        ></span>
+                                                    </i>
+                                                </a>
+                                            </div>
+
+                                            <div
+                                                :class="[
+                                                    'd-flex flex-row w-100 gap-2 flex-wrap',
+                                                    esResponsivo &&
+                                                        'justify-content-center mb-5',
+                                                ]"
+                                            >
+                                                <Badge
+                                                    v-for="(rol, index) in this
+                                                        .store.usuario.roles"
+                                                    :key="index"
+                                                    :value="rol.name"
+                                                    severity="secondary"
+                                                ></Badge>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="d-flex justify-content-center mb-5 mt-2 px-5"
+                                        v-if="
+                                            this.store.usuario.personal
+                                                .codigo_personal
+                                        "
+                                    >
+                                        <qrcode-vue
+                                            :value="
+                                                this.store.usuario.personal
+                                                    .codigo_personal
+                                            "
+                                            :size="80"
+                                            level="L"
+                                            foreground="#102820"
+                                            background="transparent"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mt-5 gap-2 flex-column">
+                        <div class="d-flex flex-column gap-3 w-100">
+                            <div class="">
                                 <FileUpload
                                     v-if="!this.store.cargarFoto"
                                     class="w-100"
@@ -137,8 +181,10 @@
                                     :url="`/api/imagen/usuario/${store.usuario.id}`"
                                     accept="image/*"
                                     chooseLabel="Subir Foto"
-                                    :maxFileSize="2097152"
+                                    :maxFileSize="3145728"
                                     @upload="onUpload"
+                                    :invalid-file-size-message="`la imágen no debe superar los 3 MB`"
+                                    @progress="100"
                                 />
                                 <div v-else class="d-flex flex-grow-1 p-1">
                                     <ProgressSpinner
@@ -147,6 +193,22 @@
                                     />
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="w-100">
+                            <Button
+                                type="button"
+                                @click="descargarCredencial"
+                                class="w-100"
+                                severity="info"
+                            >
+                                <div
+                                    class="d-flex justify-content-center gap-2 w-100"
+                                >
+                                    <i class="text-white fi fi-br-download"></i>
+                                    <strong>Descargar</strong>
+                                </div>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -234,6 +296,15 @@ export default {
                     "No se puedo subir la foto"
                 );
             }
+        },
+        descargarCredencial() {
+            const element = document.getElementById("credencial");
+            html2canvas(element).then((canvas) => {
+                const link = document.createElement("a");
+                link.download = "credencial.png";
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
         },
     },
 };
