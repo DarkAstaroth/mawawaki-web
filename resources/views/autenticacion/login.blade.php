@@ -1,109 +1,62 @@
 @extends('plantilla.masterLogin')
+
 @section('contenido')
-    <div class="d-flex flex-column flex-root" id="kt_app_root">
-        <div class="d-flex flex-column flex-md-row flex-column-fluid">
-            <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
-                <div class="d-flex flex-center flex-column flex-lg-row-fluid">
-                    <div class="w-lg-500px w-100 mt-20">
-
-
-                        <div class="text-center mb-11">
-                            <h1 class="text-dark fw-bolder mb-3">Bienvenido</h1>
+    <section class="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
+        <div class="flex flex-col justify-center items-center -mt-20 ">
+            <div class="mb-5">
+                <div class="">
+                    <img src="assets/media/logos/logo-equino.png" class="rounded-2xl" alt="imagen de la página" width="200">
+                </div>
+            </div>
+            <div class="bg-white p-5 flex rounded-2xl shadow-lg max-w-3xl">
+                <div class="md:w-1/2 px-5">
+                    <h2 class="text-2xl font-bold text-[#002D74]">Iniciar Sesión</h2>
+                    <p class="text-sm mt-4 text-[#002D74]">Si tienes una cuenta, por favor inicia sesión</p>
+                    <form class="mt-6" action="{{ route('verificar.login') }}" method="POST">
+                        @csrf
+                        @method('POST')
+                        <div>
+                            <label class="block text-gray-700">Correo Electrónico</label>
+                            <input type="email" name="email" placeholder="Ingrese su Correo Electrónico"
+                                class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none"
+                                autofocus autocomplete="off" required>
                         </div>
-                        {{-- <div class="row g-3 mb-9">
-                            <div class="col-md-12">
-                                <a href="auth/google"
-                                    class="btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100">
-                                    <img alt="Logo" src="assets/media/svg/brand-logos/google-icon.svg"
-                                        class="h-15px me-3" />Ingresar con Google</a>
-                            </div>
 
-                        </div> --}}
+                        <div class="mt-4">
+                            <label class="block text-gray-700">Contraseña</label>
+                            <input type="password" name="password" placeholder="Ingrese su Contraseña" minlength="6"
+                                class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
+                  focus:bg-white focus:outline-none"
+                                required>
+                        </div>
 
-                        <form class="form w-100" novalidate="novalidate" id="kt_sign_in_form"
-                            action="{{ route('verificar.login') }}" method="POST">
-                            @csrf
-                            @method('POST')
-                            <div class="separator separator-content my-14">
-                                <span class="text-gray-500 fw-semibold fs-7">Ingresar con tu correo</span>
-                            </div>
+                        <div class="text-right mt-2">
+                            <a href="{{ route('reset.pass') }}"
+                                class="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700">¿Olvidaste
+                                tu
+                                Contraseña?</a>
+                        </div>
 
+                        <button type="submit"
+                            class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
+                px-4 py-3 mt-6">Iniciar
+                            Sesión
+                        </button>
+                    </form>
 
-                            <div class="fv-row mb-8">
-
-                                <input type="text" placeholder="Correo electrónico" name="email" autocomplete="off"
-                                    class="form-control bg-transparent" />
-
-                            </div>
-
-                            <div class="fv-row mb-3">
-                                <input type="password" placeholder="Contraseña" name="password" autocomplete="off"
-                                    class="form-control bg-transparent" />
-                            </div>
-
-
-                            <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-                                <div></div>
-
-                                <a href="{{ route('reset.pass') }}" class="link-primary">¿Olvidaste tu contraseña?</a>
-
-                            </div>
-
-
-                            <div class="d-grid mb-10">
-                                <button type="submit" class="btn btn-primary">
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <span class="indicator-label">Ingresar</span>
-                                        <span id="loading" style="display: none;"
-                                            class="spinner-border spinner-border-sm align-middle ms-2">
-                                        </span>
-
-                                    </div>
-                                </button>
-                            </div>
-
-                            <div class="text-gray-500 text-center fw-semibold fs-6">¿No tienes cuenta?
-                                <a href="{{ route('login.registro') }}" class="link-primary">Registrate</a>
-                            </div>
-
-                        </form>
-
+                    <div class="text-sm flex justify-between items-center mt-3">
+                        <p>Si no tienes una cuenta...</p>
+                        <a href="{{ route('login.registro') }}"
+                            class="py-2 px-5 ml-3 bg-white border rounded-xl hover:scale-110 duration-300 border-blue-400">Registrarse</a>
                     </div>
-
-                </div>
-            </div>
-
-
-            <div
-                class="d-flex flex-lg-row-fluid w-lg-50 bgi-size-cover bgi-position-center order-1 order-lg-2 bg-dark bg-emerald-100   ">
-
-                <div class="d-flex flex-column flex-center py-7 py-lg-15 px-5 px-md-15 w-100">
-
-                    <a href="{{ route('home') }}" class="mb-0 mb-lg-12">
-                        <img alt="Logo" src="assets/media/logos/logo-unido.png" class="h-60px h-lg-75px" />
-                    </a>
-
-                    <img class="d-none d-lg-block mx-auto w-275px w-md-50 w-xl-500px mb-10 mb-lg-20"
-                        src="assets/media/misc/Login-image.png" alt="" />
-
-
-                    <h1 class="d-none d-lg-block text-white fs-2qx fw-bolder text-center mb-7">Una Mirada al Éxito de la
-                        Terapia con Caballos
-                    </h1>
-
-
-                    <div class="d-none d-lg-block text-white fs-base text-center">IConecta con la naturaleza, siente la<br>
-                        poderosa presencia equina y desata tu bienestar emocional. En nuestro sitio, explorarás cómo
-                        este<br>
-                        enfoque innovador acelera tu camino hacia el éxito personal. ¡Bienvenido a una terapia que te<br>
-                        impulsa hacia la mejor versión de ti mismo!
-                    </div>
-
                 </div>
 
+                <div class="w-1/2 hidden md:block justify-center items-center">
+                    <div>
+                        <img src="assets/media/misc/logos-eqt.png" class="rounded-2xl" alt="imagen de la página">
+                    </div>
+                </div>
             </div>
-
         </div>
-
-    </div>
+    </section>
 @endsection

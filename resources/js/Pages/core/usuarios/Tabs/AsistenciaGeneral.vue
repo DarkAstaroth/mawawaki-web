@@ -98,7 +98,7 @@
                         <Button
                             v-if="!asistencia.fecha_hora_salida && is('admin')"
                             v-tooltip.bottom="{
-                                value: 'Verificar',
+                                value: 'Modificar',
                                 showDelay: 300,
                                 hideDelay: 300,
                             }"
@@ -226,7 +226,6 @@
             <label for="calendar-12h" class="font-bold block mb-2">
                 Hora de salida
             </label>
-            contenido
 
             <div class="z-3">
                 <VueDatePicker v-model="horaSalida" time-picker />

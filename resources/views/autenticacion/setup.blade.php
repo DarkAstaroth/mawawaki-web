@@ -1,4 +1,7 @@
 @extends('plantilla.masterLogin')
+@section('extra')
+    @include('complemento.estilos')
+@endsection
 @section('contenido')
     <div class="d-flex flex-column flex-root" id="kt_app_root">
         <div class="d-flex flex-column flex-lg-row flex-column-fluid">

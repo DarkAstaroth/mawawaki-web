@@ -1,11 +1,9 @@
 @php
     $assetsDirectory = public_path('build/assets');
-    $largestCss = null;
-    $firstJs = null;
+    $cssFiles = [];
+    $jsFiles = [];
 
     if (is_dir($assetsDirectory)) {
-        $cssFiles = [];
-        $jsFiles = [];
         $files = scandir($assetsDirectory);
 
         foreach ($files as $file) {
@@ -14,16 +12,11 @@
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
 
                 if ($extension === 'css') {
-                    $cssFiles[$file] = filesize($filePath);
+                    $cssFiles[] = $file;
                 } elseif ($extension === 'js' && strpos($file, 'app') === 0) {
                     $jsFiles[] = $filePath;
                 }
             }
-        }
-
-        if (!empty($cssFiles)) {
-            arsort($cssFiles);
-            $largestCss = key($cssFiles);
         }
 
         if (!empty($jsFiles)) {
@@ -47,10 +40,13 @@
 
     @if (!is_dir($assetsDirectory))
         @vite(['resources/js/app.js'])
+        @vite('resources/css/app.css')
     @endif
 
-    @if (!empty($largestCss))
-        <link rel="stylesheet" href="/build/assets/{{ $largestCss }}">
+    @if (!empty($cssFiles))
+        @foreach ($cssFiles as $cssFile)
+            <link rel="stylesheet" href="/build/assets/{{ $cssFile }}">
+        @endforeach
     @endif
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -189,10 +185,15 @@
             margin: 10px;
             position: relative;
             border-radius: 50%;
-            background-color: red;
+        }
+
+        .contenido__credencial {
+            padding: 10%;
+
         }
 
         .credencial {
+            width: 100%;
             border-radius: 10px;
             overflow: hidden;
         }

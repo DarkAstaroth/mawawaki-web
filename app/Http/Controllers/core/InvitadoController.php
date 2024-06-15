@@ -9,6 +9,7 @@ use App\Models\Persona;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use PhpParser\Node\Stmt\TryCatch;
 
 class InvitadoController extends Controller
@@ -98,7 +99,7 @@ class InvitadoController extends Controller
                 'paterno' => 'required',
                 'materno' => 'required',
                 'email' => 'required|email',
-                'password' => 'required|min:8|confirmed',
+                'password' => 'required|confirmed',
                 'toc' => 'accepted',
             ], [
                 'password.confirmed' => 'Las contraseñas no coinciden.',
@@ -133,8 +134,10 @@ class InvitadoController extends Controller
             // Asignación del rol al nuevo usuario
             $nuevoUsuario->assignRole('invitado');
             return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
+        } catch (ValidationException $e) {
+            return redirect()->back()->withInput()->withErrors($e->errors());
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with(['error' => 'Hubo un problema al registrar el usuario']);
+            return redirect()->back()->withInput()->withErrors(['error' => 'Hubo un problema al registrar el usuario']);
         }
     }
 
