@@ -175,3 +175,7 @@ Route::put('eventos/asignar', [EventosController::class, 'establecerPrincipal'])
 //API para los PDF
 Route::get('pdf/usuarios', [PDFController::class, 'usuariosSistema']);
 Route::post('pdf/asistencias/principal/usuario', [AsistenciasController::class, 'generarPDFAsistencias']);
+
+
+
+Route::get('/generate-image', [UsuarioController::class, 'generateAndDownloadImage']);

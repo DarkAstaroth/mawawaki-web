@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-6 col-md-2 mb-5" v-if="is('admin|Asistente')">
+        <div class="col-6 col-md-2 mb-5">
             <div class="card">
                 <div class="card-header p-5">
                     <div
@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <div class="col-6 col-md-2 mb-5" v-if="is('admin|Asistente')">
+        <div class="col-6 col-md-2 mb-5">
             <div class="card">
                 <div class="card-header p-5">
                     <div
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <div class="col-6 col-md-2 mb-5" v-if="is('admin|Asistente')">
+        <div class="col-6 col-md-2 mb-5">
             <div class="card">
                 <div class="card-header p-5">
                     <div

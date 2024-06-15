@@ -70,18 +70,10 @@ export const useDataAsistencias = defineStore("dataAsistencias", {
     actions: {
         async modificarSalida(id, horaSalida) {
             try {
-                const fecha_hora_salida = new Date(
-                    new Date().setHours(
-                        horaSalida.hours,
-                        horaSalida.minutes,
-                        horaSalida.seconds
-                    )
-                ).toString();
-
                 const respuesta = await axios.put(
                     `/api/asistencias/modificar/salida/${id}`,
                     {
-                        fecha_hora_salida,
+                        fecha_hora_salida: `${horaSalida.hours}:${horaSalida.minutes}:${horaSalida.seconds}`,
                     }
                 );
                 return respuesta;

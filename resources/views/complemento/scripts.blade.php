@@ -1,5 +1,7 @@
 <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 @if (Route::currentRouteName() === 'login')
     <script src="{{ asset('assets/js/custom/authentication/sign-in/general.js') }}"></script>
 @endif

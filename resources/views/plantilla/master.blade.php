@@ -1,11 +1,9 @@
 @php
     $assetsDirectory = public_path('build/assets');
-    $largestCss = null;
-    $firstJs = null;
+    $cssFiles = [];
+    $jsFiles = [];
 
     if (is_dir($assetsDirectory)) {
-        $cssFiles = [];
-        $jsFiles = [];
         $files = scandir($assetsDirectory);
 
         foreach ($files as $file) {
@@ -14,16 +12,11 @@
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
 
                 if ($extension === 'css') {
-                    $cssFiles[$file] = filesize($filePath);
+                    $cssFiles[] = $file;
                 } elseif ($extension === 'js' && strpos($file, 'app') === 0) {
                     $jsFiles[] = $filePath;
                 }
             }
-        }
-
-        if (!empty($cssFiles)) {
-            arsort($cssFiles);
-            $largestCss = key($cssFiles);
         }
 
         if (!empty($jsFiles)) {
@@ -47,10 +40,13 @@
 
     @if (!is_dir($assetsDirectory))
         @vite(['resources/js/app.js'])
+        @vite('resources/css/app.css')
     @endif
 
-    @if (!empty($largestCss))
-        <link rel="stylesheet" href="/build/assets/{{ $largestCss }}">
+    @if (!empty($cssFiles))
+        @foreach ($cssFiles as $cssFile)
+            <link rel="stylesheet" href="/build/assets/{{ $cssFile }}">
+        @endforeach
     @endif
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -171,13 +167,49 @@
             color: #101820
         }
 
+        .avatar_usuario {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            overflow: hidden;
+            border-radius: 50%;
+
+        }
+
         .container_usuario {
             width: 100px;
             height: 100px;
             overflow: hidden;
             margin: 10px;
             position: relative;
+            border-radius: 50%;
+        }
+
+        .contenido__credencial {
+            padding: 10%;
+
+        }
+
+        .credencial {
+            width: 100%;
             border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .fondo_credencial img {
+            width: 100%;
+            height: 480px;
+            object-fit: fill;
+        }
+
+        .container_credencial {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 10%;
         }
 
         .container_usuario>.crop {
@@ -196,8 +228,9 @@
         .p-dialog-content {
             overflow-y: visible;
         }
+
         .dp__input {
-            height:45px;
+            height: 45px;
         }
     </style>
 

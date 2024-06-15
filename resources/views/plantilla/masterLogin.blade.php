@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @include('complemento.estilos')
+    {{-- @include('complemento.estilos') --}}
     <title>Inicio</title>
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
     @routes
     @vite(['resources/js/app.js'])
+    @vite('resources/css/app.css')
+    @yield('extra')
+
 
 </head>
 

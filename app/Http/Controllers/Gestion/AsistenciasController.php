@@ -418,11 +418,9 @@ class AsistenciasController extends Controller
             'fecha_hora_salida' => 'required',
         ]);
 
+
         $fechaIngreso = date('Y-m-d', $asistencia->fecha_hora_entrada);
-        $fechaHoraSalida = $fechaIngreso . ' ' . $request->input('fecha_hora_salida');
-        $horaSalida = date('H:i:s', strtotime($request->input('fecha_hora_salida')));
-
-
+        $horaSalida = $request->input('fecha_hora_salida');
         $fechaHoraSalida = $fechaIngreso . ' ' . $horaSalida;
 
         $marcaTiempoSalida = strtotime($fechaHoraSalida);
