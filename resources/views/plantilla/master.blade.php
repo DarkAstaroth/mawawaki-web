@@ -43,9 +43,16 @@
         @vite('resources/css/app.css')
     @endif
 
+
     @if (!empty($cssFiles))
         @foreach ($cssFiles as $cssFile)
             <link rel="stylesheet" href="/build/assets/{{ $cssFile }}">
+        @endforeach
+    @endif
+
+    @if (!empty($jsFiles))
+        @foreach ($jsFiles as $jsFile)
+            <script src="{{ asset($jsFile) }}"></script>
         @endforeach
     @endif
 

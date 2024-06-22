@@ -1,7 +1,7 @@
 @extends('plantilla.masterLogin')
 
 @section('contenido')
-    <section class="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
+    <section class="bg-gray-200 min-h-screen flex items-center justify-center">
         <div class="flex flex-col justify-center items-center -mt-20 ">
             <div class="mb-5">
                 <div class="">
@@ -10,7 +10,7 @@
             </div>
             <div class="bg-white p-5 flex rounded-2xl shadow-lg max-w-3xl">
                 <div class="md:w-1/2 px-5">
-                    <h2 class="text-2xl font-bold text-[#002D74]">Iniciar Sesión</h2>
+                    <h2 class="text-2xl font-bold text-[#002D74] font-urbanist">Iniciar Sesión</h2>
                     <p class="text-sm mt-4 text-[#002D74]">Si tienes una cuenta, por favor inicia sesión</p>
                     <form class="mt-6" action="{{ route('verificar.login') }}" method="POST">
                         @csrf
@@ -38,8 +38,8 @@
                         </div>
 
                         <button type="submit"
-                            class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
-                px-4 py-3 mt-6">Iniciar
+                            class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white rounded-lg
+                px-4 py-3 mt-6 font-urbanist font-bold">Iniciar
                             Sesión
                         </button>
                     </form>

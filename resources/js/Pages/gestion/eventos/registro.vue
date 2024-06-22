@@ -1,69 +1,60 @@
 <template>
     <div>
         <div v-if="dentroRadio && !redirigiendo">
-            <div
-                class="alert alert-dismissible bg-light-primary d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-5 w-100"
-            >
-                <i
-                    class="ki-duotone ki-fingerprint-scanning fs-5tx text-primary mb-10"
+            <div class="w-full mt-5">
+                <div
+                    class="mb-4 p-5 text-sm text-emerald-800 rounded-lg bg-emerald-50 dark:bg-gray-800 dark:text-emerald-400 divide-y"
+                    role="alert"
                 >
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    <span class="path3"></span>
-                    <span class="path4"></span>
-                    <span class="path5"></span>
-                </i>
-
-                <div class="text-center w-100">
-                    <h1 class="fw-bold mb-5">{{ this.evento.nombre }}</h1>
-                    <div
-                        class="separator separator-dashed border-primary opacity-25 mb-5"
-                    ></div>
-                    <div
-                        class="d-flex flex-column align-items-start mb-9 text-gray-900 w-100"
-                    >
-                        <div>
-                            <strong>Fecha Inicio :</strong>
-                            {{ formatearFecha(this.evento.fecha_hora_inicio) }}
-                        </div>
-                        <div>
-                            <strong>Fecha Fin :</strong>
-                            {{ formatearFecha(this.evento.fecha_hora_fin) }}
-                        </div>
-                        <div>
-                            <strong>Descripción :</strong>
-                            {{ this.evento.descripcion }}
-                        </div>
+                    <div class="flex flex-col mb-2">
+                        <span class="font-bold">Evento:</span>
+                        <span class=""> {{ evento.nombre }}</span>
                     </div>
 
-                    <div class="d-flex flex-center flex-wrap">
+                    <div class="flex flex-col mb-2">
+                        <span class="font-bold">Fecha Inicio:</span>
+                        <span class="">
+                            {{ formatearFecha(evento.fecha_hora_inicio) }}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col mb-2">
+                        <span class="font-bold">Fecha Fin:</span>
+                        <span class="">
+                            {{ formatearFecha(evento.fecha_hora_fin) }}
+                        </span>
+                    </div>
+
+                    <div class="flex flex-col mb-2">
+                        <span class="font-bold">Descripción:</span>
+                        <span class=""> {{ evento.descripcion }}</span>
+                    </div>
+                    <div class="flex justify-center pt-5">
                         <button
                             type="submit"
-                            class="btn btn-primary mb-10"
+                            class="bg-emerald-500 hover:bg-emerald-600 focus:bg-emerald-400 text-white rounded-lg px-4 py-3 font-urbanist font-bold"
                             @click="registrarAsistencia"
                         >
-                            <i class="ki-duotone ki-fingerprint-scanning fs-1">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                <span class="path3"></span>
-                                <span class="path4"></span>
-                                <span class="path5"></span>
-                            </i>
-                            Registrar
+                            <div class="flex items-center gap-2">
+                                <i class="fi fi-rr-fingerprint text-xl"></i>
+                                <span class="">Registrar</span>
+                            </div>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
         <div v-else-if="!redirigiendo">
-            <div class="alert alert-danger d-flex p-5">
-                <i class="ki-duotone ki-map fs-2hx text-danger me-4"
-                    ><span class="path1"></span><span class="path2"></span>
-                    <span class="path3"></span>
-                </i>
-                <div class="d-flex flex-column align-items-start">
-                    <h4 class="text-danger text-start">Estás fuera de rango</h4>
-                    <p class="text-start">
+            <div
+                class="mt-5 p-5 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-emerald-400 divide-y"
+                role="alert"
+            >
+                <div class="flex flex-col items-center">
+                    <i class="fi fi-br-location-dot-slash text-4xl mb-5"></i>
+                    <h4 class="text-red-800 font-bold mb-2">
+                        Estás fuera de rango
+                    </h4>
+                    <p class="text-center">
                         Tu ubicación está fuera del rango permitido para el
                         registro
                     </p>
@@ -72,23 +63,14 @@
         </div>
         <div v-else>
             <div
-                class="alert alert-dismissible bg-light-success d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-5 w-100"
+                class="flex flex-col items-center mb-4 p-5 text-sm text-emerald-800 rounded-lg bg-emerald-50 dark:bg-gray-800 dark:text-emerald-400"
+                role="alert"
             >
-                <i
-                    class="ki-duotone ki-fingerprint-scanning fs-5tx text-success mb-10"
-                >
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    <span class="path3"></span>
-                    <span class="path4"></span>
-                    <span class="path5"></span>
-                </i>
-
+                <i class="fi fi-sr-check-circle text-4xl mb-5"></i>
+                <h1 class="fw-bold mb-5 font-bold">Registrado</h1>
                 <div class="text-center w-100">
-                    <h1 class="fw-bold mb-5">Registrado</h1>
-
                     <div class="d-flex flex-column flex-center flex-wrap">
-                        <p>Redirigiendo...</p>
+                        <p class="mb-5">Redirigiendo...</p>
                         <ProgressSpinner
                             style="width: 30px; height: 30px"
                             strokeWidth="4"
