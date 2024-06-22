@@ -77,53 +77,34 @@
                     placeholder="Buscar..."
                     class="form-control mb-3"
                 />
-                <div class="table-responsive">
-                    <table
-                        v-if="this.usuariosEvento.length > 0"
-                        class="table table-bordered table-striped"
-                    >
-                        <!-- Encabezado de la tabla -->
-                        <thead>
-                            <tr
-                                class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
-                            >
-                                <th class="min-w-30px">Nro</th>
-                                <th class="min-w-150px">CI</th>
-                                <th class="min-w-150px">Paterno</th>
-                                <th class="min-w-150px">Materno</th>
-                                <th class="min-w-150px">Nombres</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(usuario, index) in usuariosFiltrados"
-                                :key="usuario.ci"
-                            >
-                                <td>{{ index + 1 }}</td>
-                                <td>
-                                    {{
-                                        usuario.ci
-                                            ? usuario.ci
-                                            : "No registrado"
-                                    }}
-                                </td>
-                                <td>{{ usuario.paterno }}</td>
-                                <td>{{ usuario.materno }}</td>
-                                <td>{{ usuario.nombres }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- Mensaje cuando no hay documentos -->
-                    <div v-else class="text-center py-4">
-                        <img
-                            src="/assets/ilustraciones/sin_doc.svg"
-                            alt=""
-                            width="150"
-                            height="150"
-                        />
-                        <p>No hay asistentes.</p>
-                    </div>
-                </div>
+                <DataTable
+                    :value="usuariosFiltrados"
+                    paginator
+                    :rows="10"
+                    :rowsPerPageOptions="[5, 10]"
+                    tableStyle="min-width: 50rem"
+                >
+                    <Column
+                        field="ci"
+                        header="CARNET"
+                        style="width: 25%"
+                    ></Column>
+                    <Column
+                        field="paterno"
+                        header="PATERNO"
+                        style="width: 25%"
+                    ></Column>
+                    <Column
+                        field="materno"
+                        header="MATERNO"
+                        style="width: 25%"
+                    ></Column>
+                    <Column
+                        field="nombres"
+                        header="NOMBRES"
+                        style="width: 25%"
+                    ></Column>
+                </DataTable>
             </div>
         </Dialog>
     </div>

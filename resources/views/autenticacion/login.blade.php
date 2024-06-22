@@ -12,7 +12,7 @@
                 <div class="md:w-1/2 px-5">
                     <h2 class="text-2xl font-bold text-[#002D74] font-urbanist">Iniciar Sesión</h2>
                     <p class="text-sm mt-4 text-[#002D74]">Si tienes una cuenta, por favor inicia sesión</p>
-                    <form class="mt-6" action="{{ route('verificar.login') }}" method="POST">
+                    <form class="mt-6" action="{{ route('verificar.login') }}" method="POST" id="loginForm">
                         @csrf
                         @method('POST')
                         <div>
@@ -26,22 +26,26 @@
                             <label class="block text-gray-700">Contraseña</label>
                             <input type="password" name="password" placeholder="Ingrese su Contraseña" minlength="6"
                                 class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
-                  focus:bg-white focus:outline-none"
+                          focus:bg-white focus:outline-none"
                                 required>
                         </div>
 
                         <div class="text-right mt-2">
                             <a href="{{ route('reset.pass') }}"
                                 class="text-sm font-semibold text-gray-700 hover:text-blue-700 focus:text-blue-700">¿Olvidaste
-                                tu
-                                Contraseña?</a>
+                                tu Contraseña?</a>
                         </div>
 
-                        <button type="submit"
+                        <button type="submit" id="submitButton"
                             class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white rounded-lg
-                px-4 py-3 mt-6 font-urbanist font-bold">Iniciar
+                    px-4 py-3 mt-6 font-urbanist font-bold">Iniciar
                             Sesión
                         </button>
+
+                        <div id="spinner" class="hidden mt-4 flex justify-center items-center">
+                            <img src="assets/media/logos/load-app.gif" class="rounded-2xl" alt="imagen de la página"
+                                width="60">
+                        </div>
                     </form>
 
                     <div class="text-sm flex justify-between items-center mt-3">
@@ -59,4 +63,11 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            document.getElementById('submitButton').style.display = 'none';
+            document.getElementById('spinner').classList.remove('hidden');
+        });
+    </script>
 @endsection

@@ -8,8 +8,8 @@
     <title>Inicio</title>
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
     @routes
-    @vite(['resources/js/app.js'])
     @vite('resources/css/app.css')
+    @vite(['resources/js/app.js'])
     @yield('extra')
 
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"

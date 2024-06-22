@@ -1,30 +1,3 @@
-@php
-    $assetsDirectory = public_path('build/assets');
-    $cssFiles = [];
-    $jsFiles = [];
-
-    if (is_dir($assetsDirectory)) {
-        $files = scandir($assetsDirectory);
-
-        foreach ($files as $file) {
-            if ($file !== '.' && $file !== '..') {
-                $filePath = 'build/assets/' . $file;
-                $extension = pathinfo($file, PATHINFO_EXTENSION);
-
-                if ($extension === 'css') {
-                    $cssFiles[] = $file;
-                } elseif ($extension === 'js' && strpos($file, 'app') === 0) {
-                    $jsFiles[] = $filePath;
-                }
-            }
-        }
-
-        if (!empty($jsFiles)) {
-            $firstJs = reset($jsFiles);
-        }
-    }
-@endphp
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,24 +11,8 @@
 
     @routes
 
-    @if (!is_dir($assetsDirectory))
-        @vite(['resources/js/app.js'])
-        @vite('resources/css/app.css')
-    @endif
-
-
-    @if (!empty($cssFiles))
-        @foreach ($cssFiles as $cssFile)
-            <link rel="stylesheet" href="/build/assets/{{ $cssFile }}">
-        @endforeach
-    @endif
-
-    @if (!empty($jsFiles))
-        @foreach ($jsFiles as $jsFile)
-            <script src="{{ asset($jsFile) }}"></script>
-        @endforeach
-    @endif
-
+    @vite(['resources/css/app.css'])
+    @vite(['resources/js/app.js'])
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
