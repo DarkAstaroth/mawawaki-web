@@ -19,6 +19,8 @@ class Persona extends Model
         'nombre', 'paterno', 'materno', 'fecha_nacimiento', 'genero', 'telefono', 'direccion', 'email', 'ci'
     ];
 
+    protected $dates = ['fecha_nacimiento'];
+
     public function user()
     {
         return $this->hasOne(User::class, 'persona_id');

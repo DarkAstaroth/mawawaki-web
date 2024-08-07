@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 use Illuminate\Support\Str;
 
@@ -297,7 +298,7 @@ class UsuarioController extends Controller
     public function UsuarioControl(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions', 'persona', 'personal','cliente');
+        $usuario->load('roles', 'permissions', 'persona', 'personal', 'cliente');
         return view('core.usuarios.control', compact('usuario'));
     }
 
@@ -527,5 +528,33 @@ class UsuarioController extends Controller
         // Actualizar el campo codigo_personal en la fila correspondiente al usuario
         Personal::where('UsuarioID', $id)->update(['codigo_personal' => $codigo]);
         return response()->json(['codigo' => $codigo], 201);
+    }
+
+    public function getBirthdays(Request $request)
+    {
+        $currentMonth = Carbon::now()->month;
+
+
+        $usersWithBirthdays = User::whereHas('persona', function ($query) use ($currentMonth) {
+            $query->whereRaw('MONTH(FROM_UNIXTIME(fecha_nacimiento)) = ?', [$currentMonth]);
+        })->with(['persona' => function ($query) {
+        }])->get();
+
+        $formattedUsers = $usersWithBirthdays->map(function ($user) {
+            return [
+                'email' => $user->email,
+                'persona' => [
+                    'ci' => $user->persona->ci,
+                    'nombre' => $user->persona->nombre,
+                    'paterno' => $user->persona->paterno,
+                    'materno' => $user->persona->materno,
+                    'fecha_nacimiento' => Carbon::createFromTimestamp($user->persona->fecha_nacimiento)->format('Y-m-d'),
+                    'telefono' => $user->persona->telefono,
+                    'direccion' => $user->persona->direccion,
+                ]
+            ];
+        });
+
+        return response()->json($formattedUsers);
     }
 }
