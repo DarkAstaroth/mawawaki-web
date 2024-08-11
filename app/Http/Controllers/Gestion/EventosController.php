@@ -258,11 +258,18 @@ class EventosController extends Controller
         $asistentes = Asistencia::where('EventoID', $id)->with('usuario.persona')->get();
 
         $nombres_apellidos = $asistentes->map(function ($asistencia) {
+            $ci = $asistencia->usuario->persona->ci;
+            $nombres = $asistencia->usuario->persona->nombre;
+            $paterno = $asistencia->usuario->persona->paterno;
+            $materno = $asistencia->usuario->persona->materno;
+
+            $ciTexto = $ci !== null ? $ci : 'SIN CI';
+
             return [
-                'ci' => $asistencia->usuario->persona->ci,
-                'nombres' => $asistencia->usuario->persona->nombre,
-                'paterno' => $asistencia->usuario->persona->paterno,
-                'materno' => $asistencia->usuario->persona->materno
+                'ci' => $ciTexto,
+                'nombres' => $nombres,
+                'paterno' => $paterno,
+                'materno' => $materno
             ];
         });
 

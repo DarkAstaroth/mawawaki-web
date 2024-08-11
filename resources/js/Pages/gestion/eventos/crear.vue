@@ -197,6 +197,7 @@ import {
 } from "@vue-leaflet/vue-leaflet";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
+import { useGeolocation } from "@vueuse/core";
 
 export default {
     name: "EventosCrear",
@@ -209,6 +210,7 @@ export default {
         MapaComponent,
     },
     setup() {
+        const vueGeo = useGeolocation();
         const store = useDataEventos();
         const toast = useToast();
         const tipoEvento = ref("");
@@ -216,6 +218,7 @@ export default {
         const usuariosSeleccionados = ref();
         const usuariosFiltro = ref();
         return {
+            vueGeo,
             store,
             toast,
             tipoEvento,

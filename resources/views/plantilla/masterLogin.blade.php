@@ -8,11 +8,18 @@
     <title>Inicio</title>
     <link rel="icon" type="image/png" href="assets/media/logos/scallia-min.png">
     @routes
-    @vite(['resources/js/app.js'])
     @vite('resources/css/app.css')
+    @vite(['resources/js/app.js'])
     @yield('extra')
 
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true"

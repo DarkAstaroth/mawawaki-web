@@ -90,6 +90,7 @@ Route::put('sincronizar/rol/usuario/{id}', [UsuarioController::class, 'sincroniz
 Route::get('convertir-mayusculas', [UsuarioController::class, 'convertirMayusculas']);
 Route::post('personal/generar-codigo/{id}', [UsuarioController::class, 'generarCodigo']);
 
+Route::get('birthdays', [UsuarioController::class, 'getBirthdays']);
 
 
 // Api para caballos

@@ -39,6 +39,15 @@ const obtenerAvisos = async (pagina, busqueda) => {
     }
 };
 
+const obtenerCumpleanos = async () => {
+    try {
+        const respuesta = await axios.get(`/api/birthdays`);
+        return respuesta.data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 const obtenerAvisosGlobales = async () => {
     try {
         const respuesta = await axios.get("/api/avisos/globales");
@@ -72,12 +81,12 @@ export const useDataAvisos = defineStore("dataAvisos", {
     persist: true,
     actions: {
         obtenerAvisosGlobales,
+        obtenerCumpleanos,
         async cargarAvisos(pagina, busqueda) {
             const respuesta = await obtenerAvisos(pagina, busqueda);
             this.avisos = respuesta.avisos.data;
             this.paginacion = respuesta.paginacion;
         },
-
         async eliminarAviso(id) {
             const respuesta = await eliminarAviso(id);
             return respuesta;

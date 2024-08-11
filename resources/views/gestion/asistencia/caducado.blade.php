@@ -1,56 +1,52 @@
 @extends('plantilla.masterLogin')
+
 @section('contenido')
-    <div class="d-flex flex-column flex-root" id="kt_app_root">
-        <style>
-            body {
-                background-image: url({{ asset('assets/media/auth/bg3.jpg') }});
-            }
-
-            [data-bs-theme="dark"] body {
-                background-image: url({{ asset('assets/media/auth/bg3-dark.jpg') }});
-            }
-        </style>
-
-
-        <div class="d-flex flex-column flex-center flex-column-fluid">
-            <div class="d-flex flex-column flex-center text-center p-10">
-                <div class="card card-flush w-lg-650px py-5">
-                    <div class="card-body py-15 py-lg-20">
-                        <div class="mb-10">
-                            <a href="../../demo1/dist/index.html" class="">
-                                <img alt="Logo" src="{{ asset('assets/media/logos/logo-equino.png') }}"
-                                    width="220" />
-                            </a>
-                        </div>
-
-                        <div
-                            class="alert alert-dismissible bg-light-info d-flex flex-center flex-column py-10 px-10 px-lg-20 mb-10">
-
-                            <i class="ki-duotone ki-information-5 fs-5tx text-info mb-5"><span class="path1"></span><span
-                                    class="path2"></span><span class="path3"></span></i>
-
-                            <div class="text-center">
-                                <h1 class="fw-bold mb-5">Evento caducado</h1>
-                                <div class="separator separator-dashed border-info opacity-25 mb-5"></div>
-                                <div class="mb-9 text-gray-900">
-                                    ¡Lo sentimos! Este evento ha caducado y <strong>ya no está disponible</strong> para
-                                    registrar
-                                    asistencia. Si tienes alguna pregunta o necesitas más información, no dudes en
-                                    cantactar al administrador. ¡Gracias!
-                                </div>
-
-                                <div class="d-flex flex-center flex-wrap">
-                                    <a href="#" class="btn btn-outline btn-outline-info btn-active-info m-2">Salir</a>
-                                    <a href="#" class="btn btn-info m-2">Ir a Inicio</a>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
+    <section class="bg-gray-200 min-h-screen flex items-center justify-center">
+        <div class="flex flex-col justify-center items-center -mt-20 ">
+            <div class="mb-5">
+                <div class="">
+                    <img src="{{ asset('assets/media/logos/logo-equino.png') }}" class="rounded-2xl" alt="imagen de la página"
+                        width="150">
                 </div>
             </div>
+            <div class="p-5 flex rounded-2xl w-full sm:w-1/2">
+                <div class="md:w-full px-5">
+                    <div id=""
+                        class="p-4 mb-4 text-indigo-800 border border-indigo-300 rounded-lg bg-white dark:bg-gray-800 dark:text-indigo-400 dark:border-indigo-800"
+                        role="alert">
+                        <div class="flex items-center">
+                            <div class="flex flex-center flex-col items-center w-full">
+                                <i class=" fi fi-br-calendar-clock text-4xl mt-2"></i>
+                                <h3 class="text-2xl font-bold mt-5 font-urbanist">Evento finalizado</h3>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-center text-sm">
+                            ¡Lo sentimos! Este evento ha finalizado y <strong>ya no está disponible</strong> para
+                            registrar
+                            asistencia. Gracias
+                        </div>
+                        <div class="flex justify-center mt-4 text-sm">
+
+                            <a href="/dashboard"
+                                class="cursor-pointer
+                                text-center block bg-indigo-500 hover:bg-indigo-400 focus:bg-indigo-400 text-white font-semibold
+                                rounded-lg px-4 py-2">
+                                <div class="flex gap-2 items-center">
+
+                                    <i class="fi fi-br-home"></i>
+                                    <div class="text-sm font-urbanist">
+
+                                        Volver
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
-    </div>
+
+    </section>
 @endsection
