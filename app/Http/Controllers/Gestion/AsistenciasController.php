@@ -118,6 +118,7 @@ class AsistenciasController extends Controller
 
         $asistencia = Asistencia::where('UsuarioID', $usuarioId)
             ->where('EventoID', $eventoId)
+            ->where('ingreso_verificado', 1)
             ->whereDate('created_at', today())
             ->latest()
             ->first();
