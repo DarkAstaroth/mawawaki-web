@@ -12,7 +12,7 @@
                             <div class="d-flex gap-2">
                                 <div v-if="is('admin')">
                                     <div
-                                        class="card-toolbar"
+                                        class=""
                                         v-if="
                                             !usuario?.personal?.codigo_personal
                                         "
@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card-toolbar">
+                                <div class="">
                                     <button
                                         type="button"
                                         class="btn btn-sm btn-flex btn-success"
@@ -180,27 +180,6 @@
                                                     >No se registró
                                                     carrera</span
                                                 >
-                                            </td>
-                                        </tr>
-
-                                        <tr
-                                            v-if="
-                                                usuario.tipo_solicitud ===
-                                                'cliente'
-                                            "
-                                        >
-                                            <td>Ocupación:</td>
-                                            <td>
-                                                <span
-                                                    class="badge badge-success"
-                                                    v-if="
-                                                        usuario.cliente.ocupacion
-                                                    "
-                                                    >{{
-                                                        usuario.cliente.ocupacion
-                                                    }}</span
-                                                >
-                                                <span v-else>Sin Registro</span>
                                             </td>
                                         </tr>
 

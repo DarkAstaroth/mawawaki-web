@@ -73,7 +73,7 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                     parametro: parametro,
                 },
             });
-            console.log(respuesta)
+            console.log(respuesta);
             this.usuarios = respuesta.data.usuarios;
 
             return respuesta.data.paginacion;
@@ -90,6 +90,14 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
             this.usuarios = respuesta.data.usuarios;
 
             return respuesta.data.paginacion;
+        },
+        async crearUsuario(data) {
+            try {
+                const respuesta = axios.post(`/api/registrar/usuario`, data);
+                return respuesta;
+            } catch (error) {
+                return error;
+            }
         },
         async actualizarEstado(id, estado) {
             try {

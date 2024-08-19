@@ -48,15 +48,8 @@ import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
 import Tooltip from "primevue/tooltip";
+import router from "@/index";
 
-import { createRouter, createWebHistory } from "vue-router";
-
-const routes = [{ path: "/dashboard/gestion/avisos" }];
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);

@@ -139,6 +139,7 @@ Route::put('documentos/{id}/revision', [DocumentacionController::class, 'cambiar
 // Api para clientes
 Route::get('pacientes/cliente/{id}', [ClienteController::class, 'obtenerPacientes']);
 Route::post('pacientes/registrar', [ClienteController::class, 'solicitudPaciente']);
+Route::post('registrar/usuario', [ClienteController::class, 'registrarUsuario']);
 
 // Api para pacientes
 Route::get('pacientes', [PacientesController::class, 'obtenerPacientes']);

@@ -6,6 +6,14 @@
             <div class="div card-toolbar" v-if="is('admin')">
                 <button
                     type="button"
+                    class="btn btn-sm btn-success"
+                    @click="navigateToCreate"
+                >
+                    <i class="text-white far fa-plus"></i>
+                    Nuevo
+                </button>
+                <button
+                    type="button"
                     class="btn btn-sm btn-danger"
                     @click="generarPDF"
                 >
@@ -183,7 +191,9 @@
                         class="page-item"
                         v-for="page in paginacion.ultimaPagina"
                         :key="page"
-                        :class="{ active: paginacion.paginaActual === page }"
+                        :class="{
+                            active: paginacion.paginaActual === page,
+                        }"
                     >
                         <a
                             class="page-link"
@@ -273,7 +283,9 @@
                                         }}</span>
                                     </template>
                                     <template #option="slotProps">
-                                        <div>{{ slotProps.option.nombre }}</div>
+                                        <div>
+                                            {{ slotProps.option.nombre }}
+                                        </div>
                                     </template>
                                 </Dropdown>
                             </div>
@@ -530,6 +542,9 @@ export default {
 
                 doc.save(nombreArchivo);
             });
+        },
+        navigateToCreate() {
+            this.$router.push({ name: "clientes.create" });
         },
     },
 };

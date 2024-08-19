@@ -33,9 +33,7 @@ class InvitadoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-    }
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.
@@ -149,18 +147,49 @@ class InvitadoController extends Controller
         return view('autenticacion.forgot');
     }
 
+    // public function enviarSolicitud(Request $request)
+    // {
+    //     $usuario = User::find($request->usuario_id,);
+
+    //     if ($request->tipo === 'cliente') {
+
+    //         $usuario->update([
+    //             'solicitud' => 1,
+    //             'tipo_solicitud' => 'cliente',
+    //         ]);
+
+    //         return response()->json([
+    //             'success' => 'Cliente creado con éxito',
+    //         ]);
+    //     }
+
+    //     if ($request->tipo === 'personal') {
+
+    //         Personal::create([
+    //             'UsuarioID' => $request->usuario_id,
+    //             'universidad' => $request->datos['universidad'],
+    //             'facultad' => $request->datos['facultad'],
+    //             'carrera' => $request->datos['carrera'],
+    //         ]);
+
+    //         $usuario->update([
+    //             'solicitud' => 1,
+    //             'tipo_solicitud' => 'personal',
+
+    //         ]);
+
+    //         return response()->json([
+    //             'success' => 'Cliente creado con éxito',
+    //         ]);
+    //     }
+    // }
+
+
     public function enviarSolicitud(Request $request)
     {
-        $usuario = User::find($request->usuario_id,);
+        $usuario = User::with('persona')->find($request->usuario_id);
 
         if ($request->tipo === 'cliente') {
-
-            Cliente::create([
-                'UsuarioID' => $request->usuario_id,
-                'ocupacion' => $request->datos['ocupacion'],
-                'materno' => $request->materno,
-            ]);
-
             $usuario->update([
                 'solicitud' => 1,
                 'tipo_solicitud' => 'cliente',
@@ -172,22 +201,40 @@ class InvitadoController extends Controller
         }
 
         if ($request->tipo === 'personal') {
+            // Crear o actualizar el registro en la tabla Personal
+            Personal::updateOrCreate(
+                ['UsuarioID' => $usuario->id],
+                [
+                    'universidad' => $request->datos['universidad'],
+                    'facultad' => $request->datos['facultad'],
+                    'carrera' => $request->datos['carrera'],
+                ]
+            );
 
-            Personal::create([
-                'UsuarioID' => $request->usuario_id,
-                'universidad' => $request->datos['universidad'],
-                'facultad' => $request->datos['facultad'],
-                'carrera' => $request->datos['carrera'],
-            ]);
+            // Actualizar o crear el registro en la tabla Persona
+            if ($usuario->persona) {
+                // Si ya existe un registro de Persona, actualizarlo
+                $usuario->persona->update([
+                    'telefono' => $request->datos['telefono'],
+                    'direccion' => $request->datos['direccion'],
+                    'ci' => $request->datos['carnet'], // Asegúrate de que este campo exista y sea el correcto
+                ]);
+            } else {
+                // Si no existe, crear un nuevo registro de Persona
+                $usuario->persona()->create([
+                    'telefono' => $request->datos['telefono'],
+                    'direccion' => $request->datos['direccion'],
+                    'ci' => $request->datos['carnet'], // Asegúrate de que este campo exista y sea el correcto
+                ]);
+            }
 
             $usuario->update([
                 'solicitud' => 1,
                 'tipo_solicitud' => 'personal',
-
             ]);
 
             return response()->json([
-                'success' => 'Cliente creado con éxito',
+                'success' => 'Personal y Persona creados o actualizados con éxito',
             ]);
         }
     }
