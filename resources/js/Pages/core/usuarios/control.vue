@@ -6,11 +6,11 @@
                     <div class="card pt-4 mb-6 mb-xl-9">
                         <div class="card-header border-0">
                             <div class="card-title">
-                                <h2>Datos Solicitud</h2>
+                                <h2>Datos del usuario</h2>
                             </div>
 
                             <div class="d-flex gap-2">
-                                <div v-if="is('admin')">
+                                <div v-if="is('admin') && noEsCliente()">
                                     <div
                                         class=""
                                         v-if="
@@ -278,16 +278,22 @@
                     </div>
                 </div>
 
-                <div class="col-12 mb-5" v-if="is('admin')">
-                    <div class="card card-bordered">
-                        <div class="card-header">
-                            <h3 class="card-title">Asistencia</h3>
-                        </div>
+                <div v-if="noEsCliente()">
+                    <div class="col-12 mb-5" v-if="is('admin')">
+                        <div class="card card-bordered">
+                            <div class="card-header">
+                                <h3 class="card-title">Asistencia</h3>
+                            </div>
 
-                        <div class="card-body">
-                            <AsistenciaGeneral :usuario="usuario" />
+                            <div class="card-body">
+                                <AsistenciaGeneral :usuario="usuario" />
+                            </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="col-12 mb-5" v-if="is('admin|Asistente')">
+                    <PacientesUsuario :usuario="usuario" />
                 </div>
 
                 <div class="col-12 mb-5" v-if="is('admin|Asistente')">
@@ -302,8 +308,10 @@
                     </div>
                 </div>
 
-                <div class="col-12" v-if="is('admin')">
-                    <ActividadesUsuario :usuario="usuario" />
+                <div v-if="noEsCliente()">
+                    <div class="col-12" v-if="is('admin')">
+                        <ActividadesUsuario :usuario="usuario" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -314,6 +322,7 @@
 import { useVuelidate } from "@vuelidate/core";
 import VueMultiselect from "vue-multiselect";
 import DocumentacionUsuario from "./Tabs/Documentacion.vue";
+import PacientesUsuario from "./Tabs/Pacientes.vue";
 import ActividadesUsuario from "./actividades.vue";
 import AsistenciaGeneral from "./Tabs/AsistenciaGeneral.vue";
 
@@ -325,6 +334,7 @@ export default {
         DocumentacionUsuario,
         ActividadesUsuario,
         AsistenciaGeneral,
+        PacientesUsuario,
     },
 
     setup() {
@@ -348,6 +358,9 @@ export default {
         this.cargarRoles(1);
     },
     methods: {
+        noEsCliente() {
+            return !this.usuario.roles.some((role) => role.name === "cliente");
+        },
         verificarCuenta(usuarioId) {
             Swal.fire({
                 title: "¿Estás seguro?",

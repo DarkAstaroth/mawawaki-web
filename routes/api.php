@@ -145,6 +145,9 @@ Route::post('registrar/usuario', [ClienteController::class, 'registrarUsuario'])
 Route::get('pacientes', [PacientesController::class, 'obtenerPacientes']);
 Route::put('verificar-paciente/{id}', [PacientesController::class, 'verificarPaciente']);
 Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiarEstado']);
+Route::get('/detalle/pacientes', [PacientesController::class, 'detallePaciente']);
+Route::get('/detalle/pacientes/{id}', [PacientesController::class, 'detallePacienteId']);
+Route::post('registrar/servicio/paciente/{id}', [PacientesController::class, 'registrarServicioPaciente']);
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);

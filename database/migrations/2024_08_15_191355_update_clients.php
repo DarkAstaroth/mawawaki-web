@@ -17,13 +17,13 @@ class UpdateClients extends Migration
         Schema::table('pacientes', function (Blueprint $table) {
             $table->dropForeign(['cliente_id']); // Eliminar la clave foránea si existe
             $table->dropColumn('cliente_id'); // Eliminar la columna
-            $table->dropForeign(['persona_id']); // Eliminar la clave foránea si existe
-            $table->dropColumn('persona_id'); // Eliminar la columna
         });
 
         // Agregar la columna 'UsuarioID' a la tabla 'pacientes'
         Schema::table('pacientes', function (Blueprint $table) {
-            $table->foreignUuid('UsuarioID')->constrained('users'); // Agregar la clave foránea
+            $table->foreignUuid('UsuarioID')->constrained('users');
+            $table->string('codigo')->nullable();
+            $table->string('profile_photo_path', 2048)->nullable()->default('assets/imagenes/user-default.jpg');
         });
 
         // Luego, eliminar la tabla 'clientes'

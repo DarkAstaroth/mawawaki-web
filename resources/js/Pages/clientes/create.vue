@@ -2,17 +2,7 @@
     <div class="flex justify-center">
         <div class="card card-bordered w-1/2">
             <div class="card-header">
-                <h3 class="card-title">Crear nuevo cliente</h3>
-                <div class="div card-toolbar" v-if="is('admin')">
-                    <a
-                        :href="route('clientes.create')"
-                        type="button"
-                        class="btn btn-sm btn-success"
-                    >
-                        <i class="text-white far fa-plus"></i>
-                        Guardar
-                    </a>
-                </div>
+                <h3 class="card-title">Crear nuevo usuario</h3>
             </div>
 
             <form class="mt-6 px-10" @submit.prevent="submitForm">
@@ -130,28 +120,6 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-gray-700"
-                        >Fecha de Nacimiento</label
-                    >
-                    <VueDatePicker
-                        v-model="fechaNacimiento"
-                        :enable-time-picker="false"
-                        select-text="Seleccionar"
-                        cancel-text="Cancelar"
-                        locale="es"
-                        format="dd/MM/yyyy"
-                    />
-                    <div
-                        v-if="v$?.fechaNacimiento.$error"
-                        class="m-2 fv-plugins-message-container invalid-feedback"
-                    >
-                        <div data-field="telefono" data-validator="required">
-                            La fecha de nacimiento es requerida
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-4">
                     <label class="block text-gray-700">Dirección</label>
                     <InputText v-model="direccion" class="w-100 uppercase" />
                     <div
@@ -167,7 +135,7 @@
                 <Button
                     type="submit"
                     label="Guardar"
-                    icon="pi pi-search"
+                    icon="pi pi-save"
                     :loading="loading"
                     @click="submitForm"
                     class="mb-5"
@@ -184,9 +152,9 @@ import { useDataUsuarios } from "@/store/dataUsuario";
 
 export default {
     setup() {
-        const v$ = useVuelidate();
-        const store = useDataUsuarios();
-        return { v$, store };
+            const v$ = useVuelidate();
+            const store = useDataUsuarios();
+            return { v$, store };
     },
     data() {
         return {
@@ -196,7 +164,6 @@ export default {
             correoElectronico: "",
             carnetIdentidad: "",
             telefono: "",
-            fechaNacimiento: null,
             direccion: "",
             loading: false,
         };
@@ -208,7 +175,6 @@ export default {
             apellidoMaterno: { required },
             correoElectronico: { required, email },
             carnetIdentidad: { required },
-            fechaNacimiento: { required },
             telefono: { required },
             direccion: { required },
         };
@@ -216,6 +182,7 @@ export default {
     methods: {
         submitForm() {
             this.v$.$touch();
+
             if (!this.v$.$invalid) {
                 this.loading = true;
                 this.store
@@ -225,33 +192,29 @@ export default {
                         materno: this.apellidoMaterno,
                         email: this.correoElectronico,
                         carnet_identidad: this.carnetIdentidad,
-                        fecha_nacimiento: this.telefono,
                         telefono: this.telefono,
                         direccion: this.direccion,
                     })
                     .then((respuesta) => {
-                        console.log(respuesta.data.message);
                         if (respuesta.status === 200) {
                             Swal.fire({
                                 title: "Usuario creado!",
                                 text: respuesta.data.message,
                                 icon: "success",
                             });
-                            this.$router.push({ name: "clientes.index" });
+                            this.$router.push({ name: "usuarios.index" });
                         }
                         this.loading = false;
                     })
                     .catch((error) => {
-                        console.log(error);
-                        // Manejar errores de la solicitud HTTP
                         if (error.response && error.response.data) {
-                            // Mostrar mensaje de error utilizando SweetAlert
                             Swal.fire({
                                 icon: "error",
                                 title: "Upsss..",
                                 text: error.response.data.error,
                             });
                         } else {
+                            console.log(error);
                             Swal.fire({
                                 icon: "error",
                                 title: "Upsss..",

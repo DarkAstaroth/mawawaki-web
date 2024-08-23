@@ -3,8 +3,12 @@
     <div class="card card-bordered">
         <div class="card-header">
             <h3 class="card-title">Listado de usuarios</h3>
-            <div class="div card-toolbar" v-if="is('admin')">
-                <button type="button" class="btn btn-sm btn-success me-5">
+            <div class="div card-toolbar flex gap-2" v-if="is('admin')">
+                <button
+                    type="button"
+                    class="btn btn-sm btn-success"
+                    @click="navigateToCreate"
+                >
                     <i class="text-white far fa-plus"></i>
                     Nuevo
                 </button>
@@ -68,8 +72,13 @@
                                             :src="usuario.profile_photo_path"
                                             alt="foto"
                                             class="crop"
-                                            :width="usuario.profile_photo_path.includes('user-default.jpg') ? 50 : 70"
-
+                                            :width="
+                                                usuario.profile_photo_path.includes(
+                                                    'user-default.jpg'
+                                                )
+                                                    ? 50
+                                                    : 70
+                                            "
                                         />
                                     </div>
                                     <div class="px-2 d-flex flex-column">
@@ -141,44 +150,6 @@
                                         rounded
                                         aria-label="Cancel"
                                 /></a>
-
-                                <!-- <div class="d-flex">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
-                                            data-boundary="viewport"></button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <a class="dropdown-item" data-bs-toggle="tooltip"
-                                                    data-bs-custom-class="tooltip-inverse" data-bs-placement="bottom"
-                                                    title="Ver perfil" :href="route(
-                                                        'usuario.control',
-                                                        { id: usuario.id }
-                                                    )
-                                                        "><i class="bi bi-eye-fill fs-4"></i>
-                                                    Ver Perfil</a>
-                                            </li>
-                                            <li v-if="is('admin')">
-                                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1"><i
-                                                        class="bi bi-pencil-square fs-4"></i>
-
-                                                    Editar</a>
-                                            </li>
-                                            <li v-if="is('admin')">
-                                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1" @click="
-                                                        resetModalData(
-                                                            true,
-                                                            usuario
-                                                        )
-                                                        "><i class="bi bi-envelope fs-4"></i>
-
-                                                    Notificar</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div> -->
                             </td>
                         </tr>
                         <tr v-if="store.usuarios.length === 0">
