@@ -1,20 +1,76 @@
 <template>
     <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-6">
-            <div class="md:col-span-3 bg-gray-200 p-4 rounded-lg shadow">
-                <h2 class="text-lg font-bold mb-4">Credencial</h2>
-                <div v-if="pacienteActual" class="space-y-2">
-                    <p>
-                        <strong>Nombre:</strong>
-                        {{ pacienteActual.persona.nombre }}
-                        {{ pacienteActual.persona.paterno }}
-                        {{ pacienteActual.persona.materno }}
-                    </p>
-                    <p><strong>CI:</strong> {{ pacienteActual.persona.ci }}</p>
-                    <p>
-                        <strong>Fecha de Nacimiento:</strong>
-                        {{ pacienteActual.persona.fecha_nacimiento }}
-                    </p>
+        <!-- <div class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-6">
+            <div class="md:col-span-3 rounded-lg shadow">
+                <div class="flex gap-20 w-full justify-center">
+                    <div id="credencial" ref="elementToConvert">
+                        <div class="relative w-[300px]">
+                            <div class="absolute inset-0">
+                                <img
+                                    src="/assets/ilustraciones/credencial.png"
+                                    alt=""
+                                    crossorigin="anonymous"
+                                />
+                            </div>
+                            <div class="relative z-10 h-[450px]">
+                                <div class="h-full">
+                                    <div class="flex flex-col items-center">
+                                        <div class="container_usuario mt-20">
+                                            <img
+                                                :src="
+                                                    '/'.concat(
+                                                        this.pacienteActual
+                                                            .profile_photo_path
+                                                    )
+                                                "
+                                                alt=""
+                                                class="crop"
+                                                width="150"
+                                                crossorigin="anonymous"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="flex flex-col items-center font-bold text-xl text-gray-900 mt-5"
+                                        >
+                                            <span>
+                                                {{
+                                                    this.pacienteActual.persona
+                                                        .nombre
+                                                }}
+                                            </span>
+
+                                            <a>
+                                                {{
+                                                    this.pacienteActual.persona
+                                                        .paterno
+                                                }}
+                                                {{
+                                                    this.pacienteActual.persona
+                                                        .materno
+                                                }}
+                                            </a>
+                                        </div>
+
+                                        <div
+                                            v-if="this.pacienteActual.codigo"
+                                            class="mt-5"
+                                        >
+                                            <qrcode-vue
+                                                :value="
+                                                    this.pacienteActual.codigo
+                                                "
+                                                :size="90"
+                                                level="L"
+                                                foreground="#102820"
+                                                background="transparent"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="md:col-span-7 bg-gray-100 p-4 rounded-lg shadow">
@@ -46,7 +102,7 @@
                     </p>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- Botones de PrimeVue -->
         <div
@@ -350,9 +406,11 @@ import Textarea from "primevue/textarea";
 import Calendar from "primevue/calendar";
 import InputNumber from "primevue/inputnumber";
 import { useDataPacientes } from "@/store/dataPaciente";
+import QrcodeVue from "qrcode.vue";
 
 export default {
     components: {
+        QrcodeVue,
         Button,
         Card,
         DataTable,
@@ -415,6 +473,7 @@ export default {
                     this.id,
                     this.obtenerParametrosFiltro()
                 );
+                console.log(this.pacienteActual);
             } catch (error) {
                 console.error("Error al cargar el paciente:", error);
             }

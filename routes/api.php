@@ -98,6 +98,8 @@ Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);
 Route::post('caballo/agregar', [CaballosController::class, 'agregarCaballo']);
 Route::patch('caballo/{id}', [CaballosController::class, 'editarCaballo']);
 Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
+Route::get('sesion/caballos', [CaballosController::class, 'obtenerCaballosSesion']);
+Route::put('/editar/sesion/{id}', [PacientesController::class, 'actualizarSesion']);
 
 // Api para eventos
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);
@@ -150,6 +152,8 @@ Route::get('/detalle/pacientes/{id}', [PacientesController::class, 'detallePacie
 Route::post('registrar/servicio/paciente/{id}', [PacientesController::class, 'registrarServicioPaciente']);
 Route::post('/registrar/pago/servicio/{id}', [PacientesController::class, 'registrarPago']);
 Route::get('pagos/servicio/{id}', [PacientesController::class, 'listarPagosServicio']);
+Route::post('programar-sesiones', [PacientesController::class, 'programarSesiones']);
+Route::get('sesiones/servicio/{id}', [PacientesController::class, 'obtenerSesionesServicio']);
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);

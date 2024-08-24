@@ -1,87 +1,13 @@
 <template>
     <div class="container mx-auto px-4">
-        <div
-            v-if="pacienteActual && servicio"
-            class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
-        >
-            <!-- Detalles del Paciente -->
-            <div class="bg-white shadow rounded-lg p-6">
-                <h2 class="text-2xl font-bold mb-4">Credencial</h2>
-                <div class="space-y-2">
-                    <p>
-                        <strong>Nombre:</strong>
-                        {{ pacienteActual.persona.nombre }}
-                        {{ pacienteActual.persona.paterno }}
-                        {{ pacienteActual.persona.materno }}
-                    </p>
-                    <p><strong>CI:</strong> {{ pacienteActual.persona.ci }}</p>
-                    <p>
-                        <strong>Fecha de Nacimiento:</strong>
-                        {{ pacienteActual.persona.fecha_nacimiento }}
-                    </p>
-                    <p>
-                        <strong>Tipo de Paciente:</strong>
-                        {{ pacienteActual.tipo_paciente }}
-                    </p>
-                    <p>
-                        <strong>Fecha de Ingreso:</strong>
-                        {{ pacienteActual.fecha_ingreso }}
-                    </p>
-                    <p>
-                        <strong>Estado de Salud:</strong>
-                        {{ pacienteActual.estado_salud }}
-                    </p>
-                    <p>
-                        <strong>Precondición:</strong>
-                        {{ pacienteActual.precondicion }}
-                    </p>
-                    <p>
-                        <strong>Contacto de Emergencia:</strong>
-                        {{ pacienteActual.contacto_emergencia_nombre }} -
-                        {{ pacienteActual.contacto_emergencia_telefono }}
-                    </p>
-                </div>
-            </div>
-
-            <!-- Detalles del Servicio -->
-            <div class="bg-white shadow rounded-lg p-6">
-                <h2 class="text-2xl font-bold mb-4">Detalles del Servicio</h2>
-                <div class="space-y-2">
-                    <p>
-                        <strong>Tipo de Servicio:</strong>
-                        {{ servicio.tipo_servicio }}
-                    </p>
-                    <p>
-                        <strong>Fecha de Ingreso:</strong>
-                        {{ formatearFecha(servicio.fecha_ingreso) }}
-                    </p>
-                    <p>
-                        <strong>Fecha Final:</strong>
-                        {{
-                            servicio.fecha_final
-                                ? formatearFecha(servicio.fecha_final)
-                                : "Sin finalizar"
-                        }}
-                    </p>
-                    <p>
-                        <strong>Estado:</strong>
-                        {{ servicio.estado ? "Activo" : "Inactivo" }}
-                    </p>
-                    <p>
-                        <strong>Observaciones:</strong>
-                        {{ servicio.observaciones }}
-                    </p>
-                </div>
-            </div>
-        </div>
-
         <!-- Tabs para Sesiones y Pagos -->
         <TabView>
             <TabPanel header="Sesiones">
                 <Button
-                    label="Nueva Sesión"
-                    icon="pi pi-plus"
-                    @click="abrirDialogoNuevaSesion"
+                    label="Programar"
+                    icon="pi pi-calendar-plus"
+                    @click="abrirDialogoProgramarSesion"
+                    :disabled="!hayPagosNoConsumidos"
                     class="mb-4"
                 />
                 <DataTable
@@ -92,16 +18,42 @@
                 >
                     <Column field="fecha_sesion" header="Fecha de Sesión">
                         <template #body="slotProps">
-                            {{ formatearFecha(slotProps.data.fecha_sesion) }}
+                            {{
+                                slotProps.data.fecha_sesion
+                                    ? formatearFecha(
+                                          slotProps.data.fecha_sesion
+                                      )
+                                    : "Sin asignar"
+                            }}
                         </template>
                     </Column>
-                    <Column field="responsable.nombre" header="Responsable" />
-                    <Column field="apoyo.nombre" header="Apoyo" />
-                    <Column field="caballo.nombre" header="Caballo" />
+                    <Column field="responsable" header="Responsable">
+                        <template #body="slotProps">
+                            {{
+                                slotProps.data.responsable?.name ||
+                                "Sin asignar"
+                            }}
+                        </template>
+                    </Column>
+                    <Column field="apoyo_id" header="Apoyo">
+                        <template #body="slotProps">
+                            {{
+                                slotProps.data.asistente?.name || "Sin asignar"
+                            }}
+                        </template>
+                    </Column>
+                    <Column field="caballo_id" header="Caballo">
+                        <template #body="slotProps">
+                            {{ slotProps.data.caballo?.name || "Sin asignar" }}
+                        </template>
+                    </Column>
                     <Column field="estado_sesion" header="Estado">
                         <template #body="slotProps">
                             <Badge
-                                :value="slotProps.data.estado_sesion"
+                                :value="
+                                    slotProps.data.estado_sesion ||
+                                    'Sin asignar'
+                                "
                                 :severity="
                                     obtenerSeveridad(
                                         slotProps.data.estado_sesion
@@ -110,18 +62,14 @@
                             />
                         </template>
                     </Column>
-                    <Column field="observaciones" header="Observaciones" />
                     <Column header="Acciones">
                         <template #body="slotProps">
                             <Button
                                 icon="pi pi-pencil"
-                                @click="editarSesion(slotProps.data)"
+                                @click="
+                                    abrirDialogoEditarSesion(slotProps.data)
+                                "
                                 class="p-button-text"
-                            />
-                            <Button
-                                icon="pi pi-trash"
-                                @click="eliminarSesion(slotProps.data)"
-                                class="p-button-text p-button-danger"
                             />
                         </template>
                     </Column>
@@ -208,63 +156,62 @@
             </TabPanel>
         </TabView>
 
-        <!-- Diálogo para nueva sesión -->
         <Dialog
-            v-model:visible="dialogoSesionVisible"
-            header="Nueva Sesión"
+            v-model:visible="dialogoEditarSesionVisible"
+            header="Editar Sesión"
             :style="{ width: '50vw' }"
-            modal
+            :modal="true"
         >
-            <form
-                @submit.prevent="guardarNuevaSesion"
-                class="p-fluid flex flex-col gap-2"
-            >
-                <div div class="field">
+            <form @submit.prevent="guardarEdicionSesion" class="p-fluid">
+                <div class="field">
                     <label for="fecha_sesion">Fecha de Sesión</label>
                     <Calendar
                         id="fecha_sesion"
-                        v-model="nuevaSesion.fecha_sesion"
+                        v-model="sesionEditada.fecha_sesion"
                         dateFormat="dd/mm/yy"
                     />
                 </div>
                 <div class="field">
                     <label for="responsable">Responsable</label>
                     <Dropdown
-                        id="responsable"
-                        v-model="nuevaSesion.responsable"
-                        :options="personal"
-                        optionLabel="nombre"
-                        placeholder="Seleccione un responsable"
-                        :filter="true"
+                        class="w-100"
+                        v-model="responsableSeleccionados"
+                        :options="usuariosFiltro"
+                        filter
+                        optionLabel="name"
+                        placeholder="Selecciona Usuarios"
                     />
                 </div>
                 <div class="field">
-                    <label for="apoyo">Apoyo</label>
+                    <label for="apoyo_id">Apoyo</label>
                     <Dropdown
-                        id="apoyo"
-                        v-model="nuevaSesion.apoyo"
-                        :options="personal"
-                        optionLabel="nombre"
-                        placeholder="Seleccione un apoyo"
-                        :filter="true"
+                        class="w-100"
+                        v-model="asistenteSeleccionados"
+                        :options="usuariosFiltro"
+                        filter
+                        optionLabel="name"
+                        placeholder="Selecciona Usuarios"
                     />
                 </div>
                 <div class="field">
-                    <label for="caballo">Caballo</label>
+                    <label for="caballo_id">Caballo</label>
                     <Dropdown
-                        id="caballo"
-                        v-model="nuevaSesion.caballo"
+                        id="caballo_id"
+                        v-model="sesionEditada.caballo_id"
                         :options="caballos"
-                        optionLabel="nombre"
+                        optionLabel="label"
+                        optionValue="value"
                         placeholder="Seleccione un caballo"
                     />
                 </div>
                 <div class="field">
-                    <label for="estado_sesion">Estado de la Sesión</label>
+                    <label for="estado_sesion">Estado</label>
                     <Dropdown
                         id="estado_sesion"
-                        v-model="nuevaSesion.estado_sesion"
+                        v-model="sesionEditada.estado_sesion"
                         :options="estadosSesion"
+                        optionLabel="label"
+                        optionValue="value"
                         placeholder="Seleccione un estado"
                     />
                 </div>
@@ -272,7 +219,7 @@
                     <label for="observaciones">Observaciones</label>
                     <Textarea
                         id="observaciones"
-                        v-model="nuevaSesion.observaciones"
+                        v-model="sesionEditada.observaciones"
                         rows="3"
                     />
                 </div>
@@ -281,18 +228,86 @@
                 <Button
                     label="Cancelar"
                     icon="pi pi-times"
-                    @click="cerrarDialogoSesion"
+                    @click="cerrarDialogoEditarSesion"
                     class="p-button-text"
                 />
                 <Button
                     label="Guardar"
                     icon="pi pi-check"
-                    @click="guardarNuevaSesion"
+                    @click="guardarEdicionSesion"
                     autofocus
                 />
             </template>
         </Dialog>
 
+        <Dialog
+            v-model:visible="dialogoSesionVisible"
+            header="Nueva Sesión"
+            :style="{ width: '50vw' }"
+            :modal="true"
+        >
+            <form @submit.prevent="programarSesiones" class="p-fluid space-y-3">
+                <div class="field mb-4">
+                    <label for="pago" class="block mb-2 font-bold"
+                        >Pago a aplicar</label
+                    >
+                    <Dropdown
+                        id="pago"
+                        v-model="pagoSeleccionado"
+                        :options="pagosNoConsumidos"
+                        optionLabel="label"
+                        placeholder="Seleccione un pago"
+                        @change="calcularSesionesDisponibles"
+                        class="w-full"
+                    >
+                        <template #option="slotProps">
+                            {{ slotProps.option.label }} - Monto:
+                            {{ slotProps.option.monto }} Bs
+                        </template>
+                    </Dropdown>
+                </div>
+
+                <!-- Resumen del pago seleccionado -->
+                <div
+                    v-if="pagoSeleccionado"
+                    class="bg-gray-100 p-4 rounded-lg mb-4"
+                >
+                    <h3 class="font-bold mb-2">Resumen del Pago</h3>
+                    <p>
+                        <strong>Fecha:</strong>
+                        {{ formatearFecha(pagoSeleccionado.fecha_pago) }}
+                    </p>
+                    <p>
+                        <strong>Monto:</strong> {{ pagoSeleccionado.monto }} BOB
+                    </p>
+                    <p>
+                        <strong>Tipo de Pago:</strong>
+                        {{ pagoSeleccionado.tipo_pago }}
+                    </p>
+                    <p>
+                        <strong>ID Transacción:</strong>
+                        {{ pagoSeleccionado.id_transaccion }}
+                    </p>
+                </div>
+
+                <div class="field mb-4">
+                    <label class="block mb-2 font-bold"
+                        >Sesiones Disponibles</label
+                    >
+                    <div class="p-2 bg-gray-100 rounded">
+                        {{ sesionesDisponibles }}
+                    </div>
+                </div>
+
+                <Button
+                    label="Programar"
+                    icon="pi pi-calendar-plus"
+                    type="submit"
+                    :disabled="!pagoSeleccionado || sesionesDisponibles === 0"
+                    class="w-full"
+                />
+            </form>
+        </Dialog>
         <!-- Diálogo para nuevo pago -->
         <Dialog
             v-model:visible="dialogoPagoVisible"
@@ -461,7 +476,7 @@
                         </small>
                     </div>
                 </div>
-
+                <!--
                 <div class="field-checkbox">
                     <Checkbox
                         id="facturado"
@@ -469,7 +484,7 @@
                         :binary="true"
                     />
                     <label for="facturado" class="ml-2">Facturado</label>
-                </div>
+                </div> -->
 
                 <div class="field">
                     <label for="estado_pago" class="font-semibold mb-2 block"
@@ -571,6 +586,7 @@ import FileUpload from "primevue/fileupload";
 import { useDataPacientes } from "@/store/dataPaciente";
 import.meta.env.VITE_APP_BASE_URL;
 import { useConfirm } from "primevue/useconfirm";
+import { useDataEventos } from "@/store/dataEventos";
 
 export default {
     name: "ServicioDetalle",
@@ -592,10 +608,29 @@ export default {
         idPaciente: { type: String, required: true },
         idServicio: { type: String, required: true },
     },
+    computed: {
+        hayPagosNoConsumidos() {
+            return this.pagos.some((pago) => !pago.consumido);
+        },
+        pagosNoConsumidos() {
+            return this.pagos
+                .filter((pago) => !pago.consumido)
+                .map((pago) => ({
+                    ...pago,
+                    label: `${this.formatearFecha(pago.fecha_pago)} - ID: ${
+                        pago.id_transaccion
+                    }`,
+                }));
+        },
+    },
     setup() {
         const v$ = useVuelidate();
         const store = useDataPacientes();
         const confirm = useConfirm();
+        const storeEvento = useDataEventos();
+        const responsableSeleccionados = ref();
+        const asistenteSeleccionados = ref();
+        const usuariosFiltro = ref();
 
         const verificarPago = (event, idPago) => {
             confirm.require({
@@ -629,7 +664,16 @@ export default {
             });
         };
 
-        return { v$, store, verificarPago, eliminarPago };
+        return {
+            v$,
+            store,
+            storeEvento,
+            verificarPago,
+            eliminarPago,
+            responsableSeleccionados,
+            asistenteSeleccionados,
+            usuariosFiltro,
+        };
     },
     data() {
         return {
@@ -670,6 +714,19 @@ export default {
             estadosSesion: ["Programada", "Completada", "Cancelada"],
             tiposPago: ["Efectivo", "Tarjeta", "Transferencia"],
             estadosPago: ["Pendiente", "Completado", "Cancelado"],
+            sesionesDisponibles: 0,
+            pagoSeleccionado: null,
+            dialogoEditarSesionVisible: false,
+            sesionEditada: {},
+            caballos: [],
+            estadosSesion: [
+                { label: "En Progreso", value: "En Progreso" },
+                { label: "Completado", value: "Completado" },
+                { label: "Cancelado", value: "Cancelado" },
+                { label: "Pendiente", value: "Pendiente" },
+                { label: "Programado", value: "Programado" },
+                { label: "Finalizado", value: "Finalizado" },
+            ],
         };
     },
     validations() {
@@ -706,7 +763,19 @@ export default {
             }
         },
         async cargarSesiones() {
-            // Implementar lógica para cargar sesiones del servicio
+            try {
+                const response = await this.store.obtenerSesionesServicio(
+                    this.idServicio
+                );
+                this.sesiones = response;
+            } catch (error) {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se pudieron cargar las sesiones. Por favor, intente de nuevo.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+            }
         },
         async cargarPagos() {
             try {
@@ -718,8 +787,36 @@ export default {
                 console.error("Error al cargar los pagos:", error);
             }
         },
+        async cargarCaballos() {
+            try {
+                const response = await this.store.obtenerCaballos();
+                this.caballos = response.map((caballo) => ({
+                    value: caballo.id,
+                    label: `${caballo.nombre} (${
+                        caballo.apodo || "Sin apodo"
+                    })`,
+                }));
+            } catch (error) {
+                console.error("Error al cargar los caballos:", error);
+            }
+        },
         abrirDialogoNuevaSesion() {
             this.dialogoSesionVisible = true;
+        },
+        calcularSesionesDisponibles() {
+            if (this.pagoSeleccionado && this.servicio.precio_sesion) {
+                this.sesionesDisponibles = Math.floor(
+                    this.pagoSeleccionado.monto / this.servicio.precio_sesion
+                );
+            } else {
+                this.sesionesDisponibles = 0;
+            }
+            console.log(
+                "Monto del pago:",
+                this.pagoSeleccionado ? this.pagoSeleccionado.monto : 0
+            );
+            console.log("Precio por sesión:", this.servicio.precio_sesion);
+            console.log("Sesiones disponibles:", this.sesionesDisponibles);
         },
         abrirDialogoNuevoPago() {
             this.dialogoPagoVisible = true;
@@ -786,6 +883,7 @@ export default {
             }
         },
         async guardarNuevoPago() {
+            console.log("enrtra");
             this.v$.$touch();
             if (this.v$.$invalid) {
                 return;
@@ -892,9 +990,105 @@ export default {
             };
             reader.readAsDataURL(file);
         },
+        abrirDialogoProgramarSesion() {
+            if (this.hayPagosNoConsumidos) {
+                this.dialogoSesionVisible = true;
+            } else {
+                // Opcional: mostrar un mensaje explicando por qué está deshabilitado
+                Swal.fire({
+                    title: "No se puede programar",
+                    text: "No hay pagos disponibles para programar una nueva sesión.",
+                    icon: "warning",
+                    confirmButtonText: "Ok",
+                });
+            }
+        },
+        async programarSesiones() {
+            if (!this.pagoSeleccionado || this.sesionesDisponibles === 0) {
+                return;
+            }
+
+            try {
+                await this.store.programarSesiones({
+                    servicioId: this.idServicio,
+                    pagoId: this.pagoSeleccionado.id,
+                    sesionesDisponibles: this.sesionesDisponibles,
+                });
+
+                Swal.fire({
+                    title: "¡Éxito!",
+                    text: `Se han programado ${this.sesionesDisponibles} sesiones correctamente.`,
+                    icon: "success",
+                    confirmButtonText: "Ok",
+                });
+
+                this.cerrarDialogoSesion();
+                await this.cargarSesiones();
+                await this.cargarPagos();
+            } catch (error) {
+                console.error("Error al programar las sesiones:", error);
+                Swal.fire({
+                    title: "Error",
+                    text: "Hubo un problema al programar las sesiones. Por favor, inténtelo de nuevo.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+            }
+        },
+        abrirDialogoEditarSesion(sesion) {
+            this.sesionEditada = { ...sesion };
+            this.dialogoEditarSesionVisible = true;
+        },
+        cerrarDialogoEditarSesion() {
+            this.dialogoEditarSesionVisible = false;
+            this.sesionEditada = {};
+        },
+        async guardarEdicionSesion() {
+            try {
+                // Aquí debes implementar la lógica para guardar los cambios en el backend
+                await this.store.actualizarSesion(this.sesionEditada.id, {
+                    ...this.sesionEditada,
+                    usuario: this.responsableSeleccionados,
+                    apoyo: this.asistenteSeleccionados,
+                });
+
+                await this.cargarSesiones(); // Recargar las sesiones para reflejar los cambios
+                Swal.fire({
+                    title: "¡Éxito!",
+                    text: "La sesión ha sido actualizada correctamente.",
+                    icon: "success",
+                    confirmButtonText: "Ok",
+                });
+            } catch (error) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Hubo un problema al actualizar la sesión. Por favor, inténtelo de nuevo.",
+                    icon: "error",
+                    confirmButtonText: "Ok",
+                });
+            }
+            this.cerrarDialogoEditarSesion();
+        },
     },
     mounted() {
         this.cargarDatos();
+        this.cargarCaballos();
+        this.storeEvento.obtenerUsuarios().then(() => {
+            this.usuariosFiltro = this.storeEvento.usuarios
+                .filter((usuario) => usuario.personal && usuario.personal.id)
+                .map((usuario) => {
+                    let nombreCompleto = "";
+                    if (usuario.persona.nombre !== "") {
+                        nombreCompleto =
+                            `${usuario.persona.nombre} ${usuario.persona.paterno} ${usuario.persona.materno}`.trim();
+                    }
+                    return {
+                        name: nombreCompleto,
+                        id: usuario.personal.id,
+                    };
+                });
+            console.log(this.usuariosFiltro);
+        });
     },
 };
 </script>

@@ -41,6 +41,7 @@ class UpdateClients extends Migration
             $table->string('tipo_pago')->after('monto');
             $table->string('comprobante')->nullable()->after('tipo_pago');
             $table->boolean('verificado')->default(false)->after('comprobante');
+            $table->boolean('consumido')->default(false)->after('verificado');
             $table->bigInteger('fecha_pago')->nullable();
             $table->string('id_transaccion')->nullable();
             $table->string('estado')->default('pendiente')->after('fecha_pago');
@@ -57,6 +58,21 @@ class UpdateClients extends Migration
             $table->integer('sesiones_realizadas')->default(0);
             $table->decimal('saldo_disponible', 10, 2)->default(0);
             $table->decimal('saldo_consumido', 10, 2)->default(0);
+        });
+
+        Schema::table('sesiones', function (Blueprint $table) {
+            $table->dropForeign(['terapeuta']);
+            $table->dropForeign(['coterapeuta_id']);
+            $table->dropColumn(['terapeuta', 'coterapeuta_id']);
+
+            $table->bigInteger('fecha_asistencia')->nullable()->after('fecha_sesion');
+            $table->string('usuario_scanner')->nullable()->after('fecha_asistencia');
+            $table->dropForeign(['apoyo_id']);
+            $table->dropColumn('apoyo_id');
+
+            // Luego, volvemos a agregar la columna como string
+            $table->string('asistente_id')->nullable()->after('responsable');
+            $table->enum('estado_sesion', ['En Progreso', 'Completado', 'Cancelado', 'Pendiente', 'Programado', 'Finalizado'])->default('Pendiente')->change();
         });
     }
 
@@ -94,6 +110,14 @@ class UpdateClients extends Migration
                 'estado',
                 'notas'
             ]);
+        });
+
+        Schema::table('sesiones', function (Blueprint $table) {
+            $table->foreignUuid('terapeuta')->nullable()->constrained('personal');
+            $table->foreignUuid('coterapeuta_id')->nullable()->constrained('personal');
+            $table->dropColumn(['fecha_asistencia', 'usuario_scanner']);
+            $table->foreignUuid('apoyo_id')->nullable()->constrained('personal')->change();
+            $table->enum('estado_sesion', ['En Progreso', 'Completado', 'Cancelado', 'Pendiente'])->default('Pendiente')->change();
         });
     }
 }

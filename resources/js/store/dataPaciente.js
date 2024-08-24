@@ -165,6 +165,55 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 throw error;
             }
         },
+        async programarSesiones(datos) {
+            try {
+                const response = await axios.post(
+                    "/api/programar-sesiones",
+                    datos
+                );
+                // Aquí puedes actualizar el estado local si es necesario
+                return response.data;
+            } catch (error) {
+                console.error("Error al programar las sesiones:", error);
+                throw error;
+            }
+        },
+        async obtenerSesionesServicio(servicioId) {
+            try {
+                const response = await axios.get(
+                    `/api/sesiones/servicio/${servicioId}`
+                );
+                return response.data;
+            } catch (error) {
+                console.error(
+                    "Error al obtener las sesiones del servicio:",
+                    error
+                );
+                throw error;
+            }
+        },
+        async obtenerCaballos() {
+            try {
+                const response = await axios.get("/api/sesion/caballos");
+                return response.data;
+            } catch (error) {
+                console.error("Error al obtener los caballos:", error);
+                throw error;
+            }
+        },
+        async actualizarSesion(sesionId, datosSesion) {
+            console.log(datosSesion);
+            try {
+                const response = await axios.put(
+                    `/api/editar/sesion/${sesionId}`,
+                    datosSesion
+                );
+                return response.data;
+            } catch (error) {
+                console.error("Error al actualizar la sesión:", error);
+                throw error;
+            }
+        },
     },
     getters: {
         getPacienteById: (state) => (id) => {

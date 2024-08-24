@@ -124,7 +124,7 @@ class UsuarioController extends Controller
     public function obtenerUsuariosSinPaginacion()
     {
         // Obtener solo los usuarios con el rol "personal"
-        $users = User::with('persona')
+        $users = User::with('persona', 'personal')
             ->role('personal')
             ->get();
 

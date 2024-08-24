@@ -4,12 +4,17 @@ namespace App\Http\Controllers\Gestion;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Gestion\PacienteResource;
+use App\Models\Gestion\Caballo;
 use App\Models\Gestion\Paciente;
 use App\Models\Gestion\Pago;
+use App\Models\Gestion\Personal;
 use App\Models\Gestion\Servicio;
+use App\Models\Gestion\Sesion;
 use App\Models\Persona;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PacientesController extends Controller
@@ -199,6 +204,8 @@ class PacientesController extends Controller
                 'ci' => $paciente->persona->ci,
                 'fecha_nacimiento' => $paciente->persona->fecha_nacimiento,
             ],
+            'profile_photo_path' => $paciente->profile_photo_path,
+            'codigo' => $paciente->codigo,
             'tipo_paciente' => $paciente->tipo_paciente,
             'fecha_ingreso' => $paciente->fecha_ingreso,
             'estado_salud' => $paciente->estado_salud,
@@ -278,6 +285,146 @@ class PacientesController extends Controller
         ], 201);
     }
 
+    // public function programarSesiones(Request $request)
+    // {
+    //     $request->validate([
+    //         'servicioId' => 'required|uuid',
+    //         'pagoId' => 'required|uuid',
+    //         'sesionesDisponibles' => 'required|integer|min:1',
+    //     ]);
+
+    //     // Aquí implementa la lógica para programar las sesiones
+    //     // Por ejemplo, crear registros de sesiones, actualizar el estado del pago, etc.
+
+    //     return response()->json(['message' => 'Sesiones programadas con éxito']);
+    // }
+
+
+    public function programarSesiones(Request $request)
+    {
+        $request->validate([
+            'servicioId' => 'required|uuid',
+            'pagoId' => 'required|uuid',
+            'sesionesDisponibles' => 'required|integer|min:1',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $servicio = Servicio::findOrFail($request->servicioId);
+            $pago = Pago::findOrFail($request->pagoId);
+
+            // Crear las sesiones programadas
+            for ($i = 0; $i < $request->sesionesDisponibles; $i++) {
+                Sesion::create([
+                    'servicio_id' => $servicio->id,
+                    'responsable' => null,
+                    'apoyo_id' => null,
+                    'caballo_id' => null,
+                    'fecha_sesion' => null,
+                    'fecha_asistencia' => null,
+                    'usuario_scanner' => null,
+                    'observaciones' => null,
+                    'estado_sesion' => 'Programado'
+                ]);
+            }
+
+            // Actualizar el estado del pago
+            $pago->update([
+                'consumido' => true,
+            ]);
+
+            // Actualizar el servicio
+            $servicio->increment('sesiones_disponibles', $request->sesionesDisponibles);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Sesiones programadas con éxito',
+                'sesiones_programadas' => $request->sesionesDisponibles
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Error al programar las sesiones: ' . $e->getMessage()], 500);
+        }
+    }
+
+    // public function obtenerSesionesServicio($id)
+    // {
+    //     $sesiones = Sesion::where('servicio_id', $id)->orderBy('fecha_sesion', 'desc')->get();
+    //     return response()->json($sesiones);
+    // }
+
+
+
+    public function obtenerSesionesServicio($id)
+    {
+        $sesiones = Sesion::where('servicio_id', $id)
+            ->orderBy('fecha_sesion', 'desc')
+            ->get()
+            ->map(function ($sesion) {
+                $responsablePersonal = $sesion->responsable ? Personal::with('usuario.persona')->find($sesion->responsable) : null;
+                $asistentePersonal = $sesion->asistente_id ? Personal::with('usuario.persona')->find($sesion->asistente_id) : null;
+                $caballo = $sesion->caballo_id ? Caballo::find($sesion->caballo_id) : null;
+
+                $sesion->responsable = $responsablePersonal ? [
+                    'name' => $this->getNombreCompleto($responsablePersonal->usuario->persona),
+                    'id' => $responsablePersonal->id
+                ] : null;
+
+                $sesion->asistente = $asistentePersonal ? [
+                    'name' => $this->getNombreCompleto($asistentePersonal->usuario->persona),
+                    'id' => $asistentePersonal->id
+                ] : null;
+
+                $sesion->caballo = $caballo ? [
+                    'name' => $caballo->nombre . ($caballo->apodo ? " ({$caballo->apodo})" : ''),
+                    'id' => $caballo->id
+                ] : null;
+
+                // Mantenemos los campos originales
+                $sesion->responsable_id = $sesion->responsable;
+                $sesion->asistente_id = $sesion->asistente_id;
+                $sesion->caballo_id = $sesion->caballo_id;
+
+                return $sesion;
+            });
+
+        // Agregamos un dd() para ver cómo está saliendo el array de respuesta
+        // dd($sesiones->toArray());
+
+        return response()->json($sesiones);
+    }
+
+    private function getNombreCompleto($persona)
+    {
+        return $persona ? trim($persona->nombre . ' ' . $persona->paterno . ' ' . $persona->materno) : null;
+    }
+
+
+    public function actualizarSesion(Request $request, $id)
+    {
+        $sesion = Sesion::findOrFail($id);
+
+        $datosActualizados = [
+            'servicio_id' => $request->input('servicio_id'),
+            'responsable' => $request->input('usuario.id'),
+            'asistente_id' => $request->input('apoyo.id'),
+            'caballo_id' => $request->input('caballo_id'),
+            'fecha_sesion' => $request->has('fecha_sesion') ? Carbon::parse($request->input('fecha_sesion'))->timestamp : null,
+            'fecha_asistencia' => $request->input('fecha_asistencia'),
+            'usuario_scanner' => $request->input('usuario_scanner'),
+            'observaciones' => $request->input('observaciones'),
+            'estado_sesion' => $request->input('estado_sesion'),
+        ];
+
+        $sesion->update($datosActualizados);
+
+        return response()->json([
+            'message' => 'Sesión actualizada exitosamente',
+            'sesion' => $sesion
+        ]);
+    }
     public function listarPagosServicio($id)
     {
         $servicio = Servicio::findOrFail($id);

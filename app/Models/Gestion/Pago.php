@@ -20,6 +20,7 @@ class Pago extends Model
 
     protected $fillable = [
         'servicio_id',
+        'consumido',
         'monto',
         'tipo_pago',
         'comprobante',

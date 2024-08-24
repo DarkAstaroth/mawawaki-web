@@ -18,7 +18,7 @@
                 v-model:visible="modalPaciente"
                 maximizable
                 modal
-                header="Crear Solicitud"
+                header="Crear Paciente/Estudiante"
                 :style="{ width: '50rem' }"
                 :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
             >
@@ -292,13 +292,13 @@
 
     <Dialog
         v-model:visible="modalDetallesPaciente"
-        maximizable
         modal
+        position="top"
         header="Detalles Paciente"
-        :style="{ width: '80rem', height: '700px' }"
+        :style="{ width: '40rem' }"
         :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
     >
-        <div class="flex gap-20 w-full">
+        <div class="flex gap-20 w-full justify-center">
             <div id="credencial" ref="elementToConvert">
                 <div class="relative w-[300px]">
                     <div class="absolute inset-0">
@@ -308,7 +308,7 @@
                             crossorigin="anonymous"
                         />
                     </div>
-                    <div class="relative z-10 h-[700px]">
+                    <div class="relative z-10 h-[450px]">
                         <div class="h-full">
                             <div class="flex flex-col items-center">
                                 <div class="container_usuario mt-20">
@@ -367,156 +367,19 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full">
-                <div
-                    class="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
-                >
-                    <h5
-                        class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400"
-                    >
-                        Standard plan
-                    </h5>
-                    <div
-                        class="flex items-baseline text-gray-900 dark:text-white"
-                    >
-                        <span class="text-3xl font-semibold">$</span>
-                        <span class="text-5xl font-extrabold tracking-tight"
-                            >49</span
-                        >
-                        <span
-                            class="ms-1 text-xl font-normal text-gray-500 dark:text-gray-400"
-                            >/month</span
-                        >
-                    </div>
-                    <ul role="list" class="space-y-5 my-7">
-                        <li class="flex items-center">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3"
-                                >2 team members</span
-                            >
-                        </li>
-                        <li class="flex">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3"
-                                >20GB Cloud storage</span
-                            >
-                        </li>
-                        <li class="flex">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-blue-700 dark:text-blue-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400 ms-3"
-                                >Integration help</span
-                            >
-                        </li>
-                        <li class="flex line-through decoration-gray-500">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-gray-400 dark:text-gray-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 ms-3"
-                                >Sketch Files</span
-                            >
-                        </li>
-                        <li class="flex line-through decoration-gray-500">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-gray-400 dark:text-gray-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 ms-3"
-                                >API Access</span
-                            >
-                        </li>
-                        <li class="flex line-through decoration-gray-500">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-gray-400 dark:text-gray-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 ms-3"
-                                >Complete documentation</span
-                            >
-                        </li>
-                        <li class="flex line-through decoration-gray-500">
-                            <svg
-                                class="flex-shrink-0 w-4 h-4 text-gray-400 dark:text-gray-500"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
-                            >
-                                <path
-                                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
-                                />
-                            </svg>
-                            <span
-                                class="text-base font-normal leading-tight text-gray-500 ms-3"
-                                >24×7 phone & email support</span
-                            >
-                        </li>
-                    </ul>
-                    <button
-                        type="button"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-200 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex justify-center w-full text-center"
-                    >
-                        Choose plan
-                    </button>
+        </div>
+
+        <div class="flex mt-5 justify-center">
+            <Button
+                type="button"
+                @click="convertAndDownloadImage"
+                severity="info"
+            >
+                <div class="flex justify-center gap-2 w-full">
+                    <i class="text-white fi fi-br-download"></i>
+                    <strong>Descargar</strong>
                 </div>
-            </div>
+            </Button>
         </div>
     </Dialog>
 
@@ -535,6 +398,7 @@ import.meta.env.VITE_APP_BASE_URL;
 import Dialog from "primevue/dialog";
 import { useDataPacientes } from "@/store/dataPaciente";
 import QrcodeVue from "qrcode.vue";
+import { toPng } from "html-to-image";
 
 export default {
     name: "DocumentacionUsuario",
@@ -663,24 +527,23 @@ export default {
                     this.datosPaciente
                 )
                 .then((respuesta) => {
-                    console.log(respuesta);
                     Swal.fire({
                         title: "Registro exitoso",
-                        text: respuesta.data.message,
+                        // text: respuesta.data.message,
                         icon: "success",
                     });
-                    this.limpiarModal();
-                    this.modalPaciente = false;
-                    this.cargarPacientes(1);
                 })
                 .catch((error) => {
                     console.log(error);
                     Swal.fire({
-                        title: "Registro exitoso",
+                        title: "Ocurrio un error en el registro",
                         // text: respuesta.data.message,
                         icon: "error    ",
                     });
                 });
+            this.modalPaciente = false;
+            this.limpiarModal();
+            this.cargarPacientes(1);
         },
         limpiarModal() {
             this.datosPersona = {
@@ -697,6 +560,24 @@ export default {
                 contactoEmergenciaNombre: "",
                 contactoEmergenciaTelefono: "",
             };
+        },
+        convertAndDownloadImage() {
+            const element = this.$refs.elementToConvert;
+            toPng(element, {
+                cacheBust: true,
+                useCORS: true,
+            })
+                .then((dataUrl) => {
+                    const link = document.createElement("a");
+                    link.href = dataUrl;
+                    link.download = "credencial.png";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         },
         irAServicios(paciente) {
             this.$router.push({
