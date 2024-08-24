@@ -55,22 +55,6 @@
             <div
                 class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
             >
-                <Button
-                    label="Nuevo servicio"
-                    icon="pi pi-plus"
-                    class="p-button-primary"
-                    @click="abrirDialogoNuevoServicio"
-                />
-                <Button
-                    label="Scannear"
-                    icon="pi pi-search"
-                    class="p-button-secondary"
-                    @click="scannear"
-                />
-            </div>
-            <div
-                class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
-            >
                 <Dropdown
                     v-model="filtroTipoServicio"
                     :options="tiposServicio"
@@ -86,6 +70,16 @@
                     placeholder="Rango de fechas"
                     class="w-full sm:w-auto"
                     @date-select="aplicarFiltros"
+                />
+            </div>
+            <div
+                class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+            >
+                <Button
+                    label="Nuevo servicio"
+                    icon="pi pi-plus"
+                    class="p-button-primary"
+                    @click="abrirDialogoNuevoServicio"
                 />
             </div>
         </div>
@@ -105,16 +99,59 @@
                     >
                         <Column field="tipo_servicio" header="Tipo de Servicio">
                             <template #body="slotProps">
+                                <Badge
+                                    :severity="
+                                        getBadgeSeverity(
+                                            slotProps.data.tipo_servicio
+                                        )
+                                    "
+                                />
                                 {{ slotProps.data.tipo_servicio }}
                             </template>
                         </Column>
+                        <Column field="precio_sesion" header="Precio Sesion">
+                            <template #body="slotProps">
+                                {{ slotProps.data.precio_sesion }} Bs
+                            </template>
+                        </Column>
+
                         <Column
-                            field="observaciones"
-                            header="Observaciones"
-                        ></Column>
+                            field="sesiones_disponibles"
+                            header="Sesiones disponibles"
+                        >
+                            <template #body="slotProps">
+                                {{ slotProps.data.sesiones_disponibles }}
+                            </template>
+                        </Column>
+                        <Column
+                            field="sesiones_realizadas"
+                            header="Sesiones Realizadas"
+                        >
+                            <template #body="slotProps">
+                                {{ slotProps.data.sesiones_realizadas }}
+                            </template>
+                        </Column>
                         <Column field="fecha_ingreso" header="Fecha de Ingreso">
                             <template #body="slotProps">
                                 {{ slotProps.data.fecha_ingreso }}
+                            </template>
+                        </Column>
+                        <Column
+                            field="ultima_actualizacion"
+                            header="Ultima actualización"
+                        >
+                            <template #body="slotProps">
+                                <span
+                                    v-if="slotProps.data.ultima_actualizacion"
+                                >
+                                    {{ slotProps.data.ultima_actualizacion }}
+                                </span>
+                                <span
+                                    v-else
+                                    class="inline-flex items-center px-2 py-1 text-sm font-medium text-yellow-800 bg-yellow-100 rounded-full"
+                                >
+                                    Sin comenzar
+                                </span>
                             </template>
                         </Column>
                         <Column field="fecha_final" header="Fecha Final">
@@ -215,7 +252,7 @@
                     <Dropdown
                         id="tipo_servicio"
                         v-model="nuevoServicio.tipo_servicio"
-                        :options="tiposServicio"
+                        :options="tiposServicioModal"
                         optionLabel="name"
                         optionValue="value"
                         placeholder="Seleccione un tipo de servicio"
@@ -230,6 +267,27 @@
                         v-if="v$.nuevoServicio.tipo_servicio.$error"
                     >
                         El tipo de servicio es requerido
+                    </small>
+                </div>
+                <div class="field">
+                    <label for="precio_sesion">Precio por Sesión</label>
+                    <InputNumber
+                        id="precio_sesion"
+                        v-model="nuevoServicio.precio_sesion"
+                        mode="currency"
+                        currency="BOB"
+                        locale="es-BO"
+                        :class="{
+                            'p-invalid':
+                                v$.nuevoServicio.precio_sesion.$invalid &&
+                                v$.nuevoServicio.precio_sesion.$dirty,
+                        }"
+                    />
+                    <small
+                        class="text-red-600"
+                        v-if="v$.nuevoServicio.precio_sesion.$error"
+                    >
+                        El precio por sesión es requerido
                     </small>
                 </div>
                 <div class="field">
@@ -280,7 +338,7 @@
 
 <script>
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@vuelidate/validators";
+import { required, numeric, minValue } from "@vuelidate/validators";
 import Button from "primevue/button";
 import Card from "primevue/card";
 import DataTable from "primevue/datatable";
@@ -290,6 +348,7 @@ import Dialog from "primevue/dialog";
 import Dropdown from "primevue/dropdown";
 import Textarea from "primevue/textarea";
 import Calendar from "primevue/calendar";
+import InputNumber from "primevue/inputnumber";
 import { useDataPacientes } from "@/store/dataPaciente";
 
 export default {
@@ -303,6 +362,7 @@ export default {
         Dropdown,
         Textarea,
         Calendar,
+        InputNumber,
     },
     props: ["id"],
     setup() {
@@ -322,9 +382,14 @@ export default {
                 { name: "EQUITACIÓN", value: "EQUITACION" },
                 { name: "EQUINOTERAPIA", value: "EQUINOTERAPIA" },
             ],
+            tiposServicioModal: [
+                { name: "Equitación", value: "equitacion" },
+                { name: "Equinoterapia", value: "equinoterapia" },
+            ],
             nuevoServicio: {
                 paciente_id: this.id,
                 tipo_servicio: null,
+                precio_sesion: null,
                 observaciones: "",
                 fecha_ingreso: new Date(),
             },
@@ -334,6 +399,7 @@ export default {
         return {
             nuevoServicio: {
                 tipo_servicio: { required },
+                precio_sesion: { required, numeric, minValue: minValue(0) },
                 fecha_ingreso: { required },
             },
         };
@@ -377,6 +443,16 @@ export default {
             const servicio = this.tiposServicio.find((s) => s.value === tipo);
             return servicio ? servicio.abrev : tipo;
         },
+        getBadgeSeverity(tipoServicio) {
+            switch (tipoServicio) {
+                case "EQUINOTERAPIA":
+                    return "success";
+                case "EQUITACION":
+                    return "info";
+                default:
+                    return "primary";
+            }
+        },
         formatearFecha(timestamp) {
             if (!timestamp) return "";
             const fecha = new Date(timestamp * 1000);
@@ -396,6 +472,7 @@ export default {
             this.nuevoServicio = {
                 paciente_id: this.id,
                 tipo_servicio: null,
+                precio_sesion: null,
                 observaciones: "",
                 fecha_ingreso: new Date(),
             };
@@ -408,6 +485,9 @@ export default {
                     const servicioParaEnviar = {
                         ...this.nuevoServicio,
                         tipo_servicio: this.nuevoServicio.tipo_servicio,
+                        precio_sesion: parseFloat(
+                            this.nuevoServicio.precio_sesion
+                        ),
                     };
 
                     await this.store.registrarServicio(
@@ -421,6 +501,7 @@ export default {
                         icon: "success",
                         confirmButtonText: "OK",
                     });
+                    await this.cargarPaciente();
                 } catch (error) {
                     console.error("Error al registrar el servicio:", error);
 
@@ -436,16 +517,14 @@ export default {
             }
         },
         verDetallesServicio(servicio) {
-            console.log("Ver detalles del servicio:", servicio);
-            // Implementa la lógica para ver detalles del servicio
+            this.$router.push({
+                name: "servicios.detalle",
+                params: { idPaciente: this.id, idServicio: servicio.id },
+            });
         },
         confirmarEliminarServicio(event, id) {
             // Implementa la lógica para confirmar la eliminación del servicio
             console.log("Confirmar eliminación del servicio:", id);
-        },
-        scannear() {
-            // Implementa la lógica para escanear
-            console.log("Escanear");
         },
     },
 };

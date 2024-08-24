@@ -3,6 +3,7 @@ import ClientesIndex from "./Pages/clientes/index.vue";
 import ClientesCreate from "./Pages/clientes/create.vue";
 import UsuariosIndex from "./Pages/core/usuarios/index.vue";
 import ServicioIndex from "./Pages/gestion/servicios/index.vue";
+import ServicioDetalle from "./Pages/gestion/servicios/detalle.vue";
 
 const routes = [
     {
@@ -24,6 +25,12 @@ const routes = [
         path: "/dashboard/servicio/paciente/:id",
         name: "servicios.paciente",
         component: ServicioIndex,
+        props: true,
+    },
+    {
+        path: "/dashboard/detalles/servicio/:idPaciente/:idServicio",
+        name: "servicios.detalle",
+        component: ServicioDetalle,
         props: true,
     },
 ];

@@ -28,6 +28,36 @@ class UpdateClients extends Migration
 
         // Luego, eliminar la tabla 'clientes'
         Schema::dropIfExists('clientes');
+
+        Schema::table('pagos', function (Blueprint $table) {
+            $table->dropForeign(['sesion_id']); // Eliminar la clave foránea si existe
+            $table->dropColumn('sesion_id'); // Eliminar la columna
+        });
+
+        // Agregar nuevas columnas a la tabla 'pagos'
+        Schema::table('pagos', function (Blueprint $table) {
+            $table->foreignUuid('servicio_id')->constrained('servicios');
+            $table->decimal('monto', 10, 2)->after('servicio_id');
+            $table->string('tipo_pago')->after('monto');
+            $table->string('comprobante')->nullable()->after('tipo_pago');
+            $table->boolean('verificado')->default(false)->after('comprobante');
+            $table->bigInteger('fecha_pago')->nullable();
+            $table->string('id_transaccion')->nullable();
+            $table->string('estado')->default('pendiente')->after('fecha_pago');
+            $table->string('razon_social')->nullable();
+            $table->string('nit')->nullable();
+            $table->boolean('facturado')->default(false)->after('nit');
+            $table->text('notas')->nullable()->after('estado');
+        });
+
+        Schema::table('servicios', function (Blueprint $table) {
+            $table->bigInteger('ultima_actualizacion')->nullable();
+            $table->decimal('precio_sesion', 10, 2)->default(0);
+            $table->integer('sesiones_disponibles')->default(0);
+            $table->integer('sesiones_realizadas')->default(0);
+            $table->decimal('saldo_disponible', 10, 2)->default(0);
+            $table->decimal('saldo_consumido', 10, 2)->default(0);
+        });
     }
 
     /**
@@ -50,7 +80,20 @@ class UpdateClients extends Migration
         Schema::table('pacientes', function (Blueprint $table) {
             $table->foreignUuid('cliente_id')->constrained('clientes')->nullable(); // Reagregar la clave foránea
             $table->dropForeign(['UsuarioID']); // Eliminar la clave foránea si existe
-            $table->dropColumn('UsuarioID'); // Eliminar la columna
+            $table->dropColumn(['UsuarioID', 'codigo', 'profile_photo_path']); // Eliminar las columnas añadidas
+        });
+
+        // Eliminar las nuevas columnas de la tabla 'pagos'
+        Schema::table('pagos', function (Blueprint $table) {
+            $table->dropColumn([
+                'monto',
+                'tipo_pago',
+                'comprobante',
+                'verificado',
+                'fecha_pago',
+                'estado',
+                'notas'
+            ]);
         });
     }
 }

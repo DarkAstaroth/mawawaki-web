@@ -13,14 +13,29 @@ class Pago extends Model
     use HasUuids;
     use SoftDeletes;
 
-
+    protected $table = 'pagos';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
 
+    protected $fillable = [
+        'servicio_id',
+        'monto',
+        'tipo_pago',
+        'comprobante',
+        'verificado',
+        'fecha_pago',
+        'id_transaccion',
+        'estado',
+        'razon_social',
+        'nit',
+        'facturado',
+        'notas'
+    ];
+
     // Relación: Un pago pertenece a una sesión.
     public function sesion()
     {
-        return $this->belongsTo(Sesion::class);
+        return $this->belongsTo(Servicio::class);
     }
 }

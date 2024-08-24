@@ -549,6 +549,9 @@ export default {
                 doc.save(nombreArchivo);
             });
         },
+        navigateToCreate() {
+            this.$router.push({ name: "clientes.create" });
+        },
     },
 };
 </script>

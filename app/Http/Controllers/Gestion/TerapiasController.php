@@ -107,6 +107,11 @@ class TerapiasController extends Controller
         return view('core.router', compact('id'));
     }
 
+    public function verDetallesServicio(string $id)
+    {
+        return view('core.router', compact('id'));
+    }
+
 
     public function registrarSesion(Request $request)
     {

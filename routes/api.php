@@ -148,6 +148,8 @@ Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiar
 Route::get('/detalle/pacientes', [PacientesController::class, 'detallePaciente']);
 Route::get('/detalle/pacientes/{id}', [PacientesController::class, 'detallePacienteId']);
 Route::post('registrar/servicio/paciente/{id}', [PacientesController::class, 'registrarServicioPaciente']);
+Route::post('/registrar/pago/servicio/{id}', [PacientesController::class, 'registrarPago']);
+Route::get('pagos/servicio/{id}', [PacientesController::class, 'listarPagosServicio']);
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);

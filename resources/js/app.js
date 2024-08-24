@@ -48,8 +48,8 @@ import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
 import Tooltip from "primevue/tooltip";
+import Checkbox from "primevue/checkbox";
 import router from "@/index";
-
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
@@ -70,6 +70,7 @@ export const appComponents = createApp({
     .component("VueDatePicker", VueDatePicker)
     .component("Dialog", Dialog)
     .component("InputText", InputText)
+    .component("Checkbox", Checkbox)
     .component("Password", Password)
     .component("Textarea", Textarea)
     .component("Dropdown", Dropdown)

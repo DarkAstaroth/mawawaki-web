@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Gestion;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Gestion\PacienteResource;
 use App\Models\Gestion\Paciente;
+use App\Models\Gestion\Pago;
 use App\Models\Gestion\Servicio;
 use App\Models\Persona;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PacientesController extends Controller
 {
@@ -211,25 +213,24 @@ class PacientesController extends Controller
         ]);
     }
 
-    public function registrarServicioPaciente(Request $request, $id)
+    public function registrarServicioPaciente(Request $request, $pacienteId)
     {
         $request->validate([
             'tipo_servicio' => 'required|string',
+            'precio_sesion' => 'required|numeric|min:0',
             'observaciones' => 'nullable|string',
             'fecha_ingreso' => 'required|date',
         ]);
 
-        $paciente = Paciente::findOrFail($id);
-
-        // Convertir la fecha a timestamp Unix
-        $fechaIngresoUnix = Carbon::parse($request->fecha_ingreso)->timestamp;
+        $paciente = Paciente::findOrFail($pacienteId);
 
         $servicio = new Servicio([
-            'paciente_id' => $id,
+            'paciente_id' => $pacienteId,
             'tipo_servicio' => $request->tipo_servicio,
+            'precio_sesion' => $request->precio_sesion,
             'observaciones' => $request->observaciones,
-            'fecha_ingreso' => $fechaIngresoUnix, // Guardamos el timestamp Unix
-            'estado' => true, // Asumiendo que el servicio se crea como activo
+            'fecha_ingreso' => Carbon::parse($request->fecha_ingreso)->timestamp,
+            'estado' => true, // Assuming the service starts as active
         ]);
 
         $paciente->servicios()->save($servicio);
@@ -238,5 +239,50 @@ class PacientesController extends Controller
             'message' => 'Servicio registrado exitosamente',
             'servicio' => $servicio
         ], 201);
+    }
+
+
+    public function registrarPago(Request $request, $servicioId)
+    {
+        $request->validate([
+            'fecha_pago' => 'required|date',
+            'monto' => 'required|numeric|min:0',
+            'tipo_pago' => 'required|string',
+            'id_transaccion' => 'required|string',
+            'razon_social' => 'required|string',
+            'nit' => 'required|string',
+            'estado' => 'required|string',
+            'notas' => 'nullable|string',
+            'comprobante' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $servicio = Servicio::findOrFail($servicioId);
+
+        $pago = new Pago($request->except(['comprobante', 'fecha_pago', 'facturado']));
+        $pago->servicio_id = $servicioId;
+        $pago->fecha_pago = Carbon::parse($request->fecha_pago)->timestamp;
+        $pago->facturado = $request->facturado ? 1 : 0;
+
+        if ($request->hasFile('comprobante')) {
+            $comprobante = $request->file('comprobante');
+            $nombreUnico = 'comprobante_' . Str::uuid() . '.' . $comprobante->getClientOriginalExtension();
+            $path = $comprobante->storeAs('public/fotos/pagos', $nombreUnico);
+            $pago->comprobante = 'storage/fotos/pagos/' . $nombreUnico;
+        }
+
+        $pago->save();
+
+        return response()->json([
+            'message' => 'Pago registrado exitosamente',
+            'pago' => $pago
+        ], 201);
+    }
+
+    public function listarPagosServicio($id)
+    {
+        $servicio = Servicio::findOrFail($id);
+        $pagos = $servicio->pagos()->orderBy('fecha_pago', 'desc')->get();
+
+        return response()->json($pagos);
     }
 }

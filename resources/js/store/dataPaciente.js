@@ -132,6 +132,39 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 throw error;
             }
         },
+        async registrarPago(servicioId, datosPago) {
+            try {
+                console.log(datosPago);
+                const response = await axios.post(
+                    `/api/registrar/pago/servicio/${servicioId}`,
+                    datosPago,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                // You might want to update some local state here
+                return response.data;
+            } catch (error) {
+                console.error("Error al registrar el pago:", error);
+                throw error;
+            }
+        },
+        async obtenerPagosServicio(servicioId) {
+            try {
+                const response = await axios.get(
+                    `/api/pagos/servicio/${servicioId}`
+                );
+                return response.data;
+            } catch (error) {
+                console.error(
+                    "Error al obtener los pagos del servicio:",
+                    error
+                );
+                throw error;
+            }
+        },
     },
     getters: {
         getPacienteById: (state) => (id) => {
