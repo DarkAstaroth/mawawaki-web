@@ -154,6 +154,8 @@ Route::post('/registrar/pago/servicio/{id}', [PacientesController::class, 'regis
 Route::get('pagos/servicio/{id}', [PacientesController::class, 'listarPagosServicio']);
 Route::post('programar-sesiones', [PacientesController::class, 'programarSesiones']);
 Route::get('sesiones/servicio/{id}', [PacientesController::class, 'obtenerSesionesServicio']);
+Route::put('/pacientes/{id}', [PacientesController::class, 'actualizarPaciente']);
+Route::delete('/pacientes/{id}', [PacientesController::class, 'eliminarPaciente']);
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);

@@ -425,6 +425,71 @@ class PacientesController extends Controller
             'sesion' => $sesion
         ]);
     }
+
+    public function actualizarPaciente(Request $request, $id)
+    {
+        $request->validate([
+            'persona.nombre' => 'required|string|max:255',
+            'persona.paterno' => 'required|string|max:255',
+            'persona.materno' => 'required|string|max:255',
+            'persona.ci' => 'required|string|max:20',
+            'persona.fecha_nacimiento' => 'required|integer',
+            'contacto_emergencia_nombre' => 'required|string|max:255',
+            'contacto_emergencia_telefono' => 'required|string|max:20',
+        ]);
+
+        $paciente = Paciente::findOrFail($id);
+        $persona = $paciente->persona;
+
+        $persona->update([
+            'nombre' => $request->input('persona.nombre'),
+            'paterno' => $request->input('persona.paterno'),
+            'materno' => $request->input('persona.materno'),
+            'ci' => $request->input('persona.ci'),
+            'fecha_nacimiento' => $request->input('persona.fecha_nacimiento'),
+        ]);
+
+        $paciente->update([
+            'precondicion' => $request->input('contraindicacion'),
+            'contacto_emergencia_nombre' => $request->input('contacto_emergencia_nombre'),
+            'contacto_emergencia_telefono' => $request->input('contacto_emergencia_telefono'),
+        ]);
+
+        return response()->json([
+            'message' => 'Paciente actualizado correctamente',
+            'paciente' => $paciente->load('persona')
+        ], 200);
+    }
+
+    public function eliminarPaciente($id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $paciente = Paciente::findOrFail($id);
+
+            // Eliminar primero el paciente
+            $paciente->delete();
+
+            $persona = $paciente->persona;
+            if ($persona) {
+                $persona->delete();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Paciente eliminado correctamente'
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'message' => 'Error al eliminar el paciente',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function listarPagosServicio($id)
     {
         $servicio = Servicio::findOrFail($id);

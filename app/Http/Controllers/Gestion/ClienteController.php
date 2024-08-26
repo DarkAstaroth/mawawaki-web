@@ -32,31 +32,42 @@ class ClienteController extends Controller
         return view('clientes.pacientes', compact('usuario'));
     }
 
+    // public function obtenerPacientes(Request $request, $id)
+    // {
+    //     $porPagina = $request->get('porPagina', 10);
+    //     $pagina = $request->get('page', 1);
+    //     $busqueda = $request->get('busqueda');
+    //     $parametro = $request->get('parametro');
+
+    //     $pacientesQuery = Paciente::where('UsuarioID', $id)->with(['persona']);
+
+    //     $pacientes = $pacientesQuery->paginate($porPagina, ['*'], 'page', $pagina);
+
+    //     $pacientesResource = PacienteResource::collection($pacientes);
+
+    //     return response()->json([
+    //         'pacientes' => $pacientesResource,
+    //         'paginacion' => [
+    //             'total' => $pacientes->total(),
+    //             'porPagina' => $pacientes->perPage(),
+    //             'paginaActual' => $pacientes->currentPage(),
+    //             'ultimaPagina' => $pacientes->lastPage(),
+    //             'desde' => $pacientes->firstItem(),
+    //             'hasta' => $pacientes->lastItem()
+    //         ]
+    //     ]);
+    // }
+
+
     public function obtenerPacientes(Request $request, $id)
     {
-        $porPagina = $request->get('porPagina', 10);
-        $pagina = $request->get('page', 1);
-        $busqueda = $request->get('busqueda');
-        $parametro = $request->get('parametro');
+        $pacientes = Paciente::where('UsuarioID', $id)
+            ->with(['persona'])
+            ->get();
 
-        $pacientesQuery = Paciente::where('UsuarioID', $id)->with(['persona']);
-
-        $pacientes = $pacientesQuery->paginate($porPagina, ['*'], 'page', $pagina);
-
-        $pacientesResource = PacienteResource::collection($pacientes);
-
-        return response()->json([
-            'pacientes' => $pacientesResource,
-            'paginacion' => [
-                'total' => $pacientes->total(),
-                'porPagina' => $pacientes->perPage(),
-                'paginaActual' => $pacientes->currentPage(),
-                'ultimaPagina' => $pacientes->lastPage(),
-                'desde' => $pacientes->firstItem(),
-                'hasta' => $pacientes->lastItem()
-            ]
-        ]);
+        return PacienteResource::collection($pacientes);
     }
+
 
     // public function solicitudPaciente(Request $request)
     // {
@@ -204,8 +215,7 @@ class ClienteController extends Controller
             'materno' => 'required|string',
             'ci' => 'required|string',
             'fechaNacimiento' => 'required|date',
-            'estadoSalud' => 'nullable|string',
-            'precondicion' => 'nullable|string',
+            'contraindicacion' => 'nullable|string',
             'contactoEmergenciaNombre' => 'nullable|string',
             'contactoEmergenciaTelefono' => 'nullable|string',
         ]);
@@ -234,8 +244,8 @@ class ClienteController extends Controller
             'UsuarioID' => $request->usuario,
             'persona_id' => $persona->id,
             'codigo' => $codigo,
-            'estado_salud' => $datosEnMayusculas['estadoSalud'] ?? null,
-            'precondicion' => $datosEnMayusculas['precondicion'] ?? null,
+            'estado_salud' => "NINGUNA",
+            'precondicion' => $datosEnMayusculas['contraindicacion'] ?? null,
             'contacto_emergencia_nombre' => $datosEnMayusculas['contactoEmergenciaNombre'] ?? null,
             'contacto_emergencia_telefono' => $datosEnMayusculas['contactoEmergenciaTelefono'] ?? null,
             'verificado' => 1,

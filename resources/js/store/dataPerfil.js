@@ -26,6 +26,7 @@ export const useDataPerfil = defineStore("dataPerfil", {
             this.cargarDocumento = estado;
         },
         obtenerUsuario(usuario) {
+            console.log(usuario);
             this.usuario = usuario;
         },
         obtenerNotificaciones(pagina, busqueda, parametro) {

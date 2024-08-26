@@ -106,7 +106,10 @@
                         />
                         <small
                             class="text-danger"
-                            v-if="enviado || v$?.usuarioData.persona.fecha_nacimiento.$error"
+                            v-if="
+                                enviado ||
+                                v$?.usuarioData.persona.fecha_nacimiento.$error
+                            "
                             >La fecha de nacimiento es requerido</small
                         >
                     </div>
@@ -149,61 +152,65 @@
                 </div>
             </div>
 
-            <div v-if="this.store.usuario.personal" class="flex-grow-1">
-                <h3>Estudios</h3>
-                <div class="d-flex flex-column gap-2 mb-5">
-                    <label for="universidad">Universidad</label>
-                    <InputText
-                        id="universidad"
-                        v-model="usuarioData.personal.universidad"
-                        aria-describedby="universidad"
-                        placeholder="Solo Sigla. Ejemplo (UMSA)"
-                        @input="validarCampos"
-                    />
-                    <small
-                        class="text-danger"
-                        v-if="
-                            enviado ||
-                            v$?.usuarioData.personal.universidad.$error
-                        "
-                        >La Universidad es requerida</small
-                    >
-                </div>
+            <div v-if="noEsCliente()">
+                <div v-if="this.store.usuario.personal" class="flex-grow-1">
+                    <h3>Estudios</h3>
+                    <div class="d-flex flex-column gap-2 mb-5">
+                        <label for="universidad">Universidad</label>
+                        <InputText
+                            id="universidad"
+                            v-model="usuarioData.personal.universidad"
+                            aria-describedby="universidad"
+                            placeholder="Solo Sigla. Ejemplo (UMSA)"
+                            @input="validarCampos"
+                        />
+                        <small
+                            class="text-danger"
+                            v-if="
+                                enviado ||
+                                v$?.usuarioData.personal.universidad.$error
+                            "
+                            >La Universidad es requerida</small
+                        >
+                    </div>
 
-                <div class="d-flex flex-column gap-2 mb-5">
-                    <label for="facultad">Facultad</label>
-                    <InputText
-                        id="facultad"
-                        v-model="usuarioData.personal.facultad"
-                        aria-describedby="facultad"
-                        placeholder="Solo Sigla. Ejemplo (FHCE)"
-                        @input="validarCampos"
-                    />
-                    <small
-                        class="text-danger"
-                        v-if="
-                            enviado || v$?.usuarioData.personal.facultad.$error
-                        "
-                        >La Facultad es requerida</small
-                    >
-                </div>
+                    <div class="d-flex flex-column gap-2 mb-5">
+                        <label for="facultad">Facultad</label>
+                        <InputText
+                            id="facultad"
+                            v-model="usuarioData.personal.facultad"
+                            aria-describedby="facultad"
+                            placeholder="Solo Sigla. Ejemplo (FHCE)"
+                            @input="validarCampos"
+                        />
+                        <small
+                            class="text-danger"
+                            v-if="
+                                enviado ||
+                                v$?.usuarioData.personal.facultad.$error
+                            "
+                            >La Facultad es requerida</small
+                        >
+                    </div>
 
-                <div class="d-flex flex-column gap-2 mb-5">
-                    <label for="facultad">Carrera</label>
-                    <InputText
-                        id="facultad"
-                        v-model="usuarioData.personal.carrera"
-                        aria-describedby="facultad"
-                        placeholder="Ejemplo Psicología"
-                        @input="validarCampos"
-                    />
-                    <small
-                        class="text-danger"
-                        v-if="
-                            enviado || v$?.usuarioData.personal.carrera.$error
-                        "
-                        >La Carrera es requerida</small
-                    >
+                    <div class="d-flex flex-column gap-2 mb-5">
+                        <label for="facultad">Carrera</label>
+                        <InputText
+                            id="facultad"
+                            v-model="usuarioData.personal.carrera"
+                            aria-describedby="facultad"
+                            placeholder="Ejemplo Psicología"
+                            @input="validarCampos"
+                        />
+                        <small
+                            class="text-danger"
+                            v-if="
+                                enviado ||
+                                v$?.usuarioData.personal.carrera.$error
+                            "
+                            >La Carrera es requerida</small
+                        >
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,25 +239,30 @@ import { useToast } from "primevue/usetoast";
 export default {
     name: "Datos Personales",
     data() {
-        return {
-            usuarioData: {
-                persona: {
-                    nombre: this.store.usuario.persona.nombre,
-                    paterno: this.store.usuario.persona.paterno,
-                    materno: this.store.usuario.persona.materno,
-                    ci: this.store.usuario.persona.ci,
-                    telefono: this.store.usuario.persona.telefono,
-                    direccion: this.store.usuario.persona.direccion,
-                    fecha_nacimiento: new Date(
-                        this.store.usuario.persona.fecha_nacimiento * 1000
-                    ),
-                },
-                personal: {
-                    universidad: this.store.usuario.personal.universidad,
-                    facultad: this.store.usuario.personal.facultad,
-                    carrera: this.store.usuario.personal.carrera,
-                },
+        let usuarioData = {
+            persona: {
+                nombre: this.store.usuario.persona.nombre,
+                paterno: this.store.usuario.persona.paterno,
+                materno: this.store.usuario.persona.materno,
+                ci: this.store.usuario.persona.ci,
+                telefono: this.store.usuario.persona.telefono,
+                direccion: this.store.usuario.persona.direccion,
+                fecha_nacimiento: new Date(
+                    this.store.usuario.persona.fecha_nacimiento * 1000
+                ),
             },
+        };
+
+        if (this.store.usuario.personal) {
+            usuarioData.personal = {
+                universidad: this.store.usuario.personal.universidad,
+                facultad: this.store.usuario.personal.facultad,
+                carrera: this.store.usuario.personal.carrera,
+            };
+        }
+
+        return {
+            usuarioData,
             esResponsivo: false,
         };
     },
@@ -261,7 +273,7 @@ export default {
         return { store, v$: useVuelidate(), toast };
     },
     validations() {
-        return {
+        let validationRules = {
             usuarioData: {
                 persona: {
                     nombre: { required },
@@ -272,13 +284,18 @@ export default {
                     direccion: { required },
                     fecha_nacimiento: { required },
                 },
-                personal: {
-                    universidad: { required },
-                    facultad: { required },
-                    carrera: { required },
-                },
             },
         };
+
+        if (this.usuarioData.personal) {
+            validationRules.usuarioData.personal = {
+                universidad: { required },
+                facultad: { required },
+                carrera: { required },
+            };
+        }
+
+        return validationRules;
     },
     created() {
         this.verificarResponsivo();
@@ -289,6 +306,16 @@ export default {
     },
     mounted() {},
     methods: {
+        noEsCliente() {
+            console.log(
+                !this.store.usuario.roles.some(
+                    (role) => role.name === "cliente"
+                )
+            );
+            return !this.store.usuario.roles.some(
+                (role) => role.name === "cliente"
+            );
+        },
         mostrarMensaje(tipo, titulo, texto) {
             this.toast.add({
                 severity: tipo,

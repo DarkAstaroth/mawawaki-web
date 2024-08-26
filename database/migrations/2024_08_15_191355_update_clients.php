@@ -92,31 +92,52 @@ class UpdateClients extends Migration
             $table->softDeletes();
         });
 
-        // Volver a agregar la columna 'cliente_id' a la tabla 'pacientes'
+        // Revertir cambios en la tabla 'pacientes'
         Schema::table('pacientes', function (Blueprint $table) {
-            $table->foreignUuid('cliente_id')->constrained('clientes')->nullable(); // Reagregar la clave foránea
-            $table->dropForeign(['UsuarioID']); // Eliminar la clave foránea si existe
-            $table->dropColumn(['UsuarioID', 'codigo', 'profile_photo_path']); // Eliminar las columnas añadidas
+            $table->foreignUuid('cliente_id')->constrained('clientes')->nullable();
+            $table->dropForeign(['UsuarioID']);
+            $table->dropColumn(['UsuarioID', 'codigo', 'profile_photo_path']);
         });
 
-        // Eliminar las nuevas columnas de la tabla 'pagos'
+        // Revertir cambios en la tabla 'pagos'
         Schema::table('pagos', function (Blueprint $table) {
+            $table->dropForeign(['servicio_id']);
             $table->dropColumn([
+                'servicio_id',
                 'monto',
                 'tipo_pago',
                 'comprobante',
                 'verificado',
+                'consumido',
                 'fecha_pago',
+                'id_transaccion',
                 'estado',
+                'razon_social',
+                'nit',
+                'facturado',
                 'notas'
+            ]);
+            $table->foreignUuid('sesion_id')->constrained('sesiones');
+        });
+
+        // Revertir cambios en la tabla 'servicios'
+        Schema::table('servicios', function (Blueprint $table) {
+            $table->dropColumn([
+                'ultima_actualizacion',
+                'precio_sesion',
+                'sesiones_disponibles',
+                'sesiones_realizadas',
+                'saldo_disponible',
+                'saldo_consumido'
             ]);
         });
 
+        // Revertir cambios en la tabla 'sesiones'
         Schema::table('sesiones', function (Blueprint $table) {
             $table->foreignUuid('terapeuta')->nullable()->constrained('personal');
             $table->foreignUuid('coterapeuta_id')->nullable()->constrained('personal');
-            $table->dropColumn(['fecha_asistencia', 'usuario_scanner']);
-            $table->foreignUuid('apoyo_id')->nullable()->constrained('personal')->change();
+            $table->foreignUuid('apoyo_id')->nullable()->constrained('personal');
+            $table->dropColumn(['fecha_asistencia', 'usuario_scanner', 'asistente_id']);
             $table->enum('estado_sesion', ['En Progreso', 'Completado', 'Cancelado', 'Pendiente'])->default('Pendiente')->change();
         });
     }

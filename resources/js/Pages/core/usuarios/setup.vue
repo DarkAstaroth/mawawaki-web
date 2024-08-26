@@ -91,7 +91,8 @@
                                 >Cliente</span
                             >
                             <span class="text-muted fw-semibold fs-6"
-                                >Pacientes del centro de terapias</span
+                                >Usuarios / Estudiantes del Centro de
+                                Terapias</span
                             >
                         </span>
                     </label>

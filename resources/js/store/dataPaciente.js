@@ -71,8 +71,7 @@ export const useDataPacientes = defineStore("dataPaciente", {
                     materno: datosPersona.materno,
                     ci: datosPersona.ci,
                     fechaNacimiento: datosPersona.fechaNacimiento,
-                    estadoSalud: datosPaciente.estadoSalud,
-                    precondicion: datosPaciente.precondicion,
+                    contraindicacion: datosPaciente.contraindicacion,
                     contactoEmergenciaNombre:
                         datosPaciente.contactoEmergenciaNombre,
                     contactoEmergenciaTelefono:
@@ -83,6 +82,51 @@ export const useDataPacientes = defineStore("dataPaciente", {
             } catch (error) {
                 console.error("Error al crear paciente:", error);
                 throw error;
+            }
+        },
+
+        async actualizarPacienteModal(pacienteActualizado) {
+            try {
+                const response = await axios.put(
+                    `/api/pacientes/${pacienteActualizado.id}`,
+                    pacienteActualizado
+                );
+                return response.data;
+            } catch (error) {
+                console.error("Error al actualizar paciente:", error);
+                throw error;
+            }
+        },
+
+        async eliminarPaciente(idPaciente) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const response = await axios.delete(
+                    `/api/pacientes/${idPaciente}`
+                );
+                return response.data;
+            } catch (error) {
+                this.loading = false;
+                this.error = error.response
+                    ? error.response.data.message
+                    : error.message;
+                console.error("Error al eliminar paciente:", error);
+                throw error;
+            }
+        },
+        async cargarPacientesAction(usuarioId) {
+            this.loading = true;
+            this.error = null;
+            try {
+                const url = `/api/pacientes/cliente/${usuarioId}`;
+                const response = await axios.get(url);
+                this.pacientes = response.data.data;
+            } catch (error) {
+                console.error("Error al cargar pacientes:", error);
+                this.error = error.message || "Error al cargar pacientes";
+            } finally {
+                this.loading = false;
             }
         },
 
