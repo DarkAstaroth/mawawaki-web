@@ -1,6 +1,45 @@
 <template>
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-xxl">
+            <div class="card-header border-0">
+                <div class="flex justify-end gap-2">
+                    <div
+                        class="card-toolbar"
+                        v-if="
+                            usuario.personal &&
+                            !usuario?.personal?.codigo_personal
+                        "
+                    >
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-flex btn-info"
+                            data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_payment"
+                            @click="generarCodigo(usuario.id)"
+                        >
+                            <i class="ki-duotone ki-check-square">
+                                <span class="path1"></span>
+                                <span class="path2"></span> </i
+                            >Otorgar código
+                        </button>
+                    </div>
+
+                    <div class="card-toolbar" v-if="!usuario.verificada">
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-flex btn-success"
+                            data-bs-toggle="modal"
+                            data-bs-target="#kt_modal_add_payment"
+                            @click="verificarCuenta(usuario.id)"
+                        >
+                            <i class="ki-duotone ki-check-square">
+                                <span class="path1"></span>
+                                <span class="path2"></span> </i
+                            >Verificar cuenta
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="bg-center bg-cover bg-no-repeat hero-bg mb-10">
                     <div class="container-fixed">

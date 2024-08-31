@@ -5,6 +5,8 @@ export const useDataPacientes = defineStore("dataPaciente", {
     state: () => ({
         pacientes: [],
         servicios: [],
+        pagos: [],
+        sesiones: [],
         personal: [],
         pacienteActual: null,
     }),
@@ -31,6 +33,7 @@ export const useDataPacientes = defineStore("dataPaciente", {
                         params: filtros,
                     }
                 );
+                this.pacienteActual = response.data.paciente;
                 return response.data.paciente;
             } catch (error) {
                 console.error("Error al cargar el paciente:", error);
@@ -130,10 +133,10 @@ export const useDataPacientes = defineStore("dataPaciente", {
             }
         },
 
-        async eliminarServicio(id) {
+        async eliminarServicio(id, paciente) {
             try {
                 const response = await axios.delete(`/api/servicios/${id}`);
-                await this.cargarServicios(this.pacienteActual.id);
+                await this.cargarPaciente(paciente, "paciente");
                 return response.data;
             } catch (error) {
                 console.error("Error al eliminar servicio:", error);
@@ -176,18 +179,62 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 throw error;
             }
         },
+        // async registrarPago(servicioId, datosPago) {
+        //     try {
+        //         console.log(datosPago);
+        //         const response = await axios.post(
+        //             `/api/registrar/pago/servicio/${servicioId}`,
+        //             datosPago,
+        //             {
+        //                 headers: {
+        //                     "Content-Type": "multipart/form-data",
+        //                 },
+        //             }
+        //         );
+        //         // You might want to update some local state here
+        //         return response.data;
+        //     } catch (error) {
+        //         console.error("Error al registrar el pago:", error);
+        //         throw error;
+        //     }
+        // },
+
         async registrarPago(servicioId, datosPago) {
             try {
-                console.log(datosPago);
+                // Convertir la fecha a timestamp Unix
+                const fechaPago = new Date(datosPago.fecha_pago);
+                const timestampUnix = Math.floor(fechaPago.getTime() / 1000);
+                console.log(timestampUnix, "UNIX");
+
+                // Crear un nuevo objeto FormData
+                const formData = new FormData();
+
+                // Agregar todos los campos al FormData, reemplazando fecha_pago con el timestamp
+                for (const [key, value] of Object.entries(datosPago)) {
+                    if (key === "fecha_pago") {
+                        formData.append(key, timestampUnix);
+                    } else if (key === "comprobante" && value instanceof File) {
+                        formData.append(key, value, value.name);
+                    } else {
+                        formData.append(key, value);
+                    }
+                }
+
+                console.log(
+                    "Datos del pago a enviar:",
+                    Object.fromEntries(formData)
+                );
+                console.log(formData);
                 const response = await axios.post(
                     `/api/registrar/pago/servicio/${servicioId}`,
-                    datosPago,
+                    formData,
                     {
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
                     }
                 );
+
                 // You might want to update some local state here
                 return response.data;
             } catch (error) {
@@ -200,7 +247,7 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 const response = await axios.get(
                     `/api/pagos/servicio/${servicioId}`
                 );
-                return response.data;
+                this.pagos = response.data;
             } catch (error) {
                 console.error(
                     "Error al obtener los pagos del servicio:",
@@ -227,7 +274,7 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 const response = await axios.get(
                     `/api/sesiones/servicio/${servicioId}`
                 );
-                return response.data;
+                this.sesiones = response.data;
             } catch (error) {
                 console.error(
                     "Error al obtener las sesiones del servicio:",
@@ -255,6 +302,38 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 return response.data;
             } catch (error) {
                 console.error("Error al actualizar la sesión:", error);
+                throw error;
+            }
+        },
+        async verificarPago(idPago) {
+            try {
+                const response = await axios.put(
+                    `/api/pagos/${idPago}/verificar`
+                );
+                return response.data.message;
+            } catch (error) {
+                console.error("Error al verificar el pago:", error);
+                throw error;
+            }
+        },
+        async eliminarServicio(idServicio) {
+            try {
+                const response = await axios.delete(
+                    `/api/servicios/${idServicio}`
+                );
+
+                return response.data.message;
+            } catch (error) {
+                console.error("Error al eliminar el servicio:", error);
+                throw error;
+            }
+        },
+        async eliminarPago(idPago) {
+            try {
+                const response = await axios.delete(`/api/pagos/${idPago}`);
+                return response.data.message;
+            } catch (error) {
+                console.error("Error al eliminar el pago:", error);
                 throw error;
             }
         },

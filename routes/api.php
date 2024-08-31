@@ -156,6 +156,11 @@ Route::post('programar-sesiones', [PacientesController::class, 'programarSesione
 Route::get('sesiones/servicio/{id}', [PacientesController::class, 'obtenerSesionesServicio']);
 Route::put('/pacientes/{id}', [PacientesController::class, 'actualizarPaciente']);
 Route::delete('/pacientes/{id}', [PacientesController::class, 'eliminarPaciente']);
+Route::delete('/pagos/{id}', [PacientesController::class, 'eliminarPago']);
+Route::delete('/servicios/{id}', [PacientesController::class, 'eliminarServicio']);
+Route::put('/pagos/{id}/verificar', [PacientesController::class, 'verificar']);
+
+
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);

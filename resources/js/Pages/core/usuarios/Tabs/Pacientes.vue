@@ -4,7 +4,11 @@
             v-model:visible="modalPaciente"
             maximizable
             modal
-            :header="modoEdicion ? 'Editar Paciente' : 'Crear Paciente'"
+            :header="
+                modoEdicion
+                    ? 'Editar Usuario/Estudiante'
+                    : 'Crear Usuario/Estudiante'
+            "
             :style="{ width: '50rem' }"
             :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
             @hide="limpiarModal"
@@ -144,7 +148,7 @@
                 </div>
 
                 <Button type="submit">
-                    {{ modoEdicion ? "Actualizar Paciente" : "Crear Paciente" }}
+                    {{ modoEdicion ? "Actualizar datos" : "Guardar datos" }}
                 </Button>
             </form>
         </Dialog>
@@ -509,7 +513,6 @@ export default {
         };
     },
     mounted() {
-        // this.cargarPacientes();
         this.storePaciente
             .cargarPacientesAction(this.usuario.id)
             .then((respuesta) => {

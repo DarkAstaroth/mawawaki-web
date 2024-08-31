@@ -252,7 +252,7 @@ class PacientesController extends Controller
     public function registrarPago(Request $request, $servicioId)
     {
         $request->validate([
-            'fecha_pago' => 'required|date',
+            'fecha_pago' => 'required',
             'monto' => 'required|numeric|min:0',
             'tipo_pago' => 'required|string',
             'id_transaccion' => 'required|string',
@@ -267,8 +267,9 @@ class PacientesController extends Controller
 
         $pago = new Pago($request->except(['comprobante', 'fecha_pago', 'facturado']));
         $pago->servicio_id = $servicioId;
-        $pago->fecha_pago = Carbon::parse($request->fecha_pago)->timestamp;
+        $pago->fecha_pago = $request->fecha_pago;
         $pago->facturado = $request->facturado ? 1 : 0;
+
 
         if ($request->hasFile('comprobante')) {
             $comprobante = $request->file('comprobante');
@@ -489,6 +490,42 @@ class PacientesController extends Controller
             ], 500);
         }
     }
+
+    public function verificar($id)
+    {
+        try {
+            $pago = Pago::findOrFail($id);
+            $pago->verificado = true;
+            $pago->save();
+            return response()->json(['message' => 'Pago verificado con éxito'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al verificar el pago', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function eliminarServicio($id)
+    {
+        try {
+            $servicio = Servicio::findOrFail($id);
+            $servicio->delete();
+            return response()->json(['message' => 'Servicio eliminado con éxito'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al eliminar el servicio', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function eliminarPago($id)
+    {
+        try {
+            $pago = Pago::findOrFail($id);
+            $pago->delete();
+            return response()->json(['message' => 'Pago eliminado con éxito'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error al eliminar el pago', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+
 
     public function listarPagosServicio($id)
     {

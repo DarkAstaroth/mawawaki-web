@@ -1,110 +1,5 @@
 <template>
     <div class="container mx-auto px-4">
-        <!-- <div class="grid grid-cols-1 md:grid-cols-10 gap-4 mb-6">
-            <div class="md:col-span-3 rounded-lg shadow">
-                <div class="flex gap-20 w-full justify-center">
-                    <div id="credencial" ref="elementToConvert">
-                        <div class="relative w-[300px]">
-                            <div class="absolute inset-0">
-                                <img
-                                    src="/assets/ilustraciones/credencial.png"
-                                    alt=""
-                                    crossorigin="anonymous"
-                                />
-                            </div>
-                            <div class="relative z-10 h-[450px]">
-                                <div class="h-full">
-                                    <div class="flex flex-col items-center">
-                                        <div class="container_usuario mt-20">
-                                            <img
-                                                :src="
-                                                    '/'.concat(
-                                                        this.pacienteActual
-                                                            .profile_photo_path
-                                                    )
-                                                "
-                                                alt=""
-                                                class="crop"
-                                                width="150"
-                                                crossorigin="anonymous"
-                                            />
-                                        </div>
-
-                                        <div
-                                            class="flex flex-col items-center font-bold text-xl text-gray-900 mt-5"
-                                        >
-                                            <span>
-                                                {{
-                                                    this.pacienteActual.persona
-                                                        .nombre
-                                                }}
-                                            </span>
-
-                                            <a>
-                                                {{
-                                                    this.pacienteActual.persona
-                                                        .paterno
-                                                }}
-                                                {{
-                                                    this.pacienteActual.persona
-                                                        .materno
-                                                }}
-                                            </a>
-                                        </div>
-
-                                        <div
-                                            v-if="this.pacienteActual.codigo"
-                                            class="mt-5"
-                                        >
-                                            <qrcode-vue
-                                                :value="
-                                                    this.pacienteActual.codigo
-                                                "
-                                                :size="90"
-                                                level="L"
-                                                foreground="#102820"
-                                                background="transparent"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="md:col-span-7 bg-gray-100 p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold mb-4">Detalles usuario</h2>
-                <div
-                    v-if="pacienteActual"
-                    class="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                >
-                    <p>
-                        <strong>Tipo de Paciente:</strong>
-                        {{ pacienteActual.tipo_paciente }}
-                    </p>
-                    <p>
-                        <strong>Fecha de Ingreso:</strong>
-                        {{ pacienteActual.fecha_ingreso }}
-                    </p>
-                    <p>
-                        <strong>Estado de Salud:</strong>
-                        {{ pacienteActual.estado_salud }}
-                    </p>
-                    <p>
-                        <strong>Precondición:</strong>
-                        {{ pacienteActual.precondicion }}
-                    </p>
-                    <p class="sm:col-span-2">
-                        <strong>Contacto de Emergencia:</strong>
-                        {{ pacienteActual.contacto_emergencia_nombre }} -
-                        {{ pacienteActual.contacto_emergencia_telefono }}
-                    </p>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- Botones de PrimeVue -->
         <div
             class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6"
         >
@@ -146,7 +41,7 @@
             <template #content>
                 <div class="overflow-x-auto">
                     <DataTable
-                        :value="pacienteActual?.servicios || []"
+                        :value="this.store.pacienteActual?.servicios || []"
                         :paginator="true"
                         :rows="10"
                         responsiveLayout="stack"
@@ -265,14 +160,18 @@
                                         aria-label="Ver"
                                     />
                                     <Button
-                                        v-if="isAdmin"
+                                        v-if="
+                                            is('admin') &&
+                                            slotProps.data
+                                                .sesiones_disponibles === 0
+                                        "
                                         v-tooltip.bottom="{
                                             value: 'Eliminar',
                                             showDelay: 300,
                                             hideDelay: 300,
                                         }"
                                         @click="
-                                            confirmarEliminarServicio(
+                                            confirmarEliminacion(
                                                 $event,
                                                 slotProps.data.id
                                             )
@@ -390,6 +289,7 @@
             </template>
         </Dialog>
     </div>
+    <ConfirmPopup></ConfirmPopup>
 </template>
 
 <script>
@@ -407,6 +307,7 @@ import Calendar from "primevue/calendar";
 import InputNumber from "primevue/inputnumber";
 import { useDataPacientes } from "@/store/dataPaciente";
 import QrcodeVue from "qrcode.vue";
+import { useConfirm } from "primevue/useconfirm";
 
 export default {
     components: {
@@ -426,11 +327,46 @@ export default {
     setup() {
         const v$ = useVuelidate();
         const store = useDataPacientes();
-        return { v$, store };
+        const confirm = useConfirm();
+
+        const confirmarEliminacion = (event, idServicio) => {
+            confirm.require({
+                target: event.currentTarget,
+                message: "¿Quieres borrar el registro?",
+                icon: "pi pi-info-circle",
+                acceptClass: "p-button-danger p-button-sm",
+                acceptLabel: "Borrar",
+                accept: () => {
+                    try {
+                        store.eliminarServicio(
+                            idServicio,
+                            store.pacienteActual.id
+                        );
+                        Swal.fire({
+                            title: "¡Eliminado!",
+                            icon: "success",
+                            confirmButtonText: "OK",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+                    } catch (error) {
+                        console.error("Error al eliminar el servicio:", error);
+                        Swal.fire(
+                            "Error",
+                            "No se pudo eliminar el servicio. Por favor, intenta de nuevo.",
+                            "error"
+                        );
+                    }
+                },
+            });
+        };
+
+        return { v$, store, confirmarEliminacion };
     },
     data() {
         return {
-            pacienteActual: null,
             filtroTipoServicio: null,
             filtroRangoFechas: null,
             dialogVisible: false,
@@ -469,11 +405,10 @@ export default {
         async cargarPaciente() {
             try {
                 const store = useDataPacientes();
-                this.pacienteActual = await store.cargarPaciente(
+                await store.cargarPaciente(
                     this.id,
                     this.obtenerParametrosFiltro()
                 );
-                console.log(this.pacienteActual);
             } catch (error) {
                 console.error("Error al cargar el paciente:", error);
             }
@@ -580,10 +515,6 @@ export default {
                 name: "servicios.detalle",
                 params: { idPaciente: this.id, idServicio: servicio.id },
             });
-        },
-        confirmarEliminarServicio(event, id) {
-            // Implementa la lógica para confirmar la eliminación del servicio
-            console.log("Confirmar eliminación del servicio:", id);
         },
     },
 };

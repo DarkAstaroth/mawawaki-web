@@ -11,7 +11,7 @@
                     class="mb-4"
                 />
                 <DataTable
-                    :value="sesiones"
+                    :value="this.store.sesiones"
                     :paginator="true"
                     :rows="10"
                     responsiveLayout="scroll"
@@ -20,14 +20,14 @@
                         <template #body="slotProps">
                             {{
                                 slotProps.data.fecha_sesion
-                                    ? formatearFecha(
+                                    ? fechaHoraLegible(
                                           slotProps.data.fecha_sesion
                                       )
                                     : "Sin asignar"
                             }}
                         </template>
                     </Column>
-                    <Column field="responsable" header="Responsable">
+                    <Column field="responsable" header="Co Responsable">
                         <template #body="slotProps">
                             {{
                                 slotProps.data.responsable?.name ||
@@ -47,6 +47,40 @@
                             {{ slotProps.data.caballo?.name || "Sin asignar" }}
                         </template>
                     </Column>
+                    <Column field="fecha_asistencia" header="Fecha Asistencia">
+                        <template #body="slotProps">
+                            <template v-if="slotProps.data.fecha_sesion">
+                                <Badge
+                                    :value="
+                                        obtenerEstadoAsistencia(slotProps.data)
+                                    "
+                                    :severity="
+                                        obtenerSeveridadAsistencia(
+                                            slotProps.data
+                                        )
+                                    "
+                                />
+
+                                <template
+                                    v-if="slotProps.data.fecha_asistencia"
+                                >
+                                    <br />
+                                    <small class="text-gray-500">
+                                        Asistió:
+                                        {{
+                                            fechaHoraLegible(
+                                                slotProps.data.fecha_asistencia
+                                            )
+                                        }}
+                                    </small>
+                                </template>
+                            </template>
+                            <template v-else>
+                                <Badge value="No programada" severity="info" />
+                            </template>
+                        </template>
+                    </Column>
+
                     <Column field="estado_sesion" header="Estado">
                         <template #body="slotProps">
                             <Badge
@@ -85,14 +119,15 @@
                 />
 
                 <DataTable
-                    :value="pagos"
+                    :value="this.store.pagos"
                     :paginator="true"
                     :rows="10"
                     responsiveLayout="scroll"
                 >
                     <Column field="fecha_pago" header="Fecha de Pago">
                         <template #body="slotProps">
-                            {{ formatearFecha(slotProps.data.fecha_pago) }}
+                            {{ fechaHoraLegible(slotProps.data.fecha_pago) }}
+                            <!-- {{ slotProps.data.fecha_pago }} -->
                         </template>
                     </Column>
                     <Column field="monto" header="Monto">
@@ -111,12 +146,22 @@
                             />
                         </template>
                     </Column>
+
+                    <Column field="consumido" header="Asignado">
+                        <template #body="slotProps">
+                            <template v-if="slotProps.data.consumido">
+                                <Badge value="Asisgnado" severity="success" />
+                            </template>
+                            <template v-else>
+                                <Badge value="No asignado" severity="warning" />
+                            </template>
+                        </template>
+                    </Column>
+
                     <Column field="verificado" header="Verificado">
                         <template #body="slotProps">
                             <template v-if="slotProps.data.verificado">
-                                <i
-                                    class="pi pi-check-circle text-green-500"
-                                ></i>
+                                <Badge value="Verificado" severity="success" />
                             </template>
                             <template v-else>
                                 <Badge
@@ -126,6 +171,7 @@
                             </template>
                         </template>
                     </Column>
+
                     <Column header="Comprobante">
                         <template #body="slotProps">
                             <Button
@@ -139,6 +185,7 @@
                     <Column header="Acciones">
                         <template #body="slotProps">
                             <Button
+                                v-if="!slotProps.data.verificado"
                                 icon="pi pi-check"
                                 @click="
                                     verificarPago($event, slotProps.data.id)
@@ -146,9 +193,16 @@
                                 class="p-button-text"
                             />
                             <Button
+                                v-if="!slotProps.data.verificado"
                                 icon="pi pi-trash"
                                 @click="eliminarPago($event, slotProps.data.id)"
                                 class="p-button-text p-button-danger"
+                            />
+                            <Button
+                                v-if="slotProps.data.verificado"
+                                icon="pi pi-eye"
+                                @click="verPagop($event, slotProps.data.id)"
+                                class="p-button-text p-button-info"
                             />
                         </template>
                     </Column>
@@ -159,22 +213,32 @@
         <Dialog
             v-model:visible="dialogoEditarSesionVisible"
             header="Editar Sesión"
-            :style="{ width: '50vw' }"
+            :style="{ width: '90vw', maxWidth: '500px' }"
             :modal="true"
+            :contentStyle="{ maxHeight: '80vh', overflow: 'auto' }"
         >
-            <form @submit.prevent="guardarEdicionSesion" class="p-fluid">
+            <form
+                @submit.prevent="guardarEdicionSesion"
+                class="p-fluid space-y-4"
+            >
                 <div class="field">
-                    <label for="fecha_sesion">Fecha de Sesión</label>
+                    <label for="fecha_sesion" class="block mb-2"
+                        >Fecha de Sesión</label
+                    >
                     <Calendar
                         id="fecha_sesion"
                         v-model="sesionEditada.fecha_sesion"
-                        dateFormat="dd/mm/yy"
+                        class="w-full"
+                        showTime
+                        hourFormat="12"
                     />
                 </div>
                 <div class="field">
-                    <label for="responsable">Responsable</label>
+                    <label for="responsable" class="block mb-2"
+                        >Co Responsable</label
+                    >
                     <Dropdown
-                        class="w-100"
+                        class="w-full"
                         v-model="responsableSeleccionados"
                         :options="usuariosFiltro"
                         filter
@@ -183,9 +247,9 @@
                     />
                 </div>
                 <div class="field">
-                    <label for="apoyo_id">Apoyo</label>
+                    <label for="apoyo_id" class="block mb-2">Apoyo</label>
                     <Dropdown
-                        class="w-100"
+                        class="w-full"
                         v-model="asistenteSeleccionados"
                         :options="usuariosFiltro"
                         filter
@@ -194,7 +258,7 @@
                     />
                 </div>
                 <div class="field">
-                    <label for="caballo_id">Caballo</label>
+                    <label for="caballo_id" class="block mb-2">Caballo</label>
                     <Dropdown
                         id="caballo_id"
                         v-model="sesionEditada.caballo_id"
@@ -202,10 +266,11 @@
                         optionLabel="label"
                         optionValue="value"
                         placeholder="Seleccione un caballo"
+                        class="w-full"
                     />
                 </div>
                 <div class="field">
-                    <label for="estado_sesion">Estado</label>
+                    <label for="estado_sesion" class="block mb-2">Estado</label>
                     <Dropdown
                         id="estado_sesion"
                         v-model="sesionEditada.estado_sesion"
@@ -213,14 +278,18 @@
                         optionLabel="label"
                         optionValue="value"
                         placeholder="Seleccione un estado"
+                        class="w-full"
                     />
                 </div>
                 <div class="field">
-                    <label for="observaciones">Observaciones</label>
+                    <label for="observaciones" class="block mb-2"
+                        >Observaciones</label
+                    >
                     <Textarea
                         id="observaciones"
                         v-model="sesionEditada.observaciones"
                         rows="3"
+                        class="w-full"
                     />
                 </div>
             </form>
@@ -275,7 +344,7 @@
                     <h3 class="font-bold mb-2">Resumen del Pago</h3>
                     <p>
                         <strong>Fecha:</strong>
-                        {{ formatearFecha(pagoSeleccionado.fecha_pago) }}
+                        {{ fechaHoraLegible(pagoSeleccionado.fecha_pago) }}
                     </p>
                     <p>
                         <strong>Monto:</strong> {{ pagoSeleccionado.monto }} BOB
@@ -324,13 +393,14 @@
                     <Calendar
                         id="fecha_pago"
                         v-model="nuevoPago.fecha_pago"
-                        dateFormat="dd/mm/yy"
                         class="w-full"
                         :class="{
                             'p-invalid':
                                 v$.nuevoPago.fecha_pago.$invalid &&
                                 v$.nuevoPago.fecha_pago.$dirty,
                         }"
+                        showTime
+                        hourFormat="12"
                     />
                     <small
                         class="p-error"
@@ -476,16 +546,6 @@
                         </small>
                     </div>
                 </div>
-                <!--
-                <div class="field-checkbox">
-                    <Checkbox
-                        id="facturado"
-                        v-model="nuevoPago.facturado"
-                        :binary="true"
-                    />
-                    <label for="facturado" class="ml-2">Facturado</label>
-                </div> -->
-
                 <div class="field">
                     <label for="estado_pago" class="font-semibold mb-2 block"
                         >Estado del Pago</label
@@ -587,6 +647,9 @@ import { useDataPacientes } from "@/store/dataPaciente";
 import.meta.env.VITE_APP_BASE_URL;
 import { useConfirm } from "primevue/useconfirm";
 import { useDataEventos } from "@/store/dataEventos";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
+dayjs.locale("es");
 
 export default {
     name: "ServicioDetalle",
@@ -610,20 +673,20 @@ export default {
     },
     computed: {
         hayPagosNoConsumidos() {
-            return this.pagos.some((pago) => !pago.consumido);
+            return this.store.pagos.some((pago) => !pago.consumido);
         },
         pagosNoConsumidos() {
-            return this.pagos
+            return this.store.pagos
                 .filter((pago) => !pago.consumido)
                 .map((pago) => ({
                     ...pago,
-                    label: `${this.formatearFecha(pago.fecha_pago)} - ID: ${
+                    label: `${this.fechaHoraLegible(pago.fecha_pago)} - ID: ${
                         pago.id_transaccion
                     }`,
                 }));
         },
     },
-    setup() {
+    setup(props) {
         const v$ = useVuelidate();
         const store = useDataPacientes();
         const confirm = useConfirm();
@@ -643,7 +706,12 @@ export default {
                 rejectLabel: "Cancelar",
                 acceptLabel: "Verificar",
                 accept: () => {
-                    console.log(idPago);
+                    store.verificarPago(idPago);
+                    store.obtenerPagosServicio(props.idServicio);
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡Verificado!",
+                    });
                 },
             });
         };
@@ -659,7 +727,12 @@ export default {
                 rejectLabel: "Cancelar",
                 acceptLabel: "Borrar",
                 accept: () => {
-                    console.log(idPago);
+                    store.eliminarPago(idPago);
+                    store.obtenerPagosServicio(props.idServicio);
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡Verificado!",
+                    });
                 },
             });
         };
@@ -764,10 +837,7 @@ export default {
         },
         async cargarSesiones() {
             try {
-                const response = await this.store.obtenerSesionesServicio(
-                    this.idServicio
-                );
-                this.sesiones = response;
+                await this.store.obtenerSesionesServicio(this.idServicio);
             } catch (error) {
                 Swal.fire({
                     title: "Error",
@@ -779,10 +849,7 @@ export default {
         },
         async cargarPagos() {
             try {
-                const response = await this.store.obtenerPagosServicio(
-                    this.idServicio
-                );
-                this.pagos = response;
+                await this.store.obtenerPagosServicio(this.idServicio);
             } catch (error) {
                 console.error("Error al cargar los pagos:", error);
             }
@@ -847,19 +914,22 @@ export default {
                 notas: "",
             });
         },
-        formatearFecha(fecha) {
-            return new Date(fecha).toLocaleDateString();
+        fechaHoraLegible(fecha) {
+            return dayjs.unix(fecha).format("D [de] MMMM [-] h:mm A");
         },
         obtenerSeveridad(estado) {
             switch (estado) {
-                case "Completada":
+                case "Completado":
                     return "success";
                 case "Pendiente":
+                case "Programado":
                     return "warning";
-                case "Cancelada":
+                case "Cancelado":
                     return "danger";
-                default:
+                case "En Progreso":
                     return "info";
+                default:
+                    return "secondary";
             }
         },
         obtenerSeveridadPago(estado) {
@@ -869,6 +939,29 @@ export default {
                 case "pendiente":
                     return "warning";
                 case "cancelado":
+                    return "danger";
+                default:
+                    return "info";
+            }
+        },
+        obtenerEstadoAsistencia(sesion) {
+            console.log(sesion);
+            if (!sesion.fecha_asistencia) {
+                return sesion.fecha_sesion > Date.now() / 1000
+                    ? "Pendiente"
+                    : "No asistió";
+            }
+            return "Asistió";
+        },
+
+        obtenerSeveridadAsistencia(sesion) {
+            const estado = this.obtenerEstadoAsistencia(sesion);
+            switch (estado) {
+                case "Asistió":
+                    return "success";
+                case "Pendiente":
+                    return "warning";
+                case "No asistió":
                     return "danger";
                 default:
                     return "info";
@@ -890,6 +983,7 @@ export default {
             }
 
             try {
+                console.log(this.nuevoPago);
                 await this.store.registrarPago(this.idServicio, this.nuevoPago);
 
                 Swal.fire({
@@ -1035,9 +1129,36 @@ export default {
                 });
             }
         },
+
         abrirDialogoEditarSesion(sesion) {
+            console.log(sesion);
             this.sesionEditada = { ...sesion };
+
+            if (sesion.fecha_sesion) {
+                this.sesionEditada.fecha_sesion = this.convertirFecha(
+                    sesion.fecha_sesion
+                );
+            }
+
+            this.responsableSeleccionados =
+                sesion.responsable && sesion.responsable.id
+                    ? this.usuariosFiltro.find(
+                          (usuario) => usuario.id === sesion.responsable.id
+                      ) || null
+                    : null;
+
+            this.asistenteSeleccionados = sesion.asistente_id
+                ? this.usuariosFiltro.find(
+                      (usuario) => usuario.id === sesion.asistente_id
+                  ) || null
+                : null;
+
             this.dialogoEditarSesionVisible = true;
+        },
+
+        convertirFecha(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date;
         },
         cerrarDialogoEditarSesion() {
             this.dialogoEditarSesionVisible = false;
@@ -1059,6 +1180,8 @@ export default {
                     icon: "success",
                     confirmButtonText: "Ok",
                 });
+                this.responsableSeleccionados = null;
+                this.asistenteSeleccionados = null;
             } catch (error) {
                 Swal.fire({
                     title: "Error",
