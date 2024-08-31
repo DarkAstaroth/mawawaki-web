@@ -34,6 +34,8 @@ class Sesion extends Model
         'fecha_sesion',
         'observaciones',
         'estado_sesion',
+        "fecha_asistencia",
+        "usuario_scanner"
     ];
 
     public function servicio()

@@ -316,6 +316,42 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 throw error;
             }
         },
+        async buscarPacientePorCodigo(codigo) {
+            try {
+                const response = await axios.get(
+                    `/api/paciente/buscar/${codigo}`
+                );
+                this.pacienteActual = response.data;
+                return response.data;
+            } catch (error) {
+                console.error("Error al buscar paciente:", error);
+                throw error;
+            }
+        },
+        async obtenerServiciosDisponibles(pacienteId) {
+            try {
+                const response = await axios.get(
+                    `/api/servicios/disponibles/${pacienteId}`
+                );
+                this.serviciosDisponibles = response.data;
+                return response.data;
+            } catch (error) {
+                console.error("Error al obtener servicios disponibles:", error);
+                throw error;
+            }
+        },
+        async verSesiones(servicioId) {
+            try {
+                const response = await axios.get(
+                    `/api/servicios/${servicioId}/sesiones`
+                );
+
+                return response.data;
+            } catch (error) {
+                console.error("Error al obtener sesiones:", error);
+                throw error;
+            }
+        },
         async eliminarServicio(idServicio) {
             try {
                 const response = await axios.delete(

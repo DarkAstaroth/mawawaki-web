@@ -159,8 +159,13 @@ Route::delete('/pacientes/{id}', [PacientesController::class, 'eliminarPaciente'
 Route::delete('/pagos/{id}', [PacientesController::class, 'eliminarPago']);
 Route::delete('/servicios/{id}', [PacientesController::class, 'eliminarServicio']);
 Route::put('/pagos/{id}/verificar', [PacientesController::class, 'verificar']);
+Route::get('/paciente/buscar/{codigo}', [PacientesController::class, 'buscarPaciente']);
+Route::get('/servicios/disponibles/{pacienteId}', [PacientesController::class, 'obtenerServiciosDisponibles']);
 
 
+Route::get('/servicios/{servicioId}/sesiones', [PacientesController::class, 'obtenerSesiones']);
+
+Route::post('/sesiones/{sesionId}/registrar', [PacientesController::class, 'registrarSesion']);
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);

@@ -534,4 +534,61 @@ class PacientesController extends Controller
 
         return response()->json($pagos);
     }
+
+    public function buscarPaciente($codigo)
+    {
+        $paciente = Paciente::where('codigo', $codigo)
+            ->with(['usuario', 'persona'])
+            ->first();
+
+        if (!$paciente) {
+            return response()->json(['message' => 'Paciente no encontrado'], 404);
+        }
+
+        return response()->json($paciente);
+    }
+
+    public function obtenerServiciosDisponibles($pacienteId)
+    {
+        $servicios = Servicio::where('paciente_id', $pacienteId)
+            ->whereRaw('sesiones_disponibles > sesiones_realizadas')
+            ->get();
+
+        return response()->json($servicios);
+    }
+
+    public function obtenerSesiones($servicioId)
+    {
+        $sesiones = Sesion::where('servicio_id', $servicioId)
+            ->where('estado_sesion', '!=', 'Completado')
+            ->get();
+        return response()->json($sesiones);
+    }
+
+    public function registrarSesion(Request $request, $sesionId)
+    {
+        DB::beginTransaction();
+        try {
+            $sesion = Sesion::findOrFail($sesionId);
+            $servicio = Servicio::findOrFail($sesion->servicio_id);
+
+            // Update session
+            $sesion->update([
+                'fecha_asistencia' => now()->timestamp,
+                'estado_sesion' => 'Completado',
+            ]);
+
+            // Update service
+            $servicio->update([
+                'sesiones_realizadas' => $servicio->sesiones_realizadas + 1,
+                'ultima_actualizacion' => now()->timestamp
+            ]);
+
+            DB::commit();
+            return response()->json(['message' => 'Sesión registrada con éxito'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Error al registrar la sesión', 'error' => $e->getMessage()], 500);
+        }
+    }
 }
