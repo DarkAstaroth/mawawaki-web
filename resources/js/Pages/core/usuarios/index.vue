@@ -15,6 +15,15 @@
 
                 <button
                     type="button"
+                    class="btn btn-sm btn-info"
+                    @click="certificadosPDF"
+                >
+                    <i class="text-white far fa-file"></i>
+                    Certificados
+                </button>
+
+                <button
+                    type="button"
                     class="btn btn-sm btn-danger"
                     @click="generarPDF"
                 >
@@ -548,6 +557,86 @@ export default {
 
                 doc.save(nombreArchivo);
             });
+        },
+
+        certificadosPDF() {
+            this.store
+                .usuariosCertificado()
+                .then((respuesta) => {
+                    console.log("Respuesta completa:", respuesta);
+                    console.log("Usuarios:", respuesta.data.usuarios);
+
+                    var doc = new jsPDF("l", "pt", "letter");
+                    doc.setFontSize(10);
+                    var titulo = "Usuarios con horas cumplidas (> 200 horas)";
+                    var tituloWidth =
+                        (doc.getStringUnitWidth(titulo) *
+                            doc.internal.getFontSize()) /
+                        doc.internal.scaleFactor;
+                    var x =
+                        (doc.internal.pageSize.getWidth() - tituloWidth) / 2;
+                    doc.text(titulo, x, 20);
+
+                    var startY = 30;
+
+                    var footer = function (data) {
+                        var str = "Página " + data.pageNumber;
+                        var pageWidth = doc.internal.pageSize.getWidth();
+                        var textWidth =
+                            (doc.getStringUnitWidth(str) *
+                                doc.internal.getFontSize()) /
+                            doc.internal.scaleFactor;
+                        doc.setFontSize(10);
+                        doc.text(
+                            str,
+                            pageWidth - data.settings.margin.right - textWidth,
+                            doc.internal.pageSize.getHeight() - 10
+                        );
+                        doc.text(
+                            "Centro Integral de Terapias Equinas",
+                            doc.internal.pageSize.getWidth() / 2,
+                            doc.internal.pageSize.getHeight() - 10,
+                            { align: "center" }
+                        );
+                    };
+
+                    // Mapeo de los datos de usuarios a un formato de array
+                    var bodyData = respuesta.data.usuarios.map((usuario) => [
+                        usuario.nro,
+                        usuario.paterno,
+                        usuario.materno,
+                        usuario.nombre,
+                        usuario.email,
+                        usuario.roles.join(", "),
+                        usuario.fecha_cumple_250_horas,
+                        `${usuario.tiempo_acumulado.horas} horas ${usuario.tiempo_acumulado.minutos} minutos ${usuario.tiempo_acumulado.segundos} segundos`,
+                    ]);
+
+                    var options = {
+                        startY: startY,
+                        head: respuesta.data.cabecera,
+                        body: bodyData,
+                        margin: { top: 20, bottom: 20 },
+                        theme: "grid",
+                        styles: { fontSize: 8 }, // Establecer el tamaño de letra
+                        didDrawPage: footer,
+                    };
+
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, "0");
+                    var mm = String(today.getMonth() + 1).padStart(2, "0"); // Enero es 0
+                    var yyyy = today.getFullYear();
+                    var fecha = dd + "-" + mm + "-" + yyyy;
+                    var nombreArchivo =
+                        "Reporte_usuario_certificado_" + fecha + ".pdf";
+
+                    doc.autoTable(options);
+
+                    doc.save(nombreArchivo);
+                })
+                .catch((error) => {
+                    console.error("Error al generar el PDF:", error);
+                });
         },
         navigateToCreate() {
             this.$router.push({ name: "clientes.create" });

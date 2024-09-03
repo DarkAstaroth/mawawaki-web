@@ -190,6 +190,16 @@ export const useDataUsuarios = defineStore("dataUsuarios", {
                 throw error;
             }
         },
+        async usuariosCertificado() {
+            try {
+                const respuesta = await axios.get(
+                    "/api/usuarios/horas-acumuladas"
+                );
+                return respuesta;
+            } catch (error) {
+                throw error;
+            }
+        },
         asignarMensaje(tipo, mensaje) {
             if (["success", "error", "warning"].includes(tipo)) {
                 this.mensaje[tipo] = mensaje;

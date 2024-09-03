@@ -502,4 +502,176 @@ class AsistenciasController extends Controller
 
         return response()->json(['success' => 'Marcado registrado correctamente'], 200);
     }
+
+    // public function obtenerHorasCumplidas()
+    // {
+    //     $usuarios = User::whereHas('asistencias.evento', function ($query) {
+    //         $query->where('principal', true);
+    //     })
+    //         ->with(['asistencias' => function ($query) {
+    //             $query->whereHas('evento', function ($subQuery) {
+    //                 $subQuery->where('principal', true);
+    //             });
+    //         }, 'persona', 'roles'])
+    //         ->get()
+    //         ->map(function ($user) {
+    //             $totalSegundos = 0;
+    //             $fechaCumple250Horas = null;
+    //             $horasAcumuladas = 0;
+
+    //             foreach ($user->asistencias as $asistencia) {
+    //                 $entrada = Carbon::createFromTimestamp($asistencia->fecha_hora_entrada);
+    //                 $salida = Carbon::createFromTimestamp($asistencia->fecha_hora_salida);
+
+    //                 if ($entrada->isSameDay($salida)) {
+    //                     $segundos = $salida->diffInSeconds($entrada);
+    //                 } else {
+    //                     $segundos = 0;
+    //                     $diaActual = $entrada->copy();
+    //                     while ($diaActual->isBefore($salida)) {
+    //                         $finDia = $diaActual->copy()->endOfDay();
+    //                         if ($finDia->isAfter($salida)) {
+    //                             $finDia = $salida;
+    //                         }
+    //                         $segundos += $finDia->diffInSeconds($diaActual);
+    //                         $diaActual = $diaActual->addDay()->startOfDay();
+    //                     }
+    //                 }
+
+    //                 $totalSegundos += $segundos;
+    //                 $horasAcumuladas += $segundos / 3600;
+
+    //                 if ($horasAcumuladas >= 250 && $fechaCumple250Horas === null) {
+    //                     $fechaCumple250Horas = $salida;
+    //                 }
+    //             }
+
+    //             $horas = floor($totalSegundos / 3600);
+    //             $minutos = floor(($totalSegundos % 3600) / 60);
+    //             $segundos = $totalSegundos % 60;
+
+    //             $roles = $user->roles->pluck('name')->filter(function ($role) {
+    //                 return !in_array($role, ['cliente', 'personal']);
+    //             })->values();
+
+    //             return [
+    //                 'id' => $user->id,
+    //                 'paterno' => $user->persona->paterno,
+    //                 'materno' => $user->persona->materno,
+    //                 'nombre' => $user->persona->nombre,
+    //                 'email' => $user->email,
+    //                 'roles' => $roles->isEmpty() ? ['Sin rol relevante'] : $roles,
+    //                 'tiempo_acumulado' => [
+    //                     'horas' => $horas,
+    //                     'minutos' => $minutos,
+    //                     'segundos' => $segundos
+    //                 ],
+    //                 'total_segundos' => $totalSegundos,
+    //                 'fecha_cumple_250_horas' => $fechaCumple250Horas ? $fechaCumple250Horas->toDateString() : 'No alcanzado'
+    //             ];
+    //         })
+    //         ->filter(function ($user) {
+    //             return $user['total_segundos'] > 200 * 3600;
+    //         })
+    //         ->values();
+
+    //     $cabecera = [["Nro", "Paterno", "Materno", "Nombre", "Correo", "Roles", "Fecha Cumplida", "Tiempo acumulado"]];
+
+    //     $resultado = [
+    //         'total' => $usuarios->count(),
+    //         'cabecera' => $cabecera,
+    //         'usuarios' => $usuarios
+    //     ];
+
+    //     return response()->json($resultado);
+    // }
+    public function obtenerHorasCumplidas()
+    {
+        $usuarios = User::whereHas('asistencias.evento', function ($query) {
+            $query->where('principal', true);
+        })
+            ->with(['asistencias' => function ($query) {
+                $query->whereHas('evento', function ($subQuery) {
+                    $subQuery->where('principal', true);
+                });
+            }, 'persona', 'roles'])
+            ->get()
+            ->map(function ($user, $index) {
+                $totalSegundos = 0;
+                $fechaCumple250Horas = null;
+                $horasAcumuladas = 0;
+
+                foreach ($user->asistencias as $asistencia) {
+                    $entrada = Carbon::createFromTimestamp($asistencia->fecha_hora_entrada);
+                    $salida = Carbon::createFromTimestamp($asistencia->fecha_hora_salida);
+
+                    if ($entrada->isSameDay($salida)) {
+                        $segundos = $salida->diffInSeconds($entrada);
+                    } else {
+                        $segundos = 0;
+                        $diaActual = $entrada->copy();
+                        while ($diaActual->isBefore($salida)) {
+                            $finDia = $diaActual->copy()->endOfDay();
+                            if ($finDia->isAfter($salida)) {
+                                $finDia = $salida;
+                            }
+                            $segundos += $finDia->diffInSeconds($diaActual);
+                            $diaActual = $diaActual->addDay()->startOfDay();
+                        }
+                    }
+
+                    $totalSegundos += $segundos;
+                    $horasAcumuladas += $segundos / 3600;
+
+                    if ($horasAcumuladas >= 250 && $fechaCumple250Horas === null) {
+                        $fechaCumple250Horas = $salida;
+                    }
+                }
+
+                $horas = floor($totalSegundos / 3600);
+                $minutos = floor(($totalSegundos % 3600) / 60);
+                $segundos = $totalSegundos % 60;
+
+                $roles = $user->roles->pluck('name')->filter(function ($role) {
+                    return !in_array($role, ['cliente', 'personal']);
+                })->values();
+
+                return [
+                    'nro' => $index + 1,
+                    'id' => $user->id,
+                    'paterno' => $user->persona->paterno,
+                    'materno' => $user->persona->materno,
+                    'nombre' => $user->persona->nombre,
+                    'email' => $user->email,
+                    'roles' => $roles->isEmpty() ? ['Sin rol relevante'] : $roles,
+                    'tiempo_acumulado' => [
+                        'horas' => $horas,
+                        'minutos' => $minutos,
+                        'segundos' => $segundos
+                    ],
+                    'total_segundos' => $totalSegundos,
+                    'fecha_cumple_250_horas' => $fechaCumple250Horas ? $fechaCumple250Horas->toDateString() : 'No alcanzado'
+                ];
+            })
+            ->filter(function ($user) {
+                return $user['total_segundos'] > 200 * 3600;
+            })
+            ->values();
+
+        // Reindexamos los números después del filtrado
+        $usuariosNumerados = $usuarios->values()->map(function ($user, $index) {
+            $user['nro'] = $index + 1;
+            return $user;
+        });
+
+        $cabecera = [["Nro", "Paterno", "Materno", "Nombre", "Correo", "Roles", "Fecha Cumplida", "Tiempo acumulado"]];
+
+        $resultado = [
+            'total' => $usuariosNumerados->count(),
+            'cabecera' => $cabecera,
+            'usuarios' => $usuariosNumerados
+        ];
+
+        return response()->json($resultado);
+    }
 }
