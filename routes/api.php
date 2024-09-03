@@ -189,6 +189,7 @@ Route::post('sesiones', [TerapiasController::class, 'registrarSesion']);
 //Api para obtener personal
 Route::get('personal', [UsuarioController::class, 'obtenerPersonal']);
 Route::get('/usuarios/horas-acumuladas', [AsistenciasController::class, 'obtenerHorasCumplidas']);
+Route::put('/verificar-asistencias/{usuarioId}', [AsistenciasController::class, 'verificarAsistenciasUsuario']);
 
 // API para configuraciones generales
 Route::get('eventos/principal', [EventosController::class, 'verificarEventoPrincipal']);

@@ -1,5 +1,9 @@
 <template>
     <div class="d-flex justify-content-end mb-5 gap-2">
+        <Button v-if="is('admin')" type="button" @click="verificarAsistencias">
+            <i class="text-white far fa-arrow me-3"></i>
+            <strong>Verificar</strong>
+        </Button>
         <Button type="button" @click="estadoModal(true)">
             <i class="text-white far fa-plus me-3"></i>
             <strong>Nuevo registro</strong>
@@ -690,6 +694,23 @@ export default {
                     this.asistenciaSeleccionada = null;
                     this.horaSalida = null;
                 });
+        },
+
+        async verificarAsistencias() {
+            try {
+                const resultado = await this.storeAsistencias.verificarAsistenciasUsuario(
+                    this.usuario.id
+                );
+                Swal.fire({
+                    icon: "success",
+                    title: "Éxito",
+                    text: `${resultado.asistencias_actualizadas} asistencias verificadas`,
+                    confirmButtonText: "Aceptar",
+                });
+            } catch (error) {
+                console.error("Error al verificar asistencias:", error);
+                this.mensaje = "Error al verificar asistencias";
+            }
         },
     },
 };

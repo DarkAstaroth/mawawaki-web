@@ -563,9 +563,6 @@ export default {
             this.store
                 .usuariosCertificado()
                 .then((respuesta) => {
-                    console.log("Respuesta completa:", respuesta);
-                    console.log("Usuarios:", respuesta.data.usuarios);
-
                     var doc = new jsPDF("l", "pt", "letter");
                     doc.setFontSize(10);
                     var titulo = "Usuarios con horas cumplidas (> 200 horas)";
