@@ -102,7 +102,7 @@ Route::post('caballo/agregar', [CaballosController::class, 'agregarCaballo']);
 Route::patch('caballo/{id}', [CaballosController::class, 'editarCaballo']);
 Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
 Route::get('sesion/caballos', [CaballosController::class, 'obtenerCaballosSesion']);
-Route::put('/editar/sesion/{id}', [PacientesController::class, 'actualizarSesion']);
+Route::put('/editar/servicio/{idServicio}/sesion/{id}', [PacientesController::class, 'actualizarSesion']);
 
 // Api para eventos
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);
@@ -157,7 +157,7 @@ Route::post('/registrar/pago/servicio/{id}', [PacientesController::class, 'regis
 Route::get('pagos/servicio/{id}', [PacientesController::class, 'listarPagosServicio']);
 Route::post('programar-sesiones', [PacientesController::class, 'programarSesiones']);
 Route::get('sesiones/servicio/{id}', [PacientesController::class, 'obtenerSesionesServicio']);
-Route::put('/pacientes/{id}', [PacientesController::class, 'actualizarPaciente']);
+Route::post('/pacientes/{id}', [PacientesController::class, 'actualizarPaciente']);
 Route::delete('/pacientes/{id}', [PacientesController::class, 'eliminarPaciente']);
 Route::delete('/pagos/{id}', [PacientesController::class, 'eliminarPago']);
 Route::delete('/servicios/{id}', [PacientesController::class, 'eliminarServicio']);

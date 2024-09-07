@@ -319,7 +319,14 @@ class ClienteController extends Controller
         ]);
 
 
-        Mail::send('emails.welcome', ['password' => $password], function ($message) use ($request) {
+        $appUrl = config('app.url');
+        $loginUrl = $appUrl . '/login';
+
+        Mail::send('emails.welcome', [
+            'password' => $password,
+            'email' => $request->email,
+            'loginUrl' => $loginUrl
+        ], function ($message) use ($request) {
             $message->to($request->email)
                 ->subject('Bienvenido a nuestro servicio');
         });

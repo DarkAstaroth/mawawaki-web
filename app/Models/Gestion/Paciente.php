@@ -32,6 +32,7 @@ class Paciente extends Model
         'codigo',
         'contacto_emergencia_nombre',
         'contacto_emergencia_telefono',
+        'profile_photo_path'
     ];
 
     protected $casts = [

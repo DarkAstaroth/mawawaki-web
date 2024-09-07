@@ -1167,11 +1167,15 @@ export default {
         async guardarEdicionSesion() {
             try {
                 // Aquí debes implementar la lógica para guardar los cambios en el backend
-                await this.store.actualizarSesion(this.sesionEditada.id, {
-                    ...this.sesionEditada,
-                    usuario: this.responsableSeleccionados,
-                    apoyo: this.asistenteSeleccionados,
-                });
+                await this.store.actualizarSesion(
+                    this.idServicio,
+                    this.sesionEditada.id,
+                    {
+                        ...this.sesionEditada,
+                        usuario: this.responsableSeleccionados,
+                        apoyo: this.asistenteSeleccionados,
+                    }
+                );
 
                 await this.cargarSesiones(); // Recargar las sesiones para reflejar los cambios
                 Swal.fire({

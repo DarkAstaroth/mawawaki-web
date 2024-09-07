@@ -296,6 +296,12 @@ class UsuarioController extends Controller
         $usuario = User::findOrFail($id);
         $usuario->verificada = 1;
         $usuario->estado = 1;
+
+
+        if ($usuario->email_verified_at === null) {
+            $usuario->email_verified_at = now();
+        }
+
         $usuario->save();
 
         return response()->json([

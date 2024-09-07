@@ -83,6 +83,24 @@
                             />
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="d-flex flex-column gap-2 mb-5">
+                            <div class="col-md-12">
+                                <div class="d-flex flex-column gap-2 mb-5">
+                                    <label for="userImage"
+                                        >Foto de usuario:</label
+                                    >
+                                    <input
+                                        type="file"
+                                        id="userImage"
+                                        @change="handleImageUpload"
+                                        accept="image/*"
+                                        class="form-control flex-1 w-100"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-12">
                         <h5>Datos Extra</h5>
@@ -482,6 +500,7 @@ export default {
                 materno: "",
                 ci: "",
                 fechaNacimiento: "",
+                userImage: null,
             },
             datosPaciente: {
                 tipoPaciente: "",
@@ -579,6 +598,9 @@ export default {
         };
     },
     methods: {
+        handleImageUpload(event) {
+            this.datosPersona.userImage = event.target.files[0];
+        },
         cargarPacientes() {
             this.storePaciente.cargarPacientesAction(this.usuario.id);
         },
@@ -633,6 +655,7 @@ export default {
                     fecha_nacimiento: Math.floor(
                         this.datosPersona.fechaNacimiento.getTime() / 1000
                     ),
+                    imagen: this.datosPersona.userImage,
                 },
                 contraindicacion: this.datosPaciente.contraindicacion,
                 contacto_emergencia_nombre:
@@ -640,7 +663,6 @@ export default {
                 contacto_emergencia_telefono:
                     this.datosPaciente.contactoEmergenciaTelefono,
             };
-            console.log(pacienteActualizado);
 
             this.storePaciente
                 .actualizarPacienteModal(pacienteActualizado)

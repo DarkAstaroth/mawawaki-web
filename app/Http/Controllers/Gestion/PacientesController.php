@@ -15,6 +15,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PacientesController extends Controller
@@ -286,20 +287,6 @@ class PacientesController extends Controller
         ], 201);
     }
 
-    // public function programarSesiones(Request $request)
-    // {
-    //     $request->validate([
-    //         'servicioId' => 'required|uuid',
-    //         'pagoId' => 'required|uuid',
-    //         'sesionesDisponibles' => 'required|integer|min:1',
-    //     ]);
-
-    //     // Aquí implementa la lógica para programar las sesiones
-    //     // Por ejemplo, crear registros de sesiones, actualizar el estado del pago, etc.
-
-    //     return response()->json(['message' => 'Sesiones programadas con éxito']);
-    // }
-
 
     public function programarSesiones(Request $request)
     {
@@ -403,9 +390,10 @@ class PacientesController extends Controller
     }
 
 
-    public function actualizarSesion(Request $request, $id)
+    public function actualizarSesion(Request $request, $idServicio, $id)
     {
         $sesion = Sesion::findOrFail($id);
+        $estadoAnterior = $sesion->estado_sesion;
 
         $datosActualizados = [
             'servicio_id' => $request->input('servicio_id'),
@@ -421,40 +409,74 @@ class PacientesController extends Controller
 
         $sesion->update($datosActualizados);
 
+        // Actualizar el servicio asociado
+        $servicio = Servicio::findOrFail($idServicio);
+
+        if ($estadoAnterior !== 'Completado' && $sesion->estado_sesion === 'Completado') {
+            $servicio->sesiones_realizadas += 1;
+        } elseif ($estadoAnterior === 'Completado' && $sesion->estado_sesion !== 'Completado') {
+            $servicio->sesiones_realizadas -= 1;
+        }
+
+        $servicio->save();
+
         return response()->json([
             'message' => 'Sesión actualizada exitosamente',
-            'sesion' => $sesion
+            'sesion' => $sesion,
+            'servicio' => $servicio
         ]);
     }
 
+
+
+
     public function actualizarPaciente(Request $request, $id)
     {
+        $data = $request->all();
+
         $request->validate([
-            'persona.nombre' => 'required|string|max:255',
-            'persona.paterno' => 'required|string|max:255',
-            'persona.materno' => 'required|string|max:255',
-            'persona.ci' => 'required|string|max:20',
-            'persona.fecha_nacimiento' => 'required|integer',
+            'nombre' => 'required',
+            'paterno' => 'required',
+            'materno' => 'required',
+            'ci' => 'required|string|max:20',
+            'fecha_nacimiento' => 'required|integer',
             'contacto_emergencia_nombre' => 'required|string|max:255',
             'contacto_emergencia_telefono' => 'required|string|max:20',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $paciente = Paciente::findOrFail($id);
         $persona = $paciente->persona;
 
-        $persona->update([
-            'nombre' => $request->input('persona.nombre'),
-            'paterno' => $request->input('persona.paterno'),
-            'materno' => $request->input('persona.materno'),
-            'ci' => $request->input('persona.ci'),
-            'fecha_nacimiento' => $request->input('persona.fecha_nacimiento'),
-        ]);
+        $personaData = [
+            'nombre' => strtoupper($data['nombre']),
+            'paterno' => strtoupper($data['paterno']),
+            'materno' => strtoupper($data['materno']),
+            'ci' => $data['ci'],
+            'fecha_nacimiento' => $data['fecha_nacimiento'],
+        ];
 
-        $paciente->update([
-            'precondicion' => $request->input('contraindicacion'),
-            'contacto_emergencia_nombre' => $request->input('contacto_emergencia_nombre'),
-            'contacto_emergencia_telefono' => $request->input('contacto_emergencia_telefono'),
-        ]);
+        $persona->update($personaData);
+
+        $pacienteData = [
+            'precondicion' => $data['contraindicacion'] ?? null,
+            'contacto_emergencia_nombre' => strtoupper($data['contacto_emergencia_nombre']),
+            'contacto_emergencia_telefono' => $data['contacto_emergencia_telefono'],
+        ];
+
+        if ($request->hasFile('imagen')) {
+            $imagen = $request->file('imagen');
+            $nombreUnico = 'usuario_' . Str::uuid() . '.' . $imagen->getClientOriginalExtension();
+            $path = $imagen->storeAs('public/fotos/usuarios', $nombreUnico);
+            $pacienteData['profile_photo_path'] = 'storage/fotos/usuarios/' . $nombreUnico;
+
+
+            if ($paciente->profile_photo_path) {
+                Storage::delete(str_replace('storage', 'public', $paciente->profile_photo_path));
+            }
+        }
+
+        $paciente->update($pacienteData);
 
         return response()->json([
             'message' => 'Paciente actualizado correctamente',

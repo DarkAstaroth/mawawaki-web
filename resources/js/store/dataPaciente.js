@@ -90,9 +90,47 @@ export const useDataPacientes = defineStore("dataPaciente", {
 
         async actualizarPacienteModal(pacienteActualizado) {
             try {
-                const response = await axios.put(
+                const formData = new FormData();
+
+                // Agregar campos del paciente
+                formData.append("id", pacienteActualizado.id);
+                formData.append(
+                    "contraindicacion",
+                    pacienteActualizado.contraindicacion
+                );
+                formData.append(
+                    "contacto_emergencia_nombre",
+                    pacienteActualizado.contacto_emergencia_nombre
+                );
+                formData.append(
+                    "contacto_emergencia_telefono",
+                    pacienteActualizado.contacto_emergencia_telefono
+                );
+
+                // Agregar campos de la persona
+                for (const [key, value] of Object.entries(
+                    pacienteActualizado.persona
+                )) {
+                    if (key === "imagen" && value instanceof File) {
+                        formData.append(key, value, value.name);
+                    } else {
+                        formData.append(key, value);
+                    }
+                }
+
+                console.log(
+                    "Datos del paciente a enviar:",
+                    Object.fromEntries(formData)
+                );
+                console.log(formData);
+                const response = await axios.post(
                     `/api/pacientes/${pacienteActualizado.id}`,
-                    pacienteActualizado
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
                 );
                 return response.data;
             } catch (error) {
@@ -100,6 +138,44 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 throw error;
             }
         },
+
+        // async actualizarPacienteModal(pacienteActualizado) {
+        //     try {
+        //         console.log(pacienteActualizado);
+        //         const formData = new FormData();
+
+        //         // Agregar los datos del paciente al FormData
+        //         Object.keys(pacienteActualizado).forEach((key) => {
+        //             if (key !== "persona") {
+        //                 formData.append(key, pacienteActualizado[key]);
+        //             }
+        //         });
+
+        //         // Agregar los datos de la persona
+        //         Object.keys(pacienteActualizado.persona).forEach((key) => {
+        //             if (
+        //                 key === "imagen" &&
+        //                 pacienteActualizado.persona.imagen
+        //             ) {
+        //                 formData.append(
+        //                     "imagen",
+        //                     pacienteActualizado.persona.imagen
+        //                 );
+        //             } else {
+        //                 formData.append(key, pacienteActualizado.persona[key]);
+        //             }
+        //         });
+
+        //         const response = await axios.put(
+        //             `/api/pacientes/${pacienteActualizado.id}`,
+        //             formData
+        //         );
+        //         return response.data;
+        //     } catch (error) {
+        //         console.error("Error al actualizar paciente:", error);
+        //         throw error;
+        //     }
+        // },
 
         async eliminarPaciente(idPaciente) {
             this.loading = true;
@@ -292,11 +368,12 @@ export const useDataPacientes = defineStore("dataPaciente", {
                 throw error;
             }
         },
-        async actualizarSesion(sesionId, datosSesion) {
+        async actualizarSesion(servicioId, sesionId, datosSesion) {
             console.log(datosSesion);
+            console.log(sesionId);
             try {
                 const response = await axios.put(
-                    `/api/editar/sesion/${sesionId}`,
+                    `/api/editar/servicio/${servicioId}/sesion/${sesionId}`,
                     datosSesion
                 );
                 return response.data;
