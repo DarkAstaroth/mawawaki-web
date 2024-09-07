@@ -164,6 +164,12 @@
                     >
                         <ActividadesUsuario :usuario="usuario" />
                     </TabPanel>
+                    <TabPanel
+                        header="Ajustes"
+                        v-if="noEsCliente() && is('admin')"
+                    >
+                        <AjusteCuenta />
+                    </TabPanel>
                 </TabView>
             </div>
         </div>
@@ -177,6 +183,7 @@ import DocumentacionUsuario from "./Tabs/Documentacion.vue";
 import PacientesUsuario from "./Tabs/Pacientes.vue";
 import ActividadesUsuario from "./actividades.vue";
 import AsistenciaGeneral from "./Tabs/AsistenciaGeneral.vue";
+import AjusteCuenta from "./Tabs/AjustesCuenta.vue";
 import DatosPersonales from "./Tabs/DatosPersonales.vue";
 import { useDataPerfil } from "@/store/dataPerfil";
 
@@ -184,6 +191,7 @@ export default {
     name: "UsuarioControl",
     props: ["usuario"],
     components: {
+        AjusteCuenta,
         DatosPersonales,
         VueMultiselect,
         DocumentacionUsuario,

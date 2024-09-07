@@ -92,6 +92,9 @@ Route::post('personal/generar-codigo/{id}', [UsuarioController::class, 'generarC
 
 Route::get('birthdays', [UsuarioController::class, 'getBirthdays']);
 
+Route::put('/usuarios/{id}/cambiar-correo', [UsuarioController::class, 'cambiarCorreo']);
+Route::put('/usuarios/{id}/cambiar-contrasena', [UsuarioController::class, 'cambiarContrasena']);
+
 
 // Api para caballos
 Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);

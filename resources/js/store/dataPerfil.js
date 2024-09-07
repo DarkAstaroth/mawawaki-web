@@ -88,6 +88,36 @@ export const useDataPerfil = defineStore("dataPerfil", {
                 throw new Error(Error);
             }
         },
+        async cambiarCorreo(userId, nuevoEmail) {
+            try {
+                const response = await axios.put(
+                    `/api/usuarios/${userId}/cambiar-correo`,
+                    { email: nuevoEmail }
+                );
+                if (response.data.success) {
+                    this.usuario.email = nuevoEmail;
+                }
+                return response.data;
+            } catch (error) {
+                console.error("Error al cambiar el correo:", error);
+                throw error;
+            }
+        },
+        async cambiarContrasena(userId, oldPassword, newPassword) {
+            try {
+                const response = await axios.put(
+                    `/api/usuarios/${userId}/cambiar-contrasena`,
+                    {
+                        old_password: oldPassword,
+                        new_password: newPassword,
+                    }
+                );
+                return response.data;
+            } catch (error) {
+                console.error("Error al cambiar la contraseña:", error);
+                throw error;
+            }
+        },
         eliminarDocumento,
     },
 });

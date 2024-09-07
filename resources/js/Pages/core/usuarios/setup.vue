@@ -130,7 +130,7 @@
                         </div>
 
                         <div class="d-flex flex-column gap-2 mb-5 mt-5">
-                            <label for="carnet">Carnet de Identidad</label>
+                            <label for="carnet">Fecha de nacimiento</label>
                             <VueDatePicker
                                 v-model="datosPersonal.fechaNacimiento"
                                 :enable-time-picker="false"

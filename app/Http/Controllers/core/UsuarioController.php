@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 use Illuminate\Support\Str;
 
@@ -543,5 +544,36 @@ class UsuarioController extends Controller
         });
 
         return response()->json($formattedUsers);
+    }
+    public function cambiarCorreo(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+
+        $usuario = User::findOrFail($id);
+        $usuario->email = $request->email;
+        $usuario->save();
+
+        return response()->json(['success' => true, 'message' => 'Correo actualizado con éxito']);
+    }
+
+    public function cambiarContrasena(Request $request, $id)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:8',
+        ]);
+
+        $usuario = User::findOrFail($id);
+
+        if (!Hash::check($request->old_password, $usuario->password)) {
+            return response()->json(['success' => false, 'message' => 'La contraseña actual es incorrecta'], 400);
+        }
+
+        $usuario->password = Hash::make($request->new_password);
+        $usuario->save();
+
+        return response()->json(['success' => true, 'message' => 'Contraseña actualizada con éxito']);
     }
 }
