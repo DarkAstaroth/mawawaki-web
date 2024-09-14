@@ -221,7 +221,7 @@
                         </span>
                     </div>
 
-                    <div class="flex justify-center" v-if="is('admin')">
+                    <div class="flex justify-center">
                         <Button @click="verSesionesDisponibles">
                             Ver servicios
                         </Button>
