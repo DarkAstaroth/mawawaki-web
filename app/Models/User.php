@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Gestion\Actividad;
+use App\Models\Gestion\Asistencia;
 use App\Models\Gestion\Cliente;
 use App\Models\Notificacion;
 use App\Models\Gestion\Documentacion;
@@ -147,5 +148,10 @@ class User extends Authenticatable implements MustVerifyEmail
                 'hash' => sha1($notifiable->getEmailForVerification()),
             ]
         );
+    }
+
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class, 'UsuarioID', 'id');
     }
 }

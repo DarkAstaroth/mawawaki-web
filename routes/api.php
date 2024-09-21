@@ -92,12 +92,17 @@ Route::post('personal/generar-codigo/{id}', [UsuarioController::class, 'generarC
 
 Route::get('birthdays', [UsuarioController::class, 'getBirthdays']);
 
+Route::put('/usuarios/{id}/cambiar-correo', [UsuarioController::class, 'cambiarCorreo']);
+Route::put('/usuarios/{id}/cambiar-contrasena', [UsuarioController::class, 'cambiarContrasena']);
+
 
 // Api para caballos
 Route::get('caballos', [CaballosController::class, 'obtenerCaballos']);
 Route::post('caballo/agregar', [CaballosController::class, 'agregarCaballo']);
 Route::patch('caballo/{id}', [CaballosController::class, 'editarCaballo']);
 Route::delete('caballo/{id}', [CaballosController::class, 'destroy']);
+Route::get('sesion/caballos', [CaballosController::class, 'obtenerCaballosSesion']);
+Route::put('/editar/servicio/{idServicio}/sesion/{id}', [PacientesController::class, 'actualizarSesion']);
 
 // Api para eventos
 Route::get('eventos', [EventosController::class, 'obtenerEventos']);
@@ -139,11 +144,31 @@ Route::put('documentos/{id}/revision', [DocumentacionController::class, 'cambiar
 // Api para clientes
 Route::get('pacientes/cliente/{id}', [ClienteController::class, 'obtenerPacientes']);
 Route::post('pacientes/registrar', [ClienteController::class, 'solicitudPaciente']);
+Route::post('registrar/usuario', [ClienteController::class, 'registrarUsuario']);
 
 // Api para pacientes
 Route::get('pacientes', [PacientesController::class, 'obtenerPacientes']);
 Route::put('verificar-paciente/{id}', [PacientesController::class, 'verificarPaciente']);
 Route::put('cambiar-estado-paciente/{id}', [PacientesController::class, 'cambiarEstado']);
+Route::get('/detalle/pacientes', [PacientesController::class, 'detallePaciente']);
+Route::get('/detalle/pacientes/{id}', [PacientesController::class, 'detallePacienteId']);
+Route::post('registrar/servicio/paciente/{id}', [PacientesController::class, 'registrarServicioPaciente']);
+Route::post('/registrar/pago/servicio/{id}', [PacientesController::class, 'registrarPago']);
+Route::get('pagos/servicio/{id}', [PacientesController::class, 'listarPagosServicio']);
+Route::post('programar-sesiones', [PacientesController::class, 'programarSesiones']);
+Route::get('sesiones/servicio/{id}', [PacientesController::class, 'obtenerSesionesServicio']);
+Route::post('/pacientes/{id}', [PacientesController::class, 'actualizarPaciente']);
+Route::delete('/pacientes/{id}', [PacientesController::class, 'eliminarPaciente']);
+Route::delete('/pagos/{id}', [PacientesController::class, 'eliminarPago']);
+Route::delete('/servicios/{id}', [PacientesController::class, 'eliminarServicio']);
+Route::put('/pagos/{id}/verificar', [PacientesController::class, 'verificar']);
+Route::get('/paciente/buscar/{codigo}', [PacientesController::class, 'buscarPaciente']);
+Route::get('/servicios/disponibles/{pacienteId}', [PacientesController::class, 'obtenerServiciosDisponibles']);
+
+
+Route::get('/servicios/{servicioId}/sesiones', [PacientesController::class, 'obtenerSesiones']);
+
+Route::post('/sesiones/{sesionId}/registrar', [PacientesController::class, 'registrarSesion']);
 
 // Api para notificaciones
 Route::post('enviar-notificacion/{id}', [NotificacionController::class, 'enviarNotificacion']);
@@ -166,6 +191,8 @@ Route::post('sesiones', [TerapiasController::class, 'registrarSesion']);
 
 //Api para obtener personal
 Route::get('personal', [UsuarioController::class, 'obtenerPersonal']);
+Route::get('/usuarios/horas-acumuladas', [AsistenciasController::class, 'obtenerHorasCumplidas']);
+Route::put('/verificar-asistencias/{usuarioId}', [AsistenciasController::class, 'verificarAsistenciasUsuario']);
 
 // API para configuraciones generales
 Route::get('eventos/principal', [EventosController::class, 'verificarEventoPrincipal']);

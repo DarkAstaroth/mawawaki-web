@@ -26,6 +26,9 @@
                 >
                     <NotificacionesUsuario />
                 </TabPanel>
+                <TabPanel header="Ajustes">
+                    <AjusteCuenta />
+                </TabPanel>
             </TabView>
         </div>
     </div>
@@ -39,10 +42,12 @@ import AsistenciaGeneral from "./Tabs/AsistenciaGeneral.vue";
 import AsistenciasUsuario from "./Tabs/Asistencias.vue";
 import DocumentacionUsuario from "./Tabs/Documentacion.vue";
 import NotificacionesUsuario from "./Tabs/Notificaciones.vue";
+import AjusteCuenta from "./Tabs/AjustesCuenta.vue";
 
 export default {
     name: "TabsUsuario",
     components: {
+        AjusteCuenta,
         VueMultiselect,
         DatosPersonales,
         AsistenciasUsuario,

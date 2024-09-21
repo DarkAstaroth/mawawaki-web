@@ -10,6 +10,7 @@
 
             <div data-kt-menu-trigger="click" class="menu-item here menu-accordion">
                 <span class="menu-link">
+
                     <span class="menu-icon">
                         <i class="ki-duotone ki-element-11 fs-1">
                             <span class="path1"></span>
@@ -233,19 +234,6 @@
                             </div>
                         </div>
                     @endrole
-
-
-                    <div class="menu-sub menu-sub-accordion">
-                        <div class="menu-item">
-                            <a class="menu-link" href="{{ route('clientes.index') }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Todos los clientes</span>
-                            </a>
-
-                        </div>
-                    </div>
 
                 </div>
 

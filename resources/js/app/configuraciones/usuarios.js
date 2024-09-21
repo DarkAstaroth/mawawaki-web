@@ -7,6 +7,7 @@ import ConfigGeneral from "../../Pages/configuraciones/general/index.vue";
 import DashboardEventos from "../../Pages/Dashboard.vue";
 import DashboardAvisos from "../../Pages/dashboard/avisos.vue";
 import ClienteIndex from "../../Pages/clientes/index.vue";
+import ClienteCreate from "../../Pages/clientes/create.vue";
 
 export default {
     "usuarios-index": UsuariosIndex,
@@ -18,4 +19,5 @@ export default {
     "dashboard-eventos": DashboardEventos,
     "dashboard-avisos": DashboardAvisos,
     "clientes-index": ClienteIndex,
+    "clientes-create": ClienteCreate,
 };

@@ -68,6 +68,17 @@ export const useDataAsistencias = defineStore("dataAsistencias", {
     }),
     persist: true,
     actions: {
+        async verificarAsistenciasUsuario(usuarioId) {
+            try {
+                const response = await axios.put(
+                    `/api/verificar-asistencias/${usuarioId}`
+                );
+                return response.data;
+            } catch (error) {
+                console.error("Error al verificar asistencias:", error);
+                throw error;
+            }
+        },
         async modificarSalida(id, horaSalida) {
             try {
                 const respuesta = await axios.put(

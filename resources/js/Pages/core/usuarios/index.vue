@@ -3,10 +3,23 @@
     <div class="card card-bordered">
         <div class="card-header">
             <h3 class="card-title">Listado de usuarios</h3>
-            <div class="div card-toolbar" v-if="is('admin')">
-                <button type="button" class="btn btn-sm btn-success me-5">
+            <div class="div card-toolbar flex gap-2" v-if="is('admin')">
+                <button
+                    type="button"
+                    class="btn btn-sm btn-success"
+                    @click="navigateToCreate"
+                >
                     <i class="text-white far fa-plus"></i>
                     Nuevo
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-info"
+                    @click="certificadosPDF"
+                >
+                    <i class="text-white far fa-file"></i>
+                    Certificados
                 </button>
 
                 <button
@@ -68,8 +81,13 @@
                                             :src="usuario.profile_photo_path"
                                             alt="foto"
                                             class="crop"
-                                            :width="usuario.profile_photo_path.includes('user-default.jpg') ? 50 : 70"
-
+                                            :width="
+                                                usuario.profile_photo_path.includes(
+                                                    'user-default.jpg'
+                                                )
+                                                    ? 50
+                                                    : 70
+                                            "
                                         />
                                     </div>
                                     <div class="px-2 d-flex flex-column">
@@ -141,44 +159,6 @@
                                         rounded
                                         aria-label="Cancel"
                                 /></a>
-
-                                <!-- <div class="d-flex">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button"
-                                            id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"
-                                            data-boundary="viewport"></button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <a class="dropdown-item" data-bs-toggle="tooltip"
-                                                    data-bs-custom-class="tooltip-inverse" data-bs-placement="bottom"
-                                                    title="Ver perfil" :href="route(
-                                                        'usuario.control',
-                                                        { id: usuario.id }
-                                                    )
-                                                        "><i class="bi bi-eye-fill fs-4"></i>
-                                                    Ver Perfil</a>
-                                            </li>
-                                            <li v-if="is('admin')">
-                                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1"><i
-                                                        class="bi bi-pencil-square fs-4"></i>
-
-                                                    Editar</a>
-                                            </li>
-                                            <li v-if="is('admin')">
-                                                <a href="#" class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#kt_modal_1" @click="
-                                                        resetModalData(
-                                                            true,
-                                                            usuario
-                                                        )
-                                                        "><i class="bi bi-envelope fs-4"></i>
-
-                                                    Notificar</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div> -->
                             </td>
                         </tr>
                         <tr v-if="store.usuarios.length === 0">
@@ -577,6 +557,86 @@ export default {
 
                 doc.save(nombreArchivo);
             });
+        },
+
+        certificadosPDF() {
+            this.store
+                .usuariosCertificado()
+                .then((respuesta) => {
+                    var doc = new jsPDF("l", "pt", "letter");
+                    doc.setFontSize(10);
+                    var titulo = "Usuarios con horas cumplidas (> 200 horas)";
+                    var tituloWidth =
+                        (doc.getStringUnitWidth(titulo) *
+                            doc.internal.getFontSize()) /
+                        doc.internal.scaleFactor;
+                    var x =
+                        (doc.internal.pageSize.getWidth() - tituloWidth) / 2;
+                    doc.text(titulo, x, 20);
+
+                    var startY = 30;
+
+                    var footer = function (data) {
+                        var str = "Página " + data.pageNumber;
+                        var pageWidth = doc.internal.pageSize.getWidth();
+                        var textWidth =
+                            (doc.getStringUnitWidth(str) *
+                                doc.internal.getFontSize()) /
+                            doc.internal.scaleFactor;
+                        doc.setFontSize(10);
+                        doc.text(
+                            str,
+                            pageWidth - data.settings.margin.right - textWidth,
+                            doc.internal.pageSize.getHeight() - 10
+                        );
+                        doc.text(
+                            "Centro Integral de Terapias Equinas",
+                            doc.internal.pageSize.getWidth() / 2,
+                            doc.internal.pageSize.getHeight() - 10,
+                            { align: "center" }
+                        );
+                    };
+
+                    // Mapeo de los datos de usuarios a un formato de array
+                    var bodyData = respuesta.data.usuarios.map((usuario) => [
+                        usuario.nro,
+                        usuario.paterno,
+                        usuario.materno,
+                        usuario.nombre,
+                        usuario.email,
+                        usuario.roles.join(", "),
+                        usuario.fecha_cumple_250_horas,
+                        `${usuario.tiempo_acumulado.horas} horas ${usuario.tiempo_acumulado.minutos} minutos ${usuario.tiempo_acumulado.segundos} segundos`,
+                    ]);
+
+                    var options = {
+                        startY: startY,
+                        head: respuesta.data.cabecera,
+                        body: bodyData,
+                        margin: { top: 20, bottom: 20 },
+                        theme: "grid",
+                        styles: { fontSize: 8 }, // Establecer el tamaño de letra
+                        didDrawPage: footer,
+                    };
+
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, "0");
+                    var mm = String(today.getMonth() + 1).padStart(2, "0"); // Enero es 0
+                    var yyyy = today.getFullYear();
+                    var fecha = dd + "-" + mm + "-" + yyyy;
+                    var nombreArchivo =
+                        "Reporte_usuario_certificado_" + fecha + ".pdf";
+
+                    doc.autoTable(options);
+
+                    doc.save(nombreArchivo);
+                })
+                .catch((error) => {
+                    console.error("Error al generar el PDF:", error);
+                });
+        },
+        navigateToCreate() {
+            this.$router.push({ name: "clientes.create" });
         },
     },
 };

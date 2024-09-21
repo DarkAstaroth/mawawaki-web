@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 use Illuminate\Support\Str;
 
@@ -24,7 +25,7 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        return view('core.usuarios.index');
+        return view('core.router');
     }
 
     public function vistaConfiguracion()
@@ -124,7 +125,7 @@ class UsuarioController extends Controller
     public function obtenerUsuariosSinPaginacion()
     {
         // Obtener solo los usuarios con el rol "personal"
-        $users = User::with('persona')
+        $users = User::with('persona', 'personal')
             ->role('personal')
             ->get();
 
@@ -136,44 +137,32 @@ class UsuarioController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-    }
+    public function store(Request $request) {}
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-    }
+    public function edit(string $id) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-    }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-    }
+    public function destroy(string $id) {}
 
 
     public function login(Request $request)
@@ -291,14 +280,14 @@ class UsuarioController extends Controller
     public function PerfilUsuario(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions', 'persona', 'personal', 'cliente');
+        $usuario->load('roles', 'permissions', 'persona', 'personal');
         return view('core.usuarios.perfil', compact('usuario'));
     }
 
     public function UsuarioControl(string $id)
     {
         $usuario = User::findOrFail($id);
-        $usuario->load('roles', 'permissions', 'persona', 'personal', 'cliente');
+        $usuario->load('roles', 'permissions', 'persona', 'personal',);
         return view('core.usuarios.control', compact('usuario'));
     }
 
@@ -307,6 +296,12 @@ class UsuarioController extends Controller
         $usuario = User::findOrFail($id);
         $usuario->verificada = 1;
         $usuario->estado = 1;
+
+
+        if ($usuario->email_verified_at === null) {
+            $usuario->email_verified_at = now();
+        }
+
         $usuario->save();
 
         return response()->json([
@@ -537,8 +532,7 @@ class UsuarioController extends Controller
 
         $usersWithBirthdays = User::whereHas('persona', function ($query) use ($currentMonth) {
             $query->whereRaw('MONTH(FROM_UNIXTIME(fecha_nacimiento)) = ?', [$currentMonth]);
-        })->with(['persona' => function ($query) {
-        }])->get();
+        })->with(['persona' => function ($query) {}])->get();
 
         $formattedUsers = $usersWithBirthdays->map(function ($user) {
             return [
@@ -556,5 +550,36 @@ class UsuarioController extends Controller
         });
 
         return response()->json($formattedUsers);
+    }
+    public function cambiarCorreo(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:users,email,' . $id,
+        ]);
+
+        $usuario = User::findOrFail($id);
+        $usuario->email = $request->email;
+        $usuario->save();
+
+        return response()->json(['success' => true, 'message' => 'Correo actualizado con éxito']);
+    }
+
+    public function cambiarContrasena(Request $request, $id)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:8',
+        ]);
+
+        $usuario = User::findOrFail($id);
+
+        if (!Hash::check($request->old_password, $usuario->password)) {
+            return response()->json(['success' => false, 'message' => 'La contraseña actual es incorrecta'], 400);
+        }
+
+        $usuario->password = Hash::make($request->new_password);
+        $usuario->save();
+
+        return response()->json(['success' => true, 'message' => 'Contraseña actualizada con éxito']);
     }
 }

@@ -233,4 +233,6 @@ Route::middleware([
     'check.estado'
 ])->group(function () {
     Route::get('dashboard/servicio/{id}', [TerapiasController::class, 'verServicio'])->name('servicio.detalles');
+    Route::get('dashboard/servicio/paciente/{id}', [TerapiasController::class, 'verServicioPaciente'])->name('servicio.paciente');
+    Route::get('dashboard/detalles/servicio/{idpaciente}/{idServicio}', [TerapiasController::class, 'verDetallesServicio'])->name('servicios.detalle');
 });

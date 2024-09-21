@@ -21,10 +21,16 @@ class Servicio extends Model
     protected $fillable = [
         'paciente_id',
         'tipo_servicio',
+        'precio_sesion',
         'observaciones',
         'fecha_ingreso',
         'fecha_final',
+        'ultima_actualizacion',
         'estado',
+        'sesiones_disponibles',
+        'sesiones_realizadas',
+        'saldo_disponible',
+        'saldo_consumido',
     ];
 
     protected $casts = [
@@ -47,5 +53,10 @@ class Servicio extends Model
     public function sesiones()
     {
         return $this->hasMany(Sesion::class);
+    }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
     }
 }

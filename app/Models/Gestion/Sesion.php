@@ -29,13 +29,13 @@ class Sesion extends Model
     protected $fillable = [
         'servicio_id',
         'responsable',
-        'terapeuta',
-        'coterapeuta_id',
-        'apoyo_id',
+        'asistente_id',
         'caballo_id',
         'fecha_sesion',
         'observaciones',
         'estado_sesion',
+        "fecha_asistencia",
+        "usuario_scanner"
     ];
 
     public function servicio()

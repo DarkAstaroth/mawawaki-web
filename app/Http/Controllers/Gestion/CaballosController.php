@@ -141,4 +141,10 @@ class CaballosController extends Controller
             'caballo' => $caballo
         ]);
     }
+
+    public function obtenerCaballosSesion()
+    {
+        $caballos = Caballo::all();
+        return response()->json($caballos);
+    }
 }

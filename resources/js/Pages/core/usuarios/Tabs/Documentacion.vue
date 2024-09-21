@@ -174,7 +174,7 @@
                 </tbody>
             </table>
             <!-- Mensaje cuando no hay documentos -->
-            <div v-else class="text-center py-4">
+            <div v-else class="text-center py-4 flex flex-col items-center">
                 <img
                     src="/assets/ilustraciones/sin_doc.svg"
                     alt=""
