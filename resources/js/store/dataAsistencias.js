@@ -124,5 +124,19 @@ export const useDataAsistencias = defineStore("dataAsistencias", {
                 throw new Error(error);
             }
         },
+        async resetearAsignaciones(data) {
+            try {
+                const response = await axios.post(
+                    "/api/asistencias/resetear",
+                    data
+                );
+                return response.data;
+            } catch (error) {
+                throw new Error(
+                    error.response.data.message ||
+                        "Error al realizar la solicitud"
+                );
+            }
+        },
     },
 });

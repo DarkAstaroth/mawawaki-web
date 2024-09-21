@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AsistenciasController extends Controller
 {
@@ -182,7 +183,7 @@ class AsistenciasController extends Controller
         $busqueda = $request->get('busqueda');
         $idEvento = $request->get('idEvento');
 
-        $asistenciasQuery = Asistencia::where('UsuarioID', $id);
+        $asistenciasQuery = Asistencia::where('UsuarioID', $id)->whereNull('tipo_asignacion');
 
         if ($idEvento) {
             $asistenciasQuery->where('EventoID', $idEvento);
@@ -267,8 +268,9 @@ class AsistenciasController extends Controller
         // Obtener el total de segundos de todas las asistencias con ingreso y salida verificados
         $totalAsistencias = Asistencia::where('UsuarioID', $request->idUsuario)
             ->where('EventoID', $request->idEvento)
-            ->where('ingreso_verificado', 1) // Verificar que el ingreso esté verificado
-            ->where('salida_verificado', 1) // Verificar que la salida esté verificada
+            ->where('ingreso_verificado', 1)
+            ->where('salida_verificado', 1)
+            ->whereNull('tipo_asignacion')
             ->sum(DB::raw('fecha_hora_salida - fecha_hora_entrada'));
 
         // Convertir el total a horas, minutos y segundos
@@ -613,5 +615,78 @@ class AsistenciasController extends Controller
             'message' => 'Asistencias verificadas con éxito',
             'asistencias_actualizadas' => $asistencias->count()
         ]);
+    }
+
+    public function resetearAsistencias(Request $request)
+    {
+        // Validación de los parámetros recibidos
+        $validator = Validator::make($request->all(), [
+            'UsuarioID' => 'required|uuid',
+            'cantidad_horas' => 'required|integer|min:1',
+            'tipo_asignacion' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Obtener los parámetros del request
+        $usuarioID = $request->UsuarioID;
+        $cantidadHoras = $request->cantidad_horas;
+        $tipoAsignacion = $request->tipo_asignacion;
+
+        // Buscar el evento principal
+        $evento = Evento::where('principal', true)->first();
+
+        if (!$evento) {
+            return response()->json(['error' => 'No se encontró un evento principal.'], 404);
+        }
+
+        // Calcular el tiempo total en segundos
+        $totalSegundosRequeridos = $cantidadHoras * 3600;
+
+        // Obtener las asistencias que cumplen con los criterios y no tienen tipo de asignación
+        $asistencias = Asistencia::where('UsuarioID', $usuarioID)
+            ->where('EventoID', $evento->id) // Usar el ID del evento principal
+            ->whereNull('tipo_asignacion') // Solo aquellas sin tipo de asignación
+            ->get();
+
+        // Variables para almacenar el tiempo total acumulado y las asistencias a modificar
+        $tiempoAcumulado = 0;
+        $asistenciasAModificar = [];
+
+        // Sumar las duraciones de las asistencias hasta alcanzar la cantidad requerida
+        foreach ($asistencias as $asistencia) {
+            if ($asistencia->fecha_hora_salida && $asistencia->fecha_hora_entrada) {
+                // Calcular la duración de la asistencia actual en segundos
+                $duracion = $asistencia->fecha_hora_salida - $asistencia->fecha_hora_entrada;
+
+                // Acumular el tiempo
+                if ($tiempoAcumulado < $totalSegundosRequeridos) {
+                    $tiempoAcumulado += $duracion;
+                    $asistenciasAModificar[] = $asistencia; // Agregar a la lista de asistencias a modificar
+
+                    // Si ya alcanzamos o superamos el tiempo requerido, podemos salir del bucle
+                    if ($tiempoAcumulado >= $totalSegundosRequeridos) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Verificar si se alcanzó el tiempo requerido
+        if ($tiempoAcumulado < $totalSegundosRequeridos) {
+            return response()->json(['error' => 'No tiene las asistencias suficientes para la asignación solicitada.'], 400);
+        }
+
+        // Modificar las asistencias que contribuyeron a alcanzar la cantidad requerida
+        foreach ($asistenciasAModificar as $asistencia) {
+            // Actualizar tipo de asignación y fecha de asignación
+            $asistencia->tipo_asignacion = $tipoAsignacion;
+            $asistencia->fecha_asignacion = Carbon::now(); // Establecer la fecha de asignación a ahora (timestamp)
+            $asistencia->save();
+        }
+
+        return response()->json(['message' => 'Asistencias reseteadas correctamente.']);
     }
 }
