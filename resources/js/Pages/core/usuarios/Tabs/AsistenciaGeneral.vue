@@ -1,8 +1,26 @@
 <template>
-    <div class="d-flex justify-content-end mb-5 gap-2">
-        <Button v-if="is('admin')" type="button" @click="verificarAsistencias">
-            <i class="text-white far fa-arrow me-3"></i>
-            <strong>Verificar</strong>
+    <div class="flex flex-col md:flex-row justify-end mb-5 gap-2">
+        <Button
+            v-if="is('admin')"
+            type="button"
+            @click="openDialog"
+            class="btn btn-sm btn-info"
+        >
+            <div class="flex justify-center items-center gap-2">
+                <i class="fi fi-sr-attribution-pencil mt-1"></i>
+                <strong>Asignar</strong>
+            </div>
+        </Button>
+        <Button
+            v-if="is('admin')"
+            type="button"
+            @click="verificarAsistencias"
+            class="btn btn-sm btn-primary"
+        >
+            <div class="flex justify-center items-center gap-2">
+                <i class="fi fi-br-check-circle mt-1"></i>
+                <strong>Verificar</strong>
+            </div>
         </Button>
         <Button type="button" @click="estadoModal(true)">
             <i class="text-white far fa-plus me-3"></i>
@@ -343,6 +361,50 @@
         </ul>
     </nav>
 
+    <Dialog
+        v-model:visible="resetModal"
+        modal
+        header="Asignar asistencias"
+        :style="{ width: '30rem' }"
+    >
+        <div class="flex flex-col gap-2">
+            <div class="p-field">
+                <label for="cantidad_horas">Cantidad de horas</label>
+                <InputText
+                    class="w-100"
+                    aria-label="cantidad de horas"
+                    placeholder="Cantidad de horas"
+                    id="cantidad_horas"
+                    v-model="rest.cantidad_horas"
+                    type="number"
+                />
+            </div>
+            <div class="p-field">
+                <label for="tipo_asignacion">Tipo Asignación</label>
+                <InputText
+                    class="w-100"
+                    id="tipo_asignacion"
+                    v-model="rest.tipo_asignacion"
+                    placeholder="Tipo de Asignación"
+                />
+            </div>
+
+            <div class="flex justify-content-end gap-2">
+                <Button
+                    type="button"
+                    label="Cancelar"
+                    severity="secondary"
+                    @click="resetModal = false"
+                ></Button>
+                <Button
+                    type="button"
+                    label="Asignar"
+                    @click="resetearAsignaciones"
+                ></Button>
+            </div>
+        </div>
+    </Dialog>
+
     <Message :closable="false" severity="success">
         Total Acumulado: {{ totalGlobal.horas }} horas
         {{ totalGlobal.minutos }} minutos
@@ -384,6 +446,12 @@ export default {
             horaIngreso: null,
             horaSalida: null,
             asistenciaSeleccionada: null,
+            resetModal: false,
+            rest: {
+                UsuarioID: this.storeUsuarios.usuario.id,
+                cantidad_horas: 0,
+                tipo_asignacion: "",
+            },
         };
     },
     setup() {
@@ -515,6 +583,36 @@ export default {
         estadoModalModificar(estado, id) {
             this.modalModificar = estado;
             this.asistenciaSeleccionada = id;
+        },
+        openDialog() {
+            this.resetModal = true;
+        },
+        async resetearAsignaciones() {
+            try {
+                await this.storeAsistencias.resetearAsignaciones(this.rest);
+
+                // Si se asignó correctamente, mostrar un mensaje de éxito
+                Swal.fire({
+                    icon: "success",
+                    title: "Éxito",
+                    text: "Las asignaciones se han reseteado correctamente.",
+                });
+
+                // Cerrar el diálogo y limpiar los campos
+                this.resetModal = false;
+                this.rest.UsuarioID = "";
+                this.rest.cantidad_horas = 0;
+                this.rest.tipo_asignacion = "";
+            } catch (error) {
+                // Mostrar un mensaje de error si falla la solicitud
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text:
+                        error.message ||
+                        "No se pudo realizar el reset de asignaciones.",
+                });
+            }
         },
         registrarAsistencia() {
             const fechaActual = new Date();
@@ -698,9 +796,10 @@ export default {
 
         async verificarAsistencias() {
             try {
-                const resultado = await this.storeAsistencias.verificarAsistenciasUsuario(
-                    this.usuario.id
-                );
+                const resultado =
+                    await this.storeAsistencias.verificarAsistenciasUsuario(
+                        this.usuario.id
+                    );
                 Swal.fire({
                     icon: "success",
                     title: "Éxito",

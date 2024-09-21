@@ -82,6 +82,7 @@ Route::get('fichas/actividad/usuario/{id}', [UsuarioController::class, 'fichasAc
 Route::post('/asistencias/usuario/{id}', [AsistenciasController::class, 'obtenerAsistencias']);
 Route::post('asistencias/total', [AsistenciasController::class, 'calcularTotalAsistencias']);
 Route::post('asistencias/verificar/{id}', [AsistenciasController::class, 'verificarAsistencia']);
+Route::post('/asistencias/resetear', [AsistenciasController::class, 'resetearAsistencias']);
 
 
 Route::put('verificar/usuario/{id}', [UsuarioController::class, 'verificarUsuario']);
