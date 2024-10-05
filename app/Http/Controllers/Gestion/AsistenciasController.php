@@ -178,8 +178,6 @@ class AsistenciasController extends Controller
         // Establecer la zona horaria local
         date_default_timezone_set(config('app.timezone'));
 
-        $porPagina = $request->get('porPagina', 10);
-        $pagina = $request->get('page', 1);
         $busqueda = $request->get('busqueda');
         $idEvento = $request->get('idEvento');
 
@@ -216,10 +214,12 @@ class AsistenciasController extends Controller
                 $segundos = $diferencia->s;
             }
 
+            // Sumar totales
             $totalHoras += $horas;
             $totalMinutos += $minutos;
             $totalSegundos += $segundos;
 
+            // Almacenar datos de asistencia
             $asistenciasConHoras[] = [
                 'id' => $asistencia->id,
                 'fecha_hora_entrada' => $horaEntrada->format('H:i:s d/m/Y'), // Formato personalizado
@@ -232,27 +232,14 @@ class AsistenciasController extends Controller
             ];
         }
 
-        $totalAsistencias = count($asistenciasConHoras);
-        $inicio = ($pagina - 1) * $porPagina;
-        $fin = min($inicio + $porPagina, $totalAsistencias);
-        $asistenciasPaginadas = array_slice($asistenciasConHoras, $inicio, $fin - $inicio);
-
         return response()->json([
             'total' => [
-                'total_asistencias' => $totalAsistencias,
+                'total_asistencias' => count($asistenciasConHoras),
                 'total_horas' => $totalHoras,
                 'total_minutos' => $totalMinutos,
                 'total_segundos' => $totalSegundos,
             ],
-            'asistencias' => $asistenciasPaginadas,
-            'paginacion' => [
-                'total' => $totalAsistencias,
-                'porPagina' => $porPagina,
-                'paginaActual' => $pagina,
-                'ultimaPagina' => ceil($totalAsistencias / $porPagina),
-                'desde' => $inicio + 1,
-                'hasta' => $fin,
-            ],
+            'asistencias' => $asistenciasConHoras, // Devolver todas las asistencias sin paginación
         ]);
     }
 

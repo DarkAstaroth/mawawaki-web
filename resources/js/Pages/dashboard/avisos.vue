@@ -16,8 +16,7 @@
                             Bienvenidos!
                         </h3>
                         <p class="fw-bold">
-                            Centro Integral de Terapias Equinas Mawawaki
-                            Sarañani
+                            Centro Integral de Terapias Equinas Mä Wawaki Sarañani
                         </p>
                         <qrcode-vue
                             :value="valorQr"
