@@ -50,218 +50,146 @@
                 </li>
             </ul>
 
-            <InputText
-                class="w-100 mb-5"
-                type="text"
-                v-model="busqueda"
-                @input="filtrarUsuarios"
-                placeholder="Buscar usuario..."
-            />
-            <div class="table-responsive">
-                <table class="table table-striped table-sm table-bordered">
-                    <thead>
-                        <tr
-                            class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
-                        >
-                            <th class="min-w-400px">Nombre</th>
-                            <th class="min-w-150px">Rol</th>
-                            <th class="min-w-200px">Creado en</th>
-                            <th class="max-w-100px" v-if="is('admin')">
-                                Estado
-                            </th>
-                            <th class="min-w-10px">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="usuario in store.usuarios" :key="usuario.id">
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar_usuario">
-                                        <img
-                                            :src="usuario.profile_photo_path"
-                                            alt="foto"
-                                            class="crop"
-                                            :width="
-                                                usuario.profile_photo_path.includes(
-                                                    'user-default.jpg'
-                                                )
-                                                    ? 50
-                                                    : 70
-                                            "
-                                        />
-                                    </div>
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ usuario.persona.nombre }}
-                                            {{ usuario.persona.paterno }}
-                                            {{ usuario.persona.materno }}
-                                        </div>
-                                        <div class="py-1 bd-highlight">
-                                            <small>
-                                                {{ usuario.email }}
-                                            </small>
-                                        </div>
-                                    </div>
+            <DataTable
+                :value="store.usuarios"
+                :paginator="true"
+                :rows="10"
+                :filters="filters"
+                :rowHover="true"
+                v-model:filters="filters"
+                :resizableColumns="true"
+                columnResizeMode="fit"
+                class="p-datatable-sm"
+                :rowsPerPageOptions="[10, 20, 50]"
+                dataKey="id"
+                :globalFilterFields="[
+                    'persona.nombre',
+                    'persona.paterno',
+                    'persona.materno',
+                    'email',
+                ]"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} usuarios"
+            >
+                <template #header>
+                    <div class="flex justify-content-between">
+                        <InputText
+                            v-model="filters['global'].value"
+                            placeholder="Buscar..."
+                            class="p-inputtext-sm"
+                            style="width: 300px"
+                        />
+                    </div>
+                </template>
+
+                <Column header="Nombre" sortable>
+                    <template #body="{ data }">
+                        <div class="d-flex align-items-center">
+                            <Avatar
+                                :image="data.profile_photo_path"
+                                alt="foto"
+                                size="large"
+                                shape="circle"
+                            />
+                            <div class="px-2 d-flex flex-column">
+                                <div>
+                                    {{ data.persona.nombre }}
+                                    {{ data.persona.paterno }}
+                                    {{ data.persona.materno }}
                                 </div>
-                            </td>
-                            <td class="align-middle">
-                                <div class="d-flex gap-2">
-                                    <div
-                                        v-for="urol in usuario.roles"
-                                        :key="urol.id"
-                                    >
-                                        <span class="badge badge-secondary">{{
-                                            urol.name
-                                        }}</span>
-                                    </div>
+                                <div class="py-1 bd-highlight">
+                                    <small>{{ data.email }}</small>
                                 </div>
-                            </td>
-                            <td class="align-middle">
-                                {{
-                                    new Date(usuario.created_at).toLocaleString(
-                                        "es-ES",
-                                        {
-                                            weekday: "long",
-                                            day: "numeric",
-                                            month: "long",
-                                            year: "numeric",
-                                            hour: "numeric",
-                                            minute: "numeric",
-                                            second: "numeric",
-                                        }
-                                    )
-                                }}
-                            </td>
-                            <td class="align-middle" v-if="is('admin')">
-                                <InputSwitch
-                                    v-model="usuario.estado"
-                                    @click="cambiarEstado(usuario)"
-                                />
-                            </td>
-                            <td class="align-middle">
-                                <a
-                                    :href="
-                                        route('usuario.control', {
-                                            id: usuario.id,
-                                        })
-                                    "
-                                    v-if="is('admin|Asistente')"
-                                >
-                                    <Button
-                                        v-tooltip.bottom="{
-                                            value: 'Perfíl',
-                                            showDelay: 300,
-                                            hideDelay: 300,
-                                        }"
-                                        icon="fi fi-rr-chart-user fs-1"
-                                        severity="info"
-                                        text
-                                        rounded
-                                        aria-label="Cancel"
-                                /></a>
-                            </td>
-                        </tr>
-                        <tr v-if="store.usuarios.length === 0">
-                            <td colspan="5" class="text-center">
-                                No hay datos
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <nav>
-                <ul class="pagination">
-                    <li
-                        class="page-item"
-                        :class="{ disabled: paginacion.paginaActual === 1 }"
-                    >
+                            </div>
+                        </div>
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <InputText
+                            v-model="filterModel.value"
+                            @input="filterCallback()"
+                            placeholder="Buscar Nombre"
+                            class="p-column-filter"
+                        />
+                    </template>
+                </Column>
+
+                <Column field="roles" header="Rol" sortable>
+                    <template #body="{ data }">
+                        <div class="d-flex gap-2">
+                            <span
+                                v-for="urol in data.roles"
+                                :key="urol.id"
+                                class="badge badge-secondary"
+                                >{{ urol.name }}</span
+                            >
+                        </div>
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <InputText
+                            v-model="filterModel.value"
+
+                            placeholder="Buscar Rol"
+                            class="p-column-filter"
+                        />
+                    </template>
+                </Column>
+
+                <Column field="created_at" header="Creado en" sortable>
+                    <template #body="{ data }">
+                        {{
+                            new Date(data.created_at).toLocaleString("es-ES", {
+                                weekday: "long",
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric",
+                                hour: "numeric",
+                                minute: "numeric",
+                                second: "numeric",
+                            })
+                        }}
+                    </template>
+                    <template #filter="{ filterModel, filterCallback }">
+                        <InputText
+                            v-model="filterModel.value"
+                            @input="filterCallback()"
+                            placeholder="Buscar Fecha"
+                            class="p-column-filter"
+                        />
+                    </template>
+                </Column>
+
+                <Column v-if="is('admin')" header="Estado">
+                    <template #body="{ data }">
+                        <InputSwitch
+                            v-model="data.estado"
+                            @change="$emit('cambiarEstado', data)"
+                        />
+                    </template>
+                </Column>
+
+                <Column header="Acciones">
+                    <template #body="{ data }">
                         <a
-                            class="page-link"
-                            href="#"
-                            @click="cambiarPaginacion(1)"
+                            :href="route('usuario.control', { id: data.id })"
+                            v-if="is('admin|Asistente')"
                         >
-                            <Icon
-                                icon="material-symbols:keyboard-double-arrow-left"
-                                width="24"
-                                height="24"
+                            <Button
+                                icon="fi fi-rr-chart-user fs-1"
+                                severity="info"
+                                text
+                                rounded
+                                aria-label="Perfil"
                             />
                         </a>
-                    </li>
-                    <li
-                        class="page-item"
-                        :class="{ disabled: paginacion.paginaActual === 1 }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="
-                                cambiarPaginacion(paginacion.paginaActual - 1)
-                            "
-                        >
-                            <Icon
-                                icon="iconamoon:arrow-left-2"
-                                width="24"
-                                height="24"
-                            />
-                        </a>
-                    </li>
-                    <li
-                        class="page-item"
-                        v-for="page in paginacion.ultimaPagina"
-                        :key="page"
-                        :class="{ active: paginacion.paginaActual === page }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="cambiarPaginacion(page)"
-                            >{{ page }}</a
-                        >
-                    </li>
-                    <li
-                        class="page-item"
-                        :class="{
-                            disabled:
-                                paginacion.paginaActual ===
-                                paginacion.ultimaPagina,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="
-                                cambiarPaginacion(paginacion.paginaActual + 1)
-                            "
-                        >
-                            <Icon
-                                icon="iconamoon:arrow-right-2"
-                                width="24"
-                                height="24"
-                            />
-                        </a>
-                    </li>
-                    <li
-                        class="page-item"
-                        :class="{
-                            disabled:
-                                paginacion.paginaActual ===
-                                paginacion.ultimaPagina,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="cambiarPaginacion(paginacion.ultimaPagina)"
-                        >
-                            <Icon
-                                icon="material-symbols:keyboard-double-arrow-right"
-                                width="24"
-                                height="24"
-                            />
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+                    </template>
+                </Column>
+
+                <template #empty>
+                    <tr>
+                        <td colspan="5" class="text-center">No hay datos</td>
+                    </tr>
+                </template>
+            </DataTable>
         </div>
     </div>
 
@@ -346,6 +274,7 @@ import FichasIndex from "./fichasIndex.vue";
 import { useToast } from "primevue/usetoast";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { FilterMatchMode } from "primevue/api";
 
 export default {
     name: "UsuariosIndex",
@@ -407,6 +336,26 @@ export default {
                 { title: "todo 4", description: "description 4" },
                 { title: "todo 5", description: "description 5" },
             ],
+            filters: {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                "persona.nombre": {
+                    value: null,
+                    matchMode: FilterMatchMode.STARTS_WITH,
+                },
+                "persona.paterno": {
+                    value: null,
+                    matchMode: FilterMatchMode.STARTS_WITH,
+                },
+                "persona.materno": {
+                    value: null,
+                    matchMode: FilterMatchMode.STARTS_WITH,
+                },
+                "persona.email": {
+                    value: null,
+                    matchMode: FilterMatchMode.STARTS_WITH,
+                },
+                estado: { value: null, matchMode: FilterMatchMode.EQUALS },
+            },
         };
     },
     validations() {},

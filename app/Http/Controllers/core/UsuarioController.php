@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\core\UsuarioResource;
 use App\Http\Resources\Gestion\ActividadResource;
 use App\Models\Gestion\Actividad;
+use App\Models\Gestion\Evento;
 use App\Models\Gestion\Personal;
 use App\Models\Persona;
 use App\Models\User;
@@ -33,95 +34,122 @@ class UsuarioController extends Controller
         return view('configuraciones.general');
     }
 
-    public function obtenerUsuarios(Request $request)
+    // public function obtenerUsuarios(Request $request)
+    // {
+    //     $porPagina = $request->get('porPagina', 10);
+    //     $pagina = $request->get('page', 1);
+    //     $busqueda = $request->get('busqueda');
+    //     $parametro = $request->get('parametro');
+    //     $rol = $request->get('rol'); // Nuevo parámetro para el rol
+
+    //     // Base query
+    //     $usuariosQuery = User::query();
+
+    //     // Filtrar por parámetro
+    //     if ($parametro === 'activos') {
+    //         $usuariosQuery->where('estado', 1)
+    //             ->where('solicitud', 1)
+    //             ->where('verificada', 1)
+    //             ->whereNotNull('email_verified_at');
+    //     } elseif ($parametro === 'inactivos') {
+    //         $usuariosQuery->where('estado', 0);
+    //     } elseif ($parametro === 'solicitudes') {
+    //         $usuariosQuery->where('estado', 0)
+    //             ->where('solicitud', 1)
+    //             ->where('verificada', 0)
+    //             ->whereNotNull('email_verified_at');
+    //     } elseif ($parametro === 'verificados') {
+    //         $usuariosQuery->whereNotNull('email_verified_at');
+    //     } elseif ($parametro === 'porVerificar') {
+    //         $usuariosQuery->where('estado', 0)
+    //             ->where('solicitud', 0)
+    //             ->where('verificada', 0)
+    //             ->whereNull('email_verified_at');
+    //     }
+
+    //     // Filtrar por rol si se proporciona
+    //     if ($rol) {
+    //         $usuariosQuery->whereHas('roles', function ($query) use ($rol) {
+    //             $query->where('name', $rol);
+    //         });
+    //     }
+
+    //     // Filtrar por búsqueda
+    //     if ($busqueda) {
+    //         $busquedaSinEspacios = str_replace(' ', '', $busqueda);
+    //         $usuariosQuery->where(function ($query) use ($busquedaSinEspacios) {
+    //             $query->whereRaw("REPLACE(name, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+    //                 ->orWhereHas('persona', function ($subquery) use ($busquedaSinEspacios) {
+    //                     $subquery->whereRaw("REPLACE(nombre, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+    //                         ->orWhereRaw("REPLACE(paterno, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
+    //                         ->orWhereRaw("REPLACE(materno, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
+    //                 })
+    //                 ->orWhereRaw("REPLACE(email, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
+    //         });
+    //     }
+
+    //     // Paginar los resultados
+    //     $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
+    //     $usuariosIds = $usuarios->pluck('id')->toArray();
+
+    //     // Cargar roles y persona para los usuarios paginados
+    //     $usuariosConRoles = User::with(['roles', 'persona'])->whereIn('id', $usuariosIds)->get();
+
+    //     // Agregar campos adicionales a los usuarios
+    //     $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
+    //         $usuario->profile_photo_path = env('APP_URL') . '/' . $usuario->profile_photo_path;
+    //         $usuario->nuevo_campo = "Valor del nuevo campo para este usuario";
+    //         $usuario->estado = $usuario->estado == 1 ? true : false;
+
+    //         return $usuario;
+    //     });
+
+    //     // Convertir usuarios a recursos
+    //     $usuariosResource = UsuarioResource::collection($usuariosConCamposAdicionales);
+    //     $resultadoBusqueda = $usuariosResource->isEmpty() ? [] : $usuariosResource;
+
+    //     // Responder con datos paginados
+    //     return response()->json([
+    //         'usuarios' => $resultadoBusqueda,
+    //         'paginacion' => [
+    //             'total' => $usuarios->total(),
+    //             'porPagina' => $usuarios->perPage(),
+    //             'paginaActual' => $usuarios->currentPage(),
+    //             'ultimaPagina' => $usuarios->lastPage(),
+    //             'desde' => $usuarios->firstItem(),
+    //             'hasta' => $usuarios->lastItem()
+    //         ]
+    //     ]);
+    // }
+
+
+    public function obtenerUsuarios()
     {
-        $porPagina = $request->get('porPagina', 10);
-        $pagina = $request->get('page', 1);
-        $busqueda = $request->get('busqueda');
-        $parametro = $request->get('parametro');
-        $rol = $request->get('rol'); // Nuevo parámetro para el rol
 
-        // Base query
-        $usuariosQuery = User::query();
+        $usuariosConRoles = User::with(['roles', 'persona'])
+            ->join('personas', 'users.persona_id', '=', 'personas.id')
+            ->orderBy('personas.paterno')
+            ->select('users.*')
+            ->get();
 
-        // Filtrar por parámetro
-        if ($parametro === 'activos') {
-            $usuariosQuery->where('estado', 1)
-                ->where('solicitud', 1)
-                ->where('verificada', 1)
-                ->whereNotNull('email_verified_at');
-        } elseif ($parametro === 'inactivos') {
-            $usuariosQuery->where('estado', 0);
-        } elseif ($parametro === 'solicitudes') {
-            $usuariosQuery->where('estado', 0)
-                ->where('solicitud', 1)
-                ->where('verificada', 0)
-                ->whereNotNull('email_verified_at');
-        } elseif ($parametro === 'verificados') {
-            $usuariosQuery->whereNotNull('email_verified_at');
-        } elseif ($parametro === 'porVerificar') {
-            $usuariosQuery->where('estado', 0)
-                ->where('solicitud', 0)
-                ->where('verificada', 0)
-                ->whereNull('email_verified_at');
-        }
 
-        // Filtrar por rol si se proporciona
-        if ($rol) {
-            $usuariosQuery->whereHas('roles', function ($query) use ($rol) {
-                $query->where('name', $rol);
-            });
-        }
-
-        // Filtrar por búsqueda
-        if ($busqueda) {
-            $busquedaSinEspacios = str_replace(' ', '', $busqueda);
-            $usuariosQuery->where(function ($query) use ($busquedaSinEspacios) {
-                $query->whereRaw("REPLACE(name, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
-                    ->orWhereHas('persona', function ($subquery) use ($busquedaSinEspacios) {
-                        $subquery->whereRaw("REPLACE(nombre, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
-                            ->orWhereRaw("REPLACE(paterno, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"])
-                            ->orWhereRaw("REPLACE(materno, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
-                    })
-                    ->orWhereRaw("REPLACE(email, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
-            });
-        }
-
-        // Paginar los resultados
-        $usuarios = $usuariosQuery->paginate($porPagina, ['*'], 'page', $pagina);
-        $usuariosIds = $usuarios->pluck('id')->toArray();
-
-        // Cargar roles y persona para los usuarios paginados
-        $usuariosConRoles = User::with(['roles', 'persona'])->whereIn('id', $usuariosIds)->get();
-
-        // Agregar campos adicionales a los usuarios
         $usuariosConCamposAdicionales = $usuariosConRoles->map(function ($usuario) {
             $usuario->profile_photo_path = env('APP_URL') . '/' . $usuario->profile_photo_path;
             $usuario->nuevo_campo = "Valor del nuevo campo para este usuario";
-            $usuario->estado = $usuario->estado == 1 ? true : false;
+            $usuario->estado = $usuario->estado == 1;
 
             return $usuario;
         });
 
-        // Convertir usuarios a recursos
-        $usuariosResource = UsuarioResource::collection($usuariosConCamposAdicionales);
-        $resultadoBusqueda = $usuariosResource->isEmpty() ? [] : $usuariosResource;
 
-        // Responder con datos paginados
+        $usuariosResource = UsuarioResource::collection($usuariosConCamposAdicionales);
+
+
         return response()->json([
-            'usuarios' => $resultadoBusqueda,
-            'paginacion' => [
-                'total' => $usuarios->total(),
-                'porPagina' => $usuarios->perPage(),
-                'paginaActual' => $usuarios->currentPage(),
-                'ultimaPagina' => $usuarios->lastPage(),
-                'desde' => $usuarios->firstItem(),
-                'hasta' => $usuarios->lastItem()
-            ]
+            'usuarios' => $usuariosResource,
+            'total' => count($usuariosResource),
         ]);
     }
-
-
     public function obtenerUsuariosSinPaginacion()
     {
         // Obtener solo los usuarios con el rol "personal"
@@ -497,8 +525,8 @@ class UsuarioController extends Controller
 
     public function convertirMayusculas()
     {
+        // Convertir nombres de personas a mayúsculas
         $personas = Persona::all();
-
         foreach ($personas as $persona) {
             $persona->nombre = mb_strtoupper($persona->nombre, 'UTF-8');
             $persona->paterno = mb_strtoupper($persona->paterno, 'UTF-8');
@@ -506,6 +534,12 @@ class UsuarioController extends Controller
             $persona->save();
         }
 
+        // Convertir nombres de eventos a mayúsculas
+        $eventos = Evento::all();
+        foreach ($eventos as $evento) {
+            $evento->nombre = mb_strtoupper($evento->nombre, 'UTF-8');
+            $evento->save();
+        }
 
         return response()->json(['message' => 'Campos convertidos a mayúsculas correctamente'], 200);
     }

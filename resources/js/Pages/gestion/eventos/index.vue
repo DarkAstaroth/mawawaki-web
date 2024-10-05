@@ -15,320 +15,166 @@
         </div>
 
         <div class="card-body">
-            <input
-                class="mb-5 form-control"
-                type="text"
-                v-model="busqueda"
-                @input="filtrarEventos"
-                placeholder="Buscar..."
-            />
-            <div class="table-responsive">
-                <table class="table table-striped table-sm table-bordered">
-                    <thead>
-                        <tr
-                            class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
-                        >
-                            <th class="min-w-150px">Nombre</th>
-                            <th class="min-w-150px">Fecha Inicio</th>
-                            <th class="min-w-150px">Fecha Fin</th>
-                            <th class="min-w-200px">Lugar</th>
-                            <th class="min-w-150px">Tipo Ingreso</th>
-                            <th class="min-w-150px">Visibilidad</th>
-                            <th class="min-w-200px">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="evento in store.eventos" :key="evento.id">
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ evento.nombre }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{
-                                                fechaHoraLegible(
-                                                    evento.fecha_hora_inicio
-                                                )
-                                            }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{
-                                                fechaHoraLegible(
-                                                    evento.fecha_hora_fin
-                                                )
-                                            }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ evento.lugar }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            <Badge
-                                                :value="
-                                                    evento.solo_ingreso
-                                                        ? 'Solo Ingreso'
-                                                        : 'Ingreso - Salida'
-                                                "
-                                                :severity="
-                                                    evento.solo_ingreso
-                                                        ? 'info'
-                                                        : 'warning'
-                                                "
-                                            ></Badge>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            <Badge
-                                                :value="
-                                                    evento.tipo.toLowerCase() ===
-                                                    'privado'
-                                                        ? 'Privado'
-                                                        : 'Público'
-                                                "
-                                                :severity="
-                                                    evento.tipo.toLowerCase() ===
-                                                    'privado'
-                                                        ? 'info'
-                                                        : 'warning'
-                                                "
-                                            ></Badge>
-                                            <Badge
-                                                v-if="evento.principal"
-                                                value="Principal"
-                                                severity="success"
-                                            ></Badge>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-items-center">
-                                <Button
-                                    v-if="is('admin|Asistente')"
-                                    v-tooltip.bottom="{
-                                        value: 'Scannear',
-                                        showDelay: 300,
-                                        hideDelay: 300,
-                                    }"
-                                    icon="fi fi-br-qr-scan"
-                                    severity="success"
-                                    text
-                                    rounded
-                                    @click="estadoModalScanner(true, evento)"
-                                />
-
-                                <a
-                                    :href="
-                                        route('evento.qrs', {
-                                            id: evento.id,
-                                        })
-                                    "
-                                    v-if="is('admin|Asistente')"
-                                >
-                                    <Button
-                                        v-tooltip.bottom="{
-                                            value: 'QR',
-                                            showDelay: 300,
-                                            hideDelay: 300,
-                                        }"
-                                        icon="fi fi-sr-qrcode"
-                                        severity="secondary"
-                                        text
-                                        rounded
-                                        aria-label="Cancel"
-                                /></a>
-
-                                <a
-                                    :href="
-                                        route('evento.detalle', {
-                                            id: evento.id,
-                                        })
-                                    "
-                                    v-if="is('admin|Asistente')"
-                                >
-                                    <Button
-                                        v-tooltip.bottom="{
-                                            value: 'Editar',
-                                            showDelay: 300,
-                                            hideDelay: 300,
-                                        }"
-                                        icon="fi fi-br-file-edit"
-                                        severity="info"
-                                        text
-                                        rounded
-                                        aria-label="Cancel"
-                                /></a>
-                                <Button
-                                    v-if="
-                                        is('admin|Asistente') &&
-                                        !evento.principal
-                                    "
-                                    v-tooltip.bottom="{
-                                        value: 'Eliminar',
-                                        showDelay: 300,
-                                        hideDelay: 300,
-                                    }"
-                                    @click="
-                                        confirmarEliminar($event, evento.id)
-                                    "
-                                    icon="pi pi-times"
-                                    severity="danger"
-                                    text
-                                    rounded
-                                    aria-label="Cancel"
-                                />
-                            </td>
-                        </tr>
-                        <tr v-if="store.eventos.length === 0">
-                            <td colspan="5" class="text-center">
-                                No hay datos
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <nav>
-                <ul class="pagination">
-                    <li
-                        class="page-item"
-                        :class="{
-                            disabled: this.store.paginacion.paginaActual === 1,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="cambiarPaginacion(1)"
-                        >
-                            <Icon
-                                icon="material-symbols:keyboard-double-arrow-left"
-                                width="24"
-                                height="24"
-                            />
-                        </a>
-                    </li>
-                    <li
-                        class="page-item"
-                        :class="{
-                            disabled: this.store.paginacion.paginaActual === 1,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="
-                                cambiarPaginacion(
-                                    this.store.paginacion.paginaActual - 1
-                                )
+            <DataTable
+                :value="store.eventos"
+                :paginator="true"
+                :rows="10"
+                :filters="filters"
+                :rowHover="true"
+                v-model:filters="filters"
+                :resizableColumns="true"
+                columnResizeMode="fit"
+                class="p-datatable-sm"
+                :rowsPerPageOptions="[10, 20, 50]"
+                dataKey="id"
+                :globalFilterFields="['nombre']"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} eventos"
+            >
+                <template #header>
+                    <div class="flex justify-content-between">
+                        <InputText
+                            v-model="filters['global'].value"
+                            placeholder="Buscar..."
+                            class="p-inputtext-sm"
+                            style="width: 300px"
+                        />
+                    </div>
+                </template>
+                <Column
+                    field="nombre"
+                    header="Nombre"
+                    filter
+                    :filterPlaceholder="'Buscar por nombre'"
+                ></Column>
+                <Column header="Fecha Inicio">
+                    <template #body="{ data: evento }">
+                        {{ fechaHoraLegible(evento.fecha_hora_inicio) }}
+                    </template>
+                </Column>
+                <Column header="Fecha Fin">
+                    <template #body="{ data: evento }">
+                        {{ fechaHoraLegible(evento.fecha_hora_fin) }}
+                    </template>
+                </Column>
+                <Column field="lugar" header="Lugar" filter></Column>
+                <Column header="Tipo Ingreso">
+                    <template #body="{ data: evento }">
+                        <Badge
+                            :value="
+                                evento.solo_ingreso
+                                    ? 'Solo Ingreso'
+                                    : 'Ingreso - Salida'
                             "
-                        >
-                            <Icon
-                                icon="iconamoon:arrow-left-2"
-                                width="24"
-                                height="24"
-                            />
-                        </a>
-                    </li>
-                    <li
-                        class="page-item"
-                        v-for="page in this.store.paginacion.ultimaPagina"
-                        :key="page"
-                        :class="{
-                            active: this.store.paginacion.paginaActual === page,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="cambiarPaginacion(page)"
-                            >{{ page }}</a
-                        >
-                    </li>
-                    <li
-                        class="page-item"
-                        :class="{
-                            disabled:
-                                this.store.paginacion.paginaActual ===
-                                this.store.paginacion.ultimaPagina,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="
-                                cambiarPaginacion(
-                                    this.store.paginacion.paginaActual + 1
-                                )
+                            :severity="evento.solo_ingreso ? 'info' : 'warning'"
+                        />
+                    </template>
+                </Column>
+                <Column header="Visibilidad">
+                    <template #body="{ data: evento }">
+                        <Badge
+                            :value="
+                                evento.tipo.toLowerCase() === 'privado'
+                                    ? 'Privado'
+                                    : 'Público'
                             "
-                        >
-                            <Icon
-                                icon="iconamoon:arrow-right-2"
-                                width="24"
-                                height="24"
-                            />
-                        </a>
-                    </li>
-                    <li
-                        class="page-item"
-                        :class="{
-                            disabled:
-                                this.store.paginacion.paginaActual ===
-                                this.store.paginacion.ultimaPagina,
-                        }"
-                    >
-                        <a
-                            class="page-link"
-                            href="#"
-                            @click="
-                                cambiarPaginacion(
-                                    this.store.paginacion.ultimaPagina
-                                )
+                            :severity="
+                                evento.tipo.toLowerCase() === 'privado'
+                                    ? 'info'
+                                    : 'warning'
                             "
+                        />
+                        <Badge
+                            v-if="evento.principal"
+                            value="Principal"
+                            severity="success"
+                        />
+                    </template>
+                </Column>
+                <Column header="Acciones">
+                    <template #body="{ data: evento }">
+                        <Button
+                            v-if="is('admin|Asistente')"
+                            v-tooltip.bottom="{
+                                value: 'Generar reporte',
+                                showDelay: 300,
+                                hideDelay: 300,
+                            }"
+                            icon="fi fi-br-file-pdf"
+                            severity="danger"
+                            text
+                            rounded
+                            @click="obtenerReporteEvento(evento)"
+                        />
+                        <Button
+                            v-if="is('admin|Asistente')"
+                            v-tooltip.bottom="{
+                                value: 'Scannear',
+                                showDelay: 300,
+                                hideDelay: 300,
+                            }"
+                            icon="fi fi-br-qr-scan"
+                            severity="success"
+                            text
+                            rounded
+                            @click="estadoModalScanner(true, evento)"
+                        />
+
+                        <a
+                            :href="route('evento.qrs', { id: evento.id })"
+                            v-if="is('admin|Asistente')"
                         >
-                            <Icon
-                                icon="material-symbols:keyboard-double-arrow-right"
-                                width="24"
-                                height="24"
+                            <Button
+                                v-tooltip.bottom="{
+                                    value: 'QR',
+                                    showDelay: 300,
+                                    hideDelay: 300,
+                                }"
+                                icon="fi fi-sr-qrcode"
+                                severity="secondary"
+                                text
+                                rounded
+                                aria-label="QR Code"
                             />
                         </a>
-                    </li>
-                </ul>
-            </nav>
+
+                        <a
+                            :href="route('evento.detalle', { id: evento.id })"
+                            v-if="is('admin|Asistente')"
+                        >
+                            <Button
+                                v-tooltip.bottom="{
+                                    value: 'Editar',
+                                    showDelay: 300,
+                                    hideDelay: 300,
+                                }"
+                                icon="fi fi-br-file-edit"
+                                severity="info"
+                                text
+                                rounded
+                                aria-label="Editar Evento"
+                            />
+                        </a>
+
+                        <Button
+                            v-if="is('admin|Asistente') && !evento.principal"
+                            v-tooltip.bottom="{
+                                value: 'Eliminar',
+                                showDelay: 300,
+                                hideDelay: 300,
+                            }"
+                            @click.prevent="
+                                confirmarEliminar($event, evento.id)
+                            "
+                            icon="pi pi-times"
+                            severity="danger"
+                            text
+                            rounded
+                            aria-label="Eliminar Evento"
+                        />
+                    </template>
+                </Column>
+            </DataTable>
         </div>
     </div>
     <Toast />
@@ -381,6 +227,9 @@ import {
 import LectorQR from "@/Pages/dashboard/lectorqr.vue";
 import { useDataAsistencias } from "@/store/dataAsistencias";
 import { useConfirm } from "primevue/useconfirm";
+import { FilterMatchMode } from "primevue/api";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 export default {
     name: "EventosIndex",
@@ -460,6 +309,13 @@ export default {
             longitud: null,
             modalScanner: false,
             eventoSeleccionado: null,
+            filters: {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                nombre: {
+                    value: null,
+                    matchMode: FilterMatchMode.STARTS_WITH,
+                },
+            },
         };
     },
 
@@ -534,6 +390,117 @@ export default {
         },
         cambiarPaginacion(pagina) {
             this.store.cargarEventos(pagina, this.busqueda, this.parametro);
+        },
+        obtenerReporteEvento(evento) {
+            this.store
+                .obtenerUsuariosEventoPdf(evento.id)
+                .then((respuesta) => {
+                    console.log(respuesta);
+                    var doc = new jsPDF("l", "pt", "letter");
+                    doc.setFontSize(10);
+
+                    var titulo = "REPORTE EVENTO";
+                    var tituloWidth =
+                        (doc.getStringUnitWidth(titulo) *
+                            doc.internal.getFontSize()) /
+                        doc.internal.scaleFactor;
+                    var x =
+                        (doc.internal.pageSize.getWidth() - tituloWidth) / 2;
+                    doc.text(titulo, x, 20);
+
+                    var nombreEvento = respuesta.data.evento.nombre;
+                    var lugar = respuesta.data.evento.lugar;
+                    var fechaInicio = respuesta.data.evento.fecha_hora_inicio;
+                    var fechaFin = respuesta.data.evento.fecha_hora_fin;
+
+                    doc.setFont("helvetica", "bold");
+                    doc.text("EVENTO: ", 40, 40);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(nombreEvento, 100, 40);
+
+                    doc.setFont("helvetica", "bold");
+                    doc.text("LUGAR: ", 40, 55);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(lugar, 100, 55);
+
+                    doc.setFont("helvetica", "bold");
+                    doc.text("FECHA INICIO: ", 40, 70);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(fechaInicio, 120, 70);
+
+                    doc.setFont("helvetica", "bold");
+                    doc.text("FECHA FIN: ", 40, 85);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(fechaFin, 120, 85);
+
+                    var startY = 100;
+
+                    var footer = function (data) {
+                        var str = "Página " + data.pageNumber;
+                        var pageWidth = doc.internal.pageSize.getWidth();
+                        var textWidth =
+                            (doc.getStringUnitWidth(str) *
+                                doc.internal.getFontSize()) /
+                            doc.internal.scaleFactor;
+                        doc.setFontSize(10);
+                        doc.text(
+                            str,
+                            pageWidth - data.settings.margin.right - textWidth,
+                            doc.internal.pageSize.getHeight() - 10
+                        );
+                        doc.text(
+                            "Centro Integral de Terapias Equinas",
+                            doc.internal.pageSize.getWidth() / 2,
+                            doc.internal.pageSize.getHeight() - 10,
+                            { align: "center" }
+                        );
+                    };
+
+                    var bodyData = respuesta.data.asistentes.map(
+                        (asistente) => [
+                            asistente.nro,
+                            asistente.ci,
+                            asistente.nombres,
+                            asistente.paterno,
+                            asistente.materno,
+                            asistente.roles,
+                        ]
+                    );
+
+                    var options = {
+                        startY: startY,
+                        head: [
+                            [
+                                "Nro",
+                                "CI",
+                                "Nombres",
+                                "Paterno",
+                                "Materno",
+                                "Roles",
+                            ],
+                        ],
+                        body: bodyData,
+                        margin: { top: 20, bottom: 20 },
+                        theme: "grid",
+                        styles: { fontSize: 8 },
+                        didDrawPage: footer,
+                    };
+
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, "0");
+                    var mm = String(today.getMonth() + 1).padStart(2, "0");
+                    var yyyy = today.getFullYear();
+                    var fecha = dd + "-" + mm + "-" + yyyy;
+                    var nombreArchivo =
+                        "Reporte_asistentes_evento_" + fecha + ".pdf";
+
+                    doc.autoTable(options);
+
+                    doc.save(nombreArchivo);
+                })
+                .catch((error) => {
+                    console.error("Error al generar el PDF:", error);
+                });
         },
     },
 };

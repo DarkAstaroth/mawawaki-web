@@ -31,7 +31,286 @@
             PDF
         </Button>
     </div>
-    <div class="table-responsive">
+    <!--
+    <DataTable
+        :value="this.storeAsistencias.asistencias"
+        :paginator="true"
+        :rows="10"
+        :filters="filters"
+        v-model:filters="filters"
+        :resizableColumns="true"
+        columnResizeMode="fit"
+        class="p-datatable-sm"
+        :rowsPerPageOptions="[10, 20, 50]"
+        dataKey="id"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} asistencias"
+    >
+        <Column header="Ingreso">
+            <template #body="{ data: asistencia }">
+                <div
+                    class="flex flex-col justify-content-center align-items-center min-h-40px"
+                    :class="{
+                        'bg-light-info': asistencia.fecha_hora_entrada !== null,
+                    }"
+                    style="width: 100%; height: 100%"
+                >
+                    <div v-if="asistencia.fecha_hora_entrada !== null">
+                        {{ asistencia.fecha_hora_entrada }}
+                        <strong
+                            v-if="asistencia.ingreso_verificado === 0"
+                            class="text-danger"
+                            >No verificado</strong
+                        >
+                        <strong v-else class="text-success">Verificado</strong>
+                    </div>
+                    <div v-else>No marcado</div>
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Salida">
+            <template #body="{ data: asistencia }">
+                <div
+                    class="d-flex flex-column justify-content-center align-items-center min-h-40px"
+                    :class="{
+                        'bg-light-info': asistencia.fecha_hora_salida !== null,
+                    }"
+                    style="width: 100%; height: 100%"
+                >
+                    <div v-if="asistencia.fecha_hora_salida !== null">
+                        {{ asistencia.fecha_hora_salida }}
+                        <strong
+                            v-if="asistencia.salida_verificado === 0"
+                            class="text-danger"
+                            >No verificado</strong
+                        >
+                        <strong v-else class="text-success">Verificado</strong>
+                    </div>
+                    <div v-else>No marcado</div>
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Total">
+            <template #body="{ data: asistencia }">
+                <div v-if="asistencia.fecha_hora_salida !== null">
+                    <div
+                        class="d-flex justify-content-center align-items-center min-h-40px"
+                    >
+                        {{ asistencia.horas }} hora(s)
+                        {{ asistencia.minutos }} minuto(s)
+                        {{ asistencia.segundos }} segundos
+                    </div>
+                </div>
+                <div
+                    class="d-flex justify-content-center align-items-center min-h-40px"
+                    v-else
+                >
+                    No terminó su registro
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Acciones">
+            <template #body="{ data: asistencia }">
+                <td>
+                    <Button
+                        v-if="!asistencia.fecha_hora_salida && is('admin')"
+                        v-tooltip.bottom="{
+                            value: 'Modificar',
+                            showDelay: 300,
+                            hideDelay: 300,
+                        }"
+                        @click="estadoModalModificar(true, asistencia.id)"
+                        icon="pi pi-calendar"
+                        severity="success"
+                        text
+                        rounded
+                        aria-label="Cancel"
+                    />
+                    <Button
+                        v-if="
+                            (asistencia.ingreso_verificado === 0 ||
+                                asistencia.salida_verificado === 0) &&
+                            asistencia.fecha_hora_salida &&
+                            is('admin')
+                        "
+                        v-tooltip.bottom="{
+                            value: 'Verificar',
+                            showDelay: 300,
+                            hideDelay: 300,
+                        }"
+                        @click="verificarAsistencia($event, asistencia.id)"
+                        icon="pi pi-check"
+                        severity="success"
+                        text
+                        rounded
+                        aria-label="Cancel"
+                    />
+
+                    <Button
+                        v-if="is('admin')"
+                        v-tooltip.bottom="{
+                            value: 'Eliminar',
+                            showDelay: 300,
+                            hideDelay: 300,
+                        }"
+                        @click="confirm2($event, asistencia.id)"
+                        icon="pi pi-times"
+                        severity="danger"
+                        text
+                        rounded
+                        aria-label="Cancel"
+                    />
+                </td>
+            </template>
+        </Column>
+    </DataTable> -->
+
+    <DataTable
+        stripedRows
+        showGridlines
+        :value="this.storeAsistencias.asistencias"
+        :paginator="true"
+        :rows="10"
+        :filters="filters"
+        v-model:filters="filters"
+        :resizableColumns="true"
+        columnResizeMode="fit"
+        class="p-datatable-sm"
+        :rowsPerPageOptions="[10, 20, 50]"
+        dataKey="id"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} asistencias"
+    >
+        <Column header="Fecha" :headerClass="'text-center'">
+            <template #body="{ data: asistencia }">
+                <div class="flex justify-center items-center min-h-40px">
+                    {{ asistencia.fecha_hora_entrada.split(" ")[1] }}
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Ingreso">
+            <template #body="{ data: asistencia }">
+                <div
+                    class="flex flex-col justify-center items-center min-h-40px p-3"
+                >
+                    <div
+                        v-if="asistencia.fecha_hora_entrada !== null"
+                        class="flex flex-col items-center"
+                    >
+                        {{ asistencia.fecha_hora_entrada.split(" ")[0] }}
+                        <!-- Solo la hora -->
+                        <strong
+                            v-if="asistencia.ingreso_verificado === 0"
+                            class="text-red-500"
+                            >No verificado</strong
+                        >
+                        <strong v-else class="text-green-500"
+                            >Verificado</strong
+                        >
+                    </div>
+                    <div v-else>No marcado</div>
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Salida">
+            <template #body="{ data: asistencia }">
+                <div
+                    class="flex flex-col justify-center items-center min-h-40px"
+                >
+                    <div
+                        v-if="asistencia.fecha_hora_salida !== null"
+                        class="flex flex-col items-center"
+                    >
+                        {{ asistencia.fecha_hora_salida.split(" ")[0] }}
+                        <!-- Solo la hora -->
+                        <strong
+                            v-if="asistencia.salida_verificado === 0"
+                            class="text-red-500"
+                            >No verificado</strong
+                        >
+                        <strong v-else class="text-green-500"
+                            >Verificado</strong
+                        >
+                    </div>
+                    <div v-else>No marcado</div>
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Total">
+            <template #body="{ data: asistencia }">
+                <div class="flex justify-center items-center min-h-40px">
+                    <div v-if="asistencia.fecha_hora_salida !== null">
+                        {{ asistencia.horas }} hora(s)
+                        {{ asistencia.minutos }} minuto(s)
+                        {{ asistencia.segundos }} segundos
+                    </div>
+                    <div v-else>No terminó su registro</div>
+                </div>
+            </template>
+        </Column>
+
+        <Column header="Acciones">
+            <template #body="{ data: asistencia }">
+                <div class="flex justify-center items-center min-h-40px">
+                    <Button
+                        v-if="!asistencia.fecha_hora_salida && is('admin')"
+                        v-tooltip.bottom="{
+                            value: 'Modificar',
+                            showDelay: 300,
+                            hideDelay: 300,
+                        }"
+                        @click="estadoModalModificar(true, asistencia.id)"
+                        icon="pi pi-calendar"
+                        severity="success"
+                        text
+                        rounded
+                        aria-label="Modificar"
+                    />
+                    <Button
+                        v-if="
+                            (asistencia.ingreso_verificado === 0 ||
+                                asistencia.salida_verificado === 0) &&
+                            asistencia.fecha_hora_salida &&
+                            is('admin')
+                        "
+                        v-tooltip.bottom="{
+                            value: 'Verificar',
+                            showDelay: 300,
+                            hideDelay: 300,
+                        }"
+                        @click="verificarAsistencia($event, asistencia.id)"
+                        icon="pi pi-check"
+                        severity="success"
+                        text
+                        rounded
+                        aria-label="Verificar"
+                    />
+                    <Button
+                        v-if="is('admin')"
+                        v-tooltip.bottom="{
+                            value: 'Eliminar',
+                            showDelay: 300,
+                            hideDelay: 300,
+                        }"
+                        @click="confirm2($event, asistencia.id)"
+                        icon="pi pi-times"
+                        severity="danger"
+                        text
+                        rounded
+                        aria-label="Eliminar"
+                    />
+                </div>
+            </template>
+        </Column>
+    </DataTable>
+
+    <!-- <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
                 <tr class="py-4 border-gray-200 fw-semibold fs-7 border-bottom">
@@ -173,7 +452,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div> -->
 
     <Dialog
         v-model:visible="modalRegistro"
@@ -262,104 +541,6 @@
             >
         </div>
     </Dialog>
-
-    <nav>
-        <ul class="pagination">
-            <li
-                class="page-item"
-                :class="{
-                    disabled:
-                        this.storeAsistencias.paginacion.paginaActual === 1,
-                }"
-            >
-                <a class="page-link" href="#" @click="cambiarPaginacion(1)"
-                    ><Icon
-                        icon="material-symbols:keyboard-double-arrow-left"
-                        width="24"
-                        height="24"
-                    />
-                </a>
-            </li>
-            <li
-                class="page-item"
-                :class="{
-                    disabled:
-                        this.storeAsistencias.paginacion.paginaActual === 1,
-                }"
-            >
-                <a
-                    class="page-link"
-                    href="#"
-                    @click="
-                        cambiarPaginacion(
-                            this.storeAsistencias.paginacion.paginaActual - 1
-                        )
-                    "
-                    ><Icon icon="iconamoon:arrow-left-2" width="24" height="24"
-                /></a>
-            </li>
-            <li
-                class="page-item"
-                v-for="page in this.storeAsistencias.paginacion.ultimaPagina"
-                :key="page"
-                :class="{
-                    active:
-                        this.storeAsistencias.paginacion.paginaActual === page,
-                }"
-            >
-                <a
-                    class="page-link"
-                    href="#"
-                    @click="cambiarPaginacion(page)"
-                    >{{ page }}</a
-                >
-            </li>
-            <li
-                class="page-item"
-                :class="{
-                    disabled:
-                        this.storeAsistencias.paginacion.paginaActual ===
-                        this.storeAsistencias.paginacion.ultimaPagina,
-                }"
-            >
-                <a
-                    class="page-link"
-                    href="#"
-                    @click="
-                        cambiarPaginacion(
-                            this.storeAsistencias.paginacion.paginaActual + 1
-                        )
-                    "
-                    ><Icon
-                        icon="iconamoon:arrow-right-2"
-                        width="24"
-                        height="24"
-                /></a>
-            </li>
-            <li
-                class="page-item"
-                :class="{
-                    disabled:
-                        this.storeAsistencias.paginacion.paginaActual ===
-                        this.storeAsistencias.paginacion.ultimaPagina,
-                }"
-            >
-                <a
-                    class="page-link"
-                    href="#"
-                    @click="
-                        cambiarPaginacion(
-                            this.storeAsistencias.paginacion.ultimaPagina
-                        )
-                    "
-                    ><Icon
-                        icon="material-symbols:keyboard-double-arrow-right"
-                        width="24"
-                        height="24"
-                /></a>
-            </li>
-        </ul>
-    </nav>
 
     <Dialog
         v-model:visible="resetModal"

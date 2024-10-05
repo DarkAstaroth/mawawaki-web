@@ -203,5 +203,15 @@ export const useDataEventos = defineStore("dataEventos", {
                 throw error;
             }
         },
+        async obtenerUsuariosEventoPdf(id) {
+            try {
+                const respuesta = await axios.get(
+                    `/api/eventos/${id}/asistentes/pdf`
+                );
+                return respuesta
+            } catch (error) {
+                throw error;
+            }
+        },
     },
 });
