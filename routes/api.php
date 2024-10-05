@@ -114,6 +114,7 @@ Route::post('asistencia/registrar', [AsistenciasController::class, 'registrarMar
 Route::get('eventos/privados', [EventosController::class, 'obtenerEventosPrivados']);
 Route::get('evento/principal', [EventosController::class, 'obtenerEventosPrincipal']);
 Route::get('eventos/{id}/asistentes', [EventosController::class, 'getAsistentes']);
+Route::get('eventos/{id}/asistentes/pdf', [EventosController::class, 'getAsistentesPdf']);
 Route::delete('evento/eliminar/{id}', [EventosController::class, 'eliminarEvento']);
 
 

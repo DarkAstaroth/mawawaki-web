@@ -16,71 +16,19 @@ class EventosController extends Controller
      */
     public function index()
     {
-        // $client = new Client();
-        // $response = $client->request('GET', 'https://api.ipgeolocation.io/getip');
-        // $ipInfo = $response->getBody()->getContents();
-        // $getIP = json_decode($ipInfo, true);
-
-        // // Dirección IP obtenida de la respuesta anterior
-        // $ip = $getIP['ip'];
-
-        // // Clave de la API
-        // $apiKey = "37cac8b6d41846c5976151b2b5480a88";
-
-        // // Crear una instancia de Guzzle Client
-        // $client = new Client();
-
-        // // Realizar la solicitud GET a la API
-        // $response = $client->request('GET', 'https://api.ipgeolocation.io/ipgeo', [
-        //     'query' => [
-        //         'apiKey' => $apiKey,
-        //         'ip' => $ip,
-        //     ],
-        // ]);
-
-        // // Obtener el contenido de la respuesta como un string JSON
-        // $geoInfo = $response->getBody()->getContents();
-
-        // // Parsear el string JSON a un array en PHP
-        // $geoInfoArray = json_decode($geoInfo, true);
-
-        // // Mostrar la respuesta en un dd
-        // dd($geoInfoArray);
-
         return view('gestion.eventos.index');
     }
 
 
-    public function obtenerEventos(Request $request)
+    public function obtenerEventos()
     {
-        $porPagina = $request->get('porPagina', 10);
-        $pagina = $request->get('page', 1);
-        $busqueda = $request->get('busqueda');
 
-        $eventoQuery = Evento::query();
-
-        if ($busqueda) {
-            $busquedaSinEspacios = str_replace(' ', '', $busqueda);
-            $eventoQuery->where(function ($query) use ($busquedaSinEspacios) {
-                $query->whereRaw("REPLACE(nombre, ' ', '') LIKE ?", ["%$busquedaSinEspacios%"]);
-            });
-        }
-
-        $eventos = $eventoQuery->paginate($porPagina, ['*'], 'page', $pagina);
-
-        $eventoResource = EventosResource::collection($eventos);
-        $resultadoBusqueda = $eventoResource->isEmpty() ? [] : $eventoResource;
+        $Eventos = Evento::all();
+        $usuariosResource = EventosResource::collection($Eventos);
 
         return response()->json([
-            'eventos' => $resultadoBusqueda,
-            'paginacion' => [
-                'total' => $eventos->total(),
-                'porPagina' => $eventos->perPage(),
-                'paginaActual' => $eventos->currentPage(),
-                'ultimaPagina' => $eventos->lastPage(),
-                'desde' => $eventos->firstItem(),
-                'hasta' => $eventos->lastItem()
-            ]
+            'eventos' => $usuariosResource,
+            'total' => count($usuariosResource),
         ]);
     }
 
@@ -274,6 +222,71 @@ class EventosController extends Controller
         });
 
         return response()->json(['usuarios' => $nombres_apellidos]);
+    }
+
+    public function getAsistentesPdf($id)
+    {
+        // Obtener el evento correspondiente por ID
+        $evento = Evento::findOrFail($id);
+
+        // Obtener asistentes del evento y ordenarlos por apellido paterno
+        $asistentes = Asistencia::where('EventoID', $id)
+            ->with(['usuario.persona', 'usuario.roles']) // Cargar los roles del usuario
+            ->get()
+            ->sortBy(function ($asistencia) {
+                return $asistencia->usuario->persona->paterno; // Ordenar por apellido paterno
+            });
+
+        // Mapear los asistentes para obtener sus datos y asignar número
+        $nombres_apellidos = $asistentes->values()->map(function ($asistencia, $index) {
+            $ci = $asistencia->usuario->persona->ci;
+            $nombres = $asistencia->usuario->persona->nombre;
+            $paterno = $asistencia->usuario->persona->paterno;
+            $materno = $asistencia->usuario->persona->materno;
+
+            // Obtener los roles del usuario y filtrar "personal" y "cliente"
+            $roles = $asistencia->usuario->roles->pluck('name')->filter(function ($role) {
+                return !in_array($role, ['personal', 'cliente','Asistente']);
+            })->toArray();
+
+            // Convertir roles a texto
+            $rolesTexto = !empty($roles) ? implode(', ', $roles) : 'Sin rol';
+
+            $ciTexto = $ci !== null ? $ci : 'SIN CI';
+
+            return [
+                'nro' => $index + 1, // Numeración basada en el orden después de ordenar
+                'ci' => $ciTexto,
+                'nombres' => $nombres,
+                'paterno' => $paterno,
+                'materno' => $materno,
+                'roles' => $rolesTexto // Agregar los roles
+            ];
+        });
+
+        // Crear la cabecera para el PDF
+        $cabecera = [
+            ["Nro", "CI", "Nombres", "Paterno", "Materno", "Roles"] // Agregar columna de Roles
+        ];
+
+        // Preparar las fechas del evento en formato legible
+        $fechaInicioLegible = date('Y-m-d H:i:s', $evento->fecha_hora_inicio);
+        $fechaFinLegible = date('Y-m-d H:i:s', $evento->fecha_hora_fin);
+
+        // Preparar los datos a devolver
+        $resultado = [
+            'evento' => [
+                'nombre' => $evento->nombre,
+                'lugar' => $evento->lugar,
+                'fecha_hora_inicio' => $fechaInicioLegible,
+                'fecha_hora_fin' => $fechaFinLegible,
+            ],
+            'total_asistentes' => $nombres_apellidos->count(), // Total de asistentes
+            'cabecera' => $cabecera,
+            'asistentes' => $nombres_apellidos // Ahora es un array de objetos
+        ];
+
+        return response()->json($resultado);
     }
 
     public function eliminarEvento($id)

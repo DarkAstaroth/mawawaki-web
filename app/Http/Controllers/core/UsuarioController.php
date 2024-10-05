@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\core\UsuarioResource;
 use App\Http\Resources\Gestion\ActividadResource;
 use App\Models\Gestion\Actividad;
+use App\Models\Gestion\Evento;
 use App\Models\Gestion\Personal;
 use App\Models\Persona;
 use App\Models\User;
@@ -524,8 +525,8 @@ class UsuarioController extends Controller
 
     public function convertirMayusculas()
     {
+        // Convertir nombres de personas a mayúsculas
         $personas = Persona::all();
-
         foreach ($personas as $persona) {
             $persona->nombre = mb_strtoupper($persona->nombre, 'UTF-8');
             $persona->paterno = mb_strtoupper($persona->paterno, 'UTF-8');
@@ -533,6 +534,12 @@ class UsuarioController extends Controller
             $persona->save();
         }
 
+        // Convertir nombres de eventos a mayúsculas
+        $eventos = Evento::all();
+        foreach ($eventos as $evento) {
+            $evento->nombre = mb_strtoupper($evento->nombre, 'UTF-8');
+            $evento->save();
+        }
 
         return response()->json(['message' => 'Campos convertidos a mayúsculas correctamente'], 200);
     }
