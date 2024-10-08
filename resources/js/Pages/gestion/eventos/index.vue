@@ -94,7 +94,7 @@
                 <Column header="Acciones">
                     <template #body="{ data: evento }">
                         <Button
-                            v-if="is('admin|Asistente')"
+                            v-if="is('admin|Asistente') & !evento.principal"
                             v-tooltip.bottom="{
                                 value: 'Generar reporte',
                                 showDelay: 300,
@@ -294,14 +294,6 @@ export default {
             lugar: "",
             descripcion: "",
             busqueda: "",
-            paginacion: {
-                total: 0,
-                porPagina: 10,
-                paginaActual: 1,
-                ultimaPagina: 1,
-                desde: 0,
-                hasta: 0,
-            },
             modo: "crear",
             enviado: false,
             modalCrearEvento: false,
@@ -486,13 +478,12 @@ export default {
                         didDrawPage: footer,
                     };
 
-                    var today = new Date();
-                    var dd = String(today.getDate()).padStart(2, "0");
-                    var mm = String(today.getMonth() + 1).padStart(2, "0");
-                    var yyyy = today.getFullYear();
-                    var fecha = dd + "-" + mm + "-" + yyyy;
                     var nombreArchivo =
-                        "Reporte_asistentes_evento_" + fecha + ".pdf";
+                        "Reporte_asistentes_evento_" +
+                        nombreEvento +
+                        "_" +
+                        fechaInicio.split(" ")[0] +
+                        ".pdf";
 
                     doc.autoTable(options);
 

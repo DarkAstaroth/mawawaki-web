@@ -15,19 +15,26 @@ export default {
     emits: ["obtenerDatos"],
     props: ["latitud", "longitud"],
     setup(props, { emit }) {
-        const previousLat = ref(-16.5393727); // Coordenada anterior de latitud
-        const previousLng = ref(-68.066687); // Coordenada anterior de longitud
+        const previousLat = ref(-16.5393727);
+        const previousLng = ref(-68.066687);
         const lat = ref(
             props.latitud !== undefined ? props.latitud : previousLat.value
-        ); // Utiliza las coordenadas proporcionadas o las anteriores si no se proporcionan
+        );
         const lng = ref(
             props.longitud !== undefined ? props.longitud : previousLng.value
-        ); // Utiliza las coordenadas proporcionadas o las anteriores si no se proporcionan
+        );
         const map = ref();
         const mapContainer = ref();
         let marker = null;
         let circle = null;
-        let marcadorMovido = false; // Variable para verificar si el marcador se ha movido
+        let marcadorMovido = false;
+
+        const customIcon = L.icon({
+            iconUrl: `${import.meta.env.VITE_APP_BASE_URL}/marker-icon.png`,
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+        });
 
         onMounted(() => {
             map.value = L.map(mapContainer.value).setView(
@@ -40,7 +47,6 @@ export default {
                     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
             }).addTo(map.value);
 
-            // Agregar el marcador al inicio
             agregarMarcadorInicial();
 
             // Manejar clic en el mapa
@@ -61,7 +67,10 @@ export default {
                 circle.remove();
             }
 
-            marker = L.marker([lat.value, lng.value], { draggable: true })
+            marker = L.marker([lat.value, lng.value], {
+                draggable: true,
+                icon: customIcon,
+            })
                 .addTo(map.value)
                 .on("dragend", (event) => {
                     marcadorMovido = true; // Marcador movido
@@ -95,7 +104,6 @@ export default {
         }
 
         function enviarDatos(data) {
-            // Emitir el evento obtenerDatos con los datos necesarios
             emit("obtenerDatos", data);
         }
 
@@ -108,7 +116,6 @@ export default {
                     enviarDatos({ lat: lat.value, lng: lng.value });
 
                     if (!marcadorMovido) {
-                        // Agregar el marcador solo si no se ha movido
                         agregarMarcadorInicial();
                     }
                 });
