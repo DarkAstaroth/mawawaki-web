@@ -3,14 +3,12 @@
         <div class="card-header">
             <h3 class="card-title">Listado de eventos</h3>
             <div class="div card-toolbar">
-                <a
-                    :href="route('eventos.create')"
-                    type="button"
-                    class="btn btn-sm btn-success"
-                >
-                    <i class="text-white far fa-plus"></i>
-                    Nuevo
-                </a>
+                <Button
+                    label="Nuevo"
+                    icon="pi pi-plus"
+                    class="p-button-success"
+                    @click="navegarCrearEvento"
+                />
             </div>
         </div>
 
@@ -317,6 +315,9 @@ export default {
         this.store.cargarEventos(1, this.busqueda);
     },
     methods: {
+        navegarCrearEvento() {
+            this.$router.push({ name: "dashboard.eventos.create" });
+        },
         establecerDatos(obj) {
             this.latitud = obj.lat;
             this.longitud = obj.lng;

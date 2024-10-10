@@ -2,9 +2,21 @@
     <form class="input-feild" v-on:submit.prevent="crearEvento">
         <div class="d-flex justify-content-between gap-5 mb-5">
             <h3 class="card-title">Crear nuevo evento</h3>
-            <button type="submit" class="btn btn-success btn-sm">
-                Guardar
-            </button>
+            <div class="flex gap-2">
+                <Button
+                    label="Volver"
+                    icon="pi pi-arrow-left"
+                    class="p-button-secondary"
+                    @click="volver"
+                />
+                <Button
+                    type="submit"
+                    label="Guardar"
+                    icon="pi pi-check"
+                    class="p-button-success"
+                    @click="guardarEvento"
+                />
+            </div>
         </div>
 
         <div
@@ -17,7 +29,7 @@
                 <div class="card flex justify-content-center">
                     <div class="d-flex flex-column gap-2">
                         <label for="titulo">Nombre del evento</label>
-                        <InputText v-model="nombre" />
+                        <InputText v-model="nombre" class="uppercase" />
                         <div
                             v-if="v$?.nombre.$error"
                             class="fv-plugins-message-container invalid-feedback"
@@ -176,6 +188,61 @@
         </div>
     </form>
     <Toast />
+
+    <Dialog
+        v-model:visible="eventoCreado"
+        modal
+        header="Evento Creado"
+        :style="{ width: '25rem' }"
+        :closable="false"
+    >
+        <Message severity="success" :closable="false"
+            >Evento Creado con éxito</Message
+        >
+
+        <div class="flex flex-col items-center gap-5 justify-center">
+            <div
+                id="evento_qr"
+                ref="elementToConvert"
+                class="flex flex-col items-center gap-5"
+            >
+                <qrcode-vue
+                    :value="nuevoQR.CodigoQR"
+                    :size="100"
+                    level="Q"
+                    :ref="`codigoQR${nuevoQR.CodigoQR}`"
+                    render-as="svg"
+                />
+
+                <div class="flex flex-col items-center justify-center">
+                    <span class="font-bold text-emerald-500">Evento</span>
+                    <span class="mb-5">{{ eventoDatos.nombre }}</span>
+
+                    <div
+                        v-if="eventoDatos.fecha_hora_inicio"
+                        class="flex flex-col items-center"
+                    >
+                        <span class="font-bold text-emerald-500">
+                            Inicio:
+                        </span>
+                        <span>{{ eventoDatos.fecha_hora_inicio }}</span>
+                    </div>
+                    <div
+                        v-if="eventoDatos.fecha_hora_fin"
+                        class="flex flex-col items-center"
+                    >
+                        <span class="font-bold text-emerald-500">Fin: </span>
+                        <span>{{ eventoDatos.fecha_hora_fin }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <Button @click="volver">Continuar</Button>
+                <Button severity="info" @click="descargarQR">Descargar</Button>
+            </div>
+        </div>
+    </Dialog>
 </template>
 
 <script>
@@ -198,6 +265,8 @@ import {
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
 import { useGeolocation } from "@vueuse/core";
+import QrcodeVue from "qrcode.vue";
+import { toPng } from "html-to-image";
 
 export default {
     name: "EventosCrear",
@@ -208,6 +277,7 @@ export default {
         LCircleMarker,
         LMarker,
         MapaComponent,
+        QrcodeVue,
     },
     setup() {
         const vueGeo = useGeolocation();
@@ -254,6 +324,9 @@ export default {
             latitud: null,
             longitud: null,
             esResponsivo: false,
+            eventoCreado: false,
+            nuevoQR: null,
+            eventoDatos: null,
         };
     },
 
@@ -288,6 +361,12 @@ export default {
         this.tipoEvento = "privado";
     },
     methods: {
+        volver() {
+            this.$router.push({ name: "dashboard.eventos" });
+            this.eventoCreado = false;
+            this.nuevoQR = null;
+            this.eventoDatos = null;
+        },
         establecerDatos(obj) {
             this.latitud = obj.lat;
             this.longitud = obj.lng;
@@ -324,19 +403,20 @@ export default {
                         this.soloIngreso,
                         this.usuariosSeleccionados
                     )
-                    .then(() => {
-                        this.mostrarMensaje(
-                            "success",
-                            "Operación Exitosa",
-                            "Evento creado correctamente"
-                        );
-                        $("#kt_modal_1").modal("hide");
-                        this.busqueda = "";
-                        this.store.cargarEventos(1, this.busqueda);
-                        this.modalCrearEvento = !this.modalCrearEvento;
-                        setTimeout(() => {
-                            window.location.href = "/dashboard/eventos";
-                        }, 2000);
+                    .then((respuesta) => {
+                        console.log(respuesta);
+                        this.eventoDatos = respuesta.evento;
+                        this.nuevoQR = respuesta.nuevoQr;
+                        this.eventoCreado = true;
+                        // Swal.fire({
+                        //     icon: "success",
+                        //     title: "Operación Exitosa",
+                        //     text: "Evento creado correctamente",
+                        //     timer: 2000,
+                        //     showConfirmButton: false,
+                        // });
+
+                        // this.$router.push({ name: "dashboard.eventos" });
                     })
                     .catch((respuesta) => {
                         this.mostrarMensaje(
@@ -359,6 +439,24 @@ export default {
         },
         verificarResponsivo() {
             this.esResponsivo = window.innerWidth < 768;
+        },
+        descargarQR() {
+            const element = this.$refs.elementToConvert;
+            toPng(element, {
+                cacheBust: true,
+                useCORS: true,
+            })
+                .then((dataUrl) => {
+                    const link = document.createElement("a");
+                    link.href = dataUrl;
+                    link.download = "credencial.png";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         },
     },
 };

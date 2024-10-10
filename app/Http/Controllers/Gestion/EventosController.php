@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Gestion\EventosResource;
 use App\Models\Gestion\Asistencia;
 use App\Models\Gestion\Evento;
+use App\Models\Gestion\QR;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class EventosController extends Controller
 {
@@ -16,7 +19,7 @@ class EventosController extends Controller
      */
     public function index()
     {
-        return view('gestion.eventos.index');
+        return view('core.router');
     }
 
 
@@ -38,31 +41,61 @@ class EventosController extends Controller
 
     public function create()
     {
-        return view('gestion.eventos.crear');
+        return view('core.router');
     }
 
 
     /**
      * Store a newly created resource in storage.
      */
+
+
+
+
     public function store(Request $request)
     {
+        $response = DB::transaction(function () use ($request) {
+            $nuevoEvento = new Evento;
+            $nuevoEvento->nombre = $request->input('nombre');
+            $nuevoEvento->fecha_hora_inicio = strtotime($request->input('fechaInicio'));
+            $nuevoEvento->fecha_hora_fin = strtotime($request->input('fechaFin'));
+            $nuevoEvento->lugar = $request->input('lugar');
+            $nuevoEvento->latitud = $request->input('latitud');
+            $nuevoEvento->longitud = $request->input('longitud');
+            $nuevoEvento->descripcion = $request->input('descripcion');
+            $nuevoEvento->tipo = $request->input('tipoEvento');
+            $nuevoEvento->solo_ingreso = $request->input('soloIngreso');
+            $nuevoEvento->usuarios_ids = json_encode($request->input('usuariosFiltro'));
 
-        $nuevoEvento = new Evento;
-        $nuevoEvento->nombre = $request->input('nombre');
-        $nuevoEvento->fecha_hora_inicio = strtotime($request->input('fechaInicio'));
-        $nuevoEvento->fecha_hora_fin = strtotime($request->input('fechaFin'));
-        $nuevoEvento->lugar = $request->input('lugar');
-        $nuevoEvento->latitud = $request->input('latitud');
-        $nuevoEvento->longitud = $request->input('longitud');
-        $nuevoEvento->descripcion = $request->input('descripcion');
-        $nuevoEvento->tipo = $request->input('tipoEvento');
-        $nuevoEvento->tipo = $request->input('tipoEvento');
-        $nuevoEvento->solo_ingreso = $request->input('soloIngreso');
-        $nuevoEvento->usuarios_ids = json_encode($request->input('usuariosFiltro'));
-        $nuevoEvento->save();
+            $nuevoEvento->save();
 
-        return response()->json(['message' => 'Evento creado con éxito'], 201);
+            $nuevoQr = new QR();
+            $nuevoQr->EventoID = $nuevoEvento->id;
+            $nuevoQr->CodigoQR = (string) Str::uuid();
+            $nuevoQr->fecha_vencimiento = null;
+            $nuevoQr->cantidad_usos = -1;
+
+            $nuevoQr->save();
+
+            return [
+                'evento' => [
+                    'id' => $nuevoEvento->id,
+                    'nombre' => $nuevoEvento->nombre,
+                    'fecha_hora_inicio' => date('Y-m-d H:i:s', $nuevoEvento->fecha_hora_inicio),
+                    'fecha_hora_fin' => date('Y-m-d H:i:s', $nuevoEvento->fecha_hora_fin),
+                ],
+                'nuevoQr' => [
+                    'EventoID' => $nuevoQr->EventoID,
+                    'CodigoQR' => $nuevoQr->CodigoQR,
+                    'fecha_vencimiento' => $nuevoQr->fecha_vencimiento,
+                    'cantidad_usos' => $nuevoQr->cantidad_usos,
+                ]
+            ];
+        });
+
+        return response()->json([
+            'message' => 'Evento creado con éxito',
+        ] + $response, 201);
     }
 
     public function update(Request $request, $id)
@@ -246,7 +279,7 @@ class EventosController extends Controller
 
             // Obtener los roles del usuario y filtrar "personal" y "cliente"
             $roles = $asistencia->usuario->roles->pluck('name')->filter(function ($role) {
-                return !in_array($role, ['personal', 'cliente','Asistente']);
+                return !in_array($role, ['personal', 'cliente', 'Asistente']);
             })->toArray();
 
             // Convertir roles a texto

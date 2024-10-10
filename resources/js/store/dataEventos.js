@@ -62,8 +62,8 @@ export const useDataEventos = defineStore("dataEventos", {
             soloIngreso,
             usuariosFiltro
         ) {
-            await axios
-                .post("/api/evento", {
+            try {
+                const respuesta = await axios.post("/api/evento", {
                     nombre,
                     fechaInicio,
                     fechaFin,
@@ -74,13 +74,12 @@ export const useDataEventos = defineStore("dataEventos", {
                     tipoEvento,
                     soloIngreso,
                     usuariosFiltro,
-                })
-                .then(() => {
-                    return "El evento fue creado correctamente";
-                })
-                .catch(() => {
-                    throw new Error("Error al crear el evento.");
                 });
+
+                return respuesta.data;
+            } catch (error) {
+                throw new Error("Error al crear evento.");
+            }
         },
         async modificarEvento(
             id,
@@ -208,7 +207,19 @@ export const useDataEventos = defineStore("dataEventos", {
                 const respuesta = await axios.get(
                     `/api/eventos/${id}/asistentes/pdf`
                 );
-                return respuesta
+                return respuesta;
+            } catch (error) {
+                throw error;
+            }
+        },
+        async crearQREventoDefault() {
+            try {
+                const respuesta = await axios.post("/api/qr/generar", {
+                    idEvento: this.idEvento,
+                    fechaVencimiento: this.fecha_vencimiento,
+                    cantidadUsos: this.cantidad_usos,
+                });
+                return respuesta.data;
             } catch (error) {
                 throw error;
             }
