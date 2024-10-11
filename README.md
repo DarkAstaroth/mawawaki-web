@@ -41,6 +41,6 @@ El proyecto utiliza las siguientes tecnologías:
 
 ## Instalación y Ejecución
 
-Para realizar la instalación del proyecto revisar la `el manual de instalacion` que contiene pasos detallados para la instalación y ejecución del proyecto
+Para realizar la instalación del proyecto revisar la el `manual de instalación` que contiene pasos detallados para la instalación y ejecución del proyecto
 
 [Manual de Instalación](INSTALL.md)
