@@ -113,16 +113,42 @@ class QRcontroller extends Controller
         //
     }
 
+    // public function generarQR(Request $request)
+    // {
+    //     $nuevoQr = new QR();
+    //     $nuevoQr->EventoID = $request->input('idEvento');
+    //     $nuevoQr->CodigoQR = (string) Str::uuid();
+    //     $nuevoQr->fecha_vencimiento = $request->input('fechaVencimiento') === null ? null : strtotime($request->input('fechaVencimiento'));
+    //     $nuevoQr->cantidad_usos = $request->input('cantidadUsos');
+    //     $nuevoQr->cuota = $request->input('cantidadUsos');
+    //     $nuevoQr->save();
+
+    //     return response()->json(['message' => 'Evento creado con éxito'], 201);
+    // }
+
     public function generarQR(Request $request)
     {
+        // Crear un nuevo registro de QR
         $nuevoQr = new QR();
         $nuevoQr->EventoID = $request->input('idEvento');
-        $nuevoQr->CodigoQR = (string) Str::uuid();
-        $nuevoQr->fecha_vencimiento = $request->input('fechaVencimiento') === null ? null : strtotime($request->input('fechaVencimiento'));
+        $nuevoQr->CodigoQR = (string) Str::uuid(); // Generar un UUID como código QR
+        $nuevoQr->fecha_vencimiento = $request->input('fechaVencimiento') ? strtotime($request->input('fechaVencimiento')) : null;
         $nuevoQr->cantidad_usos = $request->input('cantidadUsos');
         $nuevoQr->cuota = $request->input('cantidadUsos');
+
+        // Guardar el nuevo registro en la base de datos
         $nuevoQr->save();
 
-        return response()->json(['message' => 'Evento creado con éxito'], 201);
+        // Devolver el objeto nuevo QR con los datos relevantes
+        return response()->json([
+            'message' => 'Evento creado con éxito',
+            'nuevoQr' => [
+                'EventoID' => $nuevoQr->EventoID,
+                'CodigoQR' => $nuevoQr->CodigoQR,
+                'fecha_vencimiento' => $nuevoQr->fecha_vencimiento,
+                'cantidad_usos' => $nuevoQr->cantidad_usos,
+                'cuota' => $nuevoQr->cuota,
+            ]
+        ], 201);
     }
 }

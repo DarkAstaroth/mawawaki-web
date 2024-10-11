@@ -4,12 +4,24 @@ import ClientesCreate from "./Pages/clientes/create.vue";
 import UsuariosIndex from "./Pages/core/usuarios/index.vue";
 import ServicioIndex from "./Pages/gestion/servicios/index.vue";
 import ServicioDetalle from "./Pages/gestion/servicios/detalle.vue";
+import EventosIndex from "./Pages/gestion/eventos/index.vue";
+import EventosCreate from "./Pages/gestion/eventos/crear.vue";
 
 const routes = [
     {
         path: "/dashboard/clientes",
         name: "clientes.index",
         component: ClientesIndex,
+    },
+    {
+        path: "/dashboard/eventos",
+        name: "dashboard.eventos",
+        component: EventosIndex,
+    },
+    {
+        path: "/dashboard/eventos/create",
+        name: "dashboard.eventos.create",
+        component: EventosCreate,
     },
     {
         path: "/dashboard/clientes/create",
