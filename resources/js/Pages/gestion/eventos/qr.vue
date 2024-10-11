@@ -100,179 +100,129 @@
         </Dialog>
 
         <div class="card-body">
-            <input
-                class="mb-5 form-control"
-                type="text"
-                v-model="busqueda"
-                @input="filtrarEventos"
-                placeholder="Buscar..."
-            />
-            <div class="table-responsive">
-                <table class="table table-striped table-sm table-bordered">
-                    <thead>
-                        <tr
-                            class="py-4 border-gray-200 fw-semibold fs-7 border-bottom"
-                        >
-                            <th class="min-w-150px">Codigo</th>
-                            <th class="min-w-150px">Fecha expiracion</th>
-                            <th class="min-w-150px">Usos</th>
-                            <th class="min-w-150px">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="qr in qrs" :key="qr.id">
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{ qr.CodigoQR }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
+            <DataTable
+                :value="qrs"
+                :paginator="true"
+                :rows="10"
+                :rowHover="true"
+                :resizableColumns="true"
+                columnResizeMode="fit"
+                class="p-datatable-sm"
+                :rowsPerPageOptions="[10, 20, 50]"
+                dataKey="id"
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} QR's"
+            >
+                <Column header="Código">
+                    <template #body="{ data: qr }">
+                        <div class="p-4">
+                            <qrcode-vue
+                                :value="qr.CodigoQR"
+                                :size="50"
+                                level="Q"
+                                :ref="`codigoQR${qr.CodigoQR}`"
+                                render-as="svg"
+                            />
+                        </div>
+                    </template>
+                </Column>
+                <Column header="Fecha Vencimiento">
+                    <template #body="{ data: qr }">
+                        {{
+                            qr.fecha_vencimiento === null
+                                ? "Sin fecha de expiración"
+                                : fechaHoraLegible(qr.fecha_vencimiento)
+                        }}
+                    </template>
+                </Column>
 
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{
-                                                qr.fecha_vencimiento === null
-                                                    ? "Sin fecha de expiración"
-                                                    : fechaHoraLegible(
-                                                          qr.fecha_vencimiento
-                                                      )
-                                            }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
+                <Column header="Cantidad de usos">
+                    <template #body="{ data: qr }">
+                        {{
+                            qr.cantidad_usos === -1
+                                ? "Sin límite"
+                                : qr.cantidad_usos
+                        }}
+                    </template>
+                </Column>
+                <Column header="Acciones">
+                    <template #body="{ data: qr }">
+                        <Button
+                            v-if="is('admin|Asistente') "
+                            v-tooltip.bottom="{
+                                value: 'Generar',
+                                showDelay: 300,
+                                hideDelay: 300,
+                            }"
+                            icon="fi fi-sr-qrcode"
+                            severity="info"
+                            text
+                            rounded
+                            @click="actualizarURL(qr.CodigoQR)"
+                        />
+                    </template>
+                </Column>
+            </DataTable>
+            <Dialog
+                v-model:visible="modalQR"
+                modal
+                :style="{ width: '25rem' }"
+                header="QR Generado"
+            >
+                <div class="flex flex-col items-center gap-5 justify-center">
+                    <div
+                        id="evento_qr"
+                        ref="elementToConvert"
+                        class="flex flex-col items-center gap-5"
+                    >
+                        <qrcode-vue
+                            :value="valorQR"
+                            :size="200"
+                            level="Q"
+                            :ref="`codigoQR${qrSeleccionado}`"
+                            render-as="svg"
+                        />
 
-                            <td class="align-middle">
-                                <div class="d-flex align-items-center">
-                                    <div class="px-2 d-flex flex-column">
-                                        <div>
-                                            {{
-                                                qr.cantidad_usos === -1
-                                                    ? "Sin límite"
-                                                    : qr.cantidad_usos
-                                            }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <td class="align-items-center">
-                                <div class="d-flex">
-                                    <div class="dropdown">
-                                        <button
-                                            class="btn btn-secondary dropdown-toggle btn-sm"
-                                            type="button"
-                                            id="dropdownMenuButton1"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                            data-boundary="viewport"
-                                        >
-                                            Acciones
-                                        </button>
-                                        <ul
-                                            class="dropdown-menu"
-                                            aria-labelledby="dropdownMenuButton1"
-                                        >
-                                            <li></li>
-                                            <li>
-                                                <a
-                                                    class="dropdown-item"
-                                                    data-bs-toggle="modal"
-                                                    :data-bs-target="`#${qr.CodigoQR}`"
-                                                    @click="
-                                                        actualizarURL(
-                                                            qr.CodigoQR
-                                                        )
-                                                    "
-                                                    ><i
-                                                        class="bi bi-pencil-square fs-4"
-                                                    ></i>
-                                                    Generar</a
-                                                >
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </td>
-
-                            <Dialog
-                                v-model:visible="modalQR"
-                                modal
-                                header="QR Generado"
-                                :style="{ width: '60rem' }"
-                                :breakpoints="{
-                                    '1199px': '75vw',
-                                    '575px': '90vw',
-                                }"
+                        <div class="flex flex-col items-center justify-center">
+                            <span class="font-bold text-emerald-500"
+                                >Evento</span
                             >
-                                <div
-                                    class="d-flex flex-column align-items-center"
-                                >
-                                    <div class="d-flex w-100 px-10">
-                                        <qrcode-vue
-                                            :value="valorQR"
-                                            :size="200"
-                                            level="Q"
-                                            :ref="`codigoQR${qr.CodigoQR}`"
-                                            render-as="svg"
-                                        />
-                                        <div class="mx-10">
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Evento
-                                                        </th>
-                                                        <td>
-                                                            {{ nombreEvento }}
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            Fecha de vencimiento
-                                                        </th>
-                                                        <td>
-                                                            {{
-                                                                qr.fecha_vencimiento ===
-                                                                null
-                                                                    ? "Sin fecha de expiración"
-                                                                    : fechaHoraLegible(
-                                                                          qr.fecha_vencimiento
-                                                                      )
-                                                            }}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="d-flex justify-content-end w-100 mt-2"
-                                    >
-                                        <button
-                                            type="submit"
-                                            class="btn btn-success"
-                                            @click="generarPDF(qr.CodigoQR)"
-                                        >
-                                            Descargar
-                                        </button>
-                                    </div>
-                                </div>
-                            </Dialog>
-                        </tr>
-                        <tr v-if="qrs.length === 0">
-                            <td colspan="4" class="text-center">
-                                No hay datos
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                            <span class="mb-5">{{ this.evento.nombre }}</span>
+
+                            <div
+                                v-if="this.evento.fecha_hora_inicio"
+                                class="flex flex-col items-center"
+                            >
+                                <span class="font-bold text-emerald-500">
+                                    Inicio:
+                                </span>
+                                <span>{{
+                                    fechaHoraLegible(
+                                        this.evento.fecha_hora_inicio
+                                    )
+                                }}</span>
+                            </div>
+                            <div
+                                v-if="this.evento.fecha_hora_fin"
+                                class="flex flex-col items-center"
+                            >
+                                <span class="font-bold text-emerald-500"
+                                    >Fin:
+                                </span>
+                                <span>{{
+                                    fechaHoraLegible(this.evento.fecha_hora_fin)
+                                }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <Button severity="info" @click="descargarQR"
+                            >Descargar</Button
+                        >
+                    </div>
+                </div>
+            </Dialog>
         </div>
     </div>
 </template>
@@ -293,6 +243,7 @@ import Calendar from "primevue/calendar";
 import InputText from "primevue/inputtext";
 import Checkbox from "primevue/checkbox";
 import.meta.env.VITE_APP_BASE_URL;
+import { toPng } from "html-to-image";
 
 dayjs.locale("es");
 
@@ -337,12 +288,14 @@ export default {
             enviado: false,
             modalQR: false,
             modalCrearQR: false,
+            qrSeleccionado: null,
         };
     },
     template: '<qrcode-vue :value="value"></qrcode-vue>',
 
     validations() {},
     mounted() {
+        this.qrSeleccionado = null;
         this.cargarQRS(1);
     },
     computed: {
@@ -433,6 +386,7 @@ export default {
             doc.save("QR_GENERADO.pdf");
         },
         actualizarURL(codigo) {
+            this.qrSeleccionado = codigo;
             this.modalQR = true;
             this.valorQR = `${
                 import.meta.env.VITE_APP_BASE_URL
@@ -460,6 +414,24 @@ export default {
             if (this.controlLimite) {
                 this.cantidad_usos = -1;
             }
+        },
+        descargarQR() {
+            const element = this.$refs.elementToConvert;
+            toPng(element, {
+                cacheBust: true,
+                useCORS: true,
+            })
+                .then((dataUrl) => {
+                    const link = document.createElement("a");
+                    link.href = dataUrl;
+                    link.download = "credencial.png";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
         },
     },
 };
