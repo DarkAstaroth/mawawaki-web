@@ -25,10 +25,7 @@ class InvitadoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -91,7 +88,7 @@ class InvitadoController extends Controller
     public function crearUsuarioEmail(Request $request)
     {
         try {
-            // Validación de los datos de entrada
+
             $request->validate([
                 'nombres' => 'required',
                 'paterno' => 'required',
@@ -104,24 +101,24 @@ class InvitadoController extends Controller
                 'toc.accepted' => 'Debe aceptar los términos y condiciones.',
             ]);
 
-            // Verificar si el correo electrónico ya está registrado
+
             if (User::where('email', $request->email)->exists()) {
                 return redirect()->back()->withInput()->with('error', 'El correo electronico ya existe');
             }
 
-            // Convertir nombres y apellidos a mayúsculas
+
             $nombres = strtoupper($request->nombres);
             $paterno = strtoupper($request->paterno);
             $materno = strtoupper($request->materno);
 
-            // Creación de la nueva persona
+
             $nuevaPersona = Persona::create([
                 'nombre' => $nombres,
                 'paterno' => $paterno,
                 'materno' => $materno,
             ]);
 
-            // Creación del nuevo usuario
+
             $nuevoUsuario = User::create([
                 'email' => $request->email,
                 'gauth_type' => 'email',
@@ -129,7 +126,7 @@ class InvitadoController extends Controller
                 'persona_id' => $nuevaPersona->id,
             ]);
 
-            // Asignación del rol al nuevo usuario
+
             $nuevoUsuario->assignRole('invitado');
             return redirect()->route('login')->with('success', 'Usuario registrado con éxito. Debes iniciar sesión');
         } catch (ValidationException $e) {
@@ -147,44 +144,6 @@ class InvitadoController extends Controller
         return view('autenticacion.forgot');
     }
 
-    // public function enviarSolicitud(Request $request)
-    // {
-    //     $usuario = User::find($request->usuario_id,);
-
-    //     if ($request->tipo === 'cliente') {
-
-    //         $usuario->update([
-    //             'solicitud' => 1,
-    //             'tipo_solicitud' => 'cliente',
-    //         ]);
-
-    //         return response()->json([
-    //             'success' => 'Cliente creado con éxito',
-    //         ]);
-    //     }
-
-    //     if ($request->tipo === 'personal') {
-
-    //         Personal::create([
-    //             'UsuarioID' => $request->usuario_id,
-    //             'universidad' => $request->datos['universidad'],
-    //             'facultad' => $request->datos['facultad'],
-    //             'carrera' => $request->datos['carrera'],
-    //         ]);
-
-    //         $usuario->update([
-    //             'solicitud' => 1,
-    //             'tipo_solicitud' => 'personal',
-
-    //         ]);
-
-    //         return response()->json([
-    //             'success' => 'Cliente creado con éxito',
-    //         ]);
-    //     }
-    // }
-
-
     public function enviarSolicitud(Request $request)
     {
         $usuario = User::with('persona')->find($request->usuario_id);
@@ -201,30 +160,39 @@ class InvitadoController extends Controller
         }
 
         if ($request->tipo === 'personal') {
-            // Crear o actualizar el registro en la tabla Personal
+
+            $existingPersona = Persona::where('ci', $request->datos['carnet'])->first();
+            if ($existingPersona && $existingPersona->UsuarioID !== $usuario->id) {
+                return response()->json([
+                    'error' => 'El carnet de identidad ya está en uso por otro usuario.',
+                ], 400);
+            }
+
             Personal::updateOrCreate(
                 ['UsuarioID' => $usuario->id],
                 [
                     'universidad' => $request->datos['universidad'],
                     'facultad' => $request->datos['facultad'],
                     'carrera' => $request->datos['carrera'],
+                    'fecha_nacimiento' => strtotime($request->datos['fechaNacimiento']),
                 ]
             );
 
-            // Actualizar o crear el registro en la tabla Persona
             if ($usuario->persona) {
-                // Si ya existe un registro de Persona, actualizarlo
+
                 $usuario->persona->update([
                     'telefono' => $request->datos['telefono'],
                     'direccion' => $request->datos['direccion'],
-                    'ci' => $request->datos['carnet'], // Asegúrate de que este campo exista y sea el correcto
+                    'ci' => $request->datos['carnet'],
+                    'fecha_nacimiento' => strtotime($request->datos['fechaNacimiento']),
                 ]);
             } else {
-                // Si no existe, crear un nuevo registro de Persona
+
                 $usuario->persona()->create([
                     'telefono' => $request->datos['telefono'],
                     'direccion' => $request->datos['direccion'],
-                    'ci' => $request->datos['carnet'], // Asegúrate de que este campo exista y sea el correcto
+                    'ci' => $request->datos['carnet'],
+                    'fecha_nacimiento' => strtotime($request->datos['fechaNacimiento']),
                 ]);
             }
 
