@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Requests\CustomEmailVerificationRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 //     return redirect()->route('invitado.index')->with('success', 'Email verificado correctamente');
 // })->name('verification.verify');
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request, $id) {
+Route::get('/email/verify/{id}/{hash}', function (CustomEmailVerificationRequest $request, $id) {
     $user = User::find($id);
     if (!$user) {
         return redirect()->route('invitado.index')->with('error', 'Usuario no encontrado');
