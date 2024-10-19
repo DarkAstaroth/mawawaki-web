@@ -471,6 +471,30 @@ class UsuarioController extends Controller
         return response()->json(['personales' => $personales]);
     }
 
+    // public function subirFoto(Request $request, $id)
+    // {
+    //     // Verificar si el usuario existe
+    //     $usuario = User::find($id);
+    //     if (!$usuario) {
+    //         return response()->json(['error' => 'Usuario no encontrado'], 404);
+    //     }
+
+
+    //     if ($request->hasFile('foto')) {
+    //         $foto = $request->file('foto')[0]; // Obtener el primer elemento del array
+
+    //         // Obtener el nombre original y la extensión del archivo
+    //         $nombreFoto = $foto->getClientOriginalName();
+    //         $extension = $foto->getClientOriginalExtension();
+    //         $nombreUnico = 'foto_' . $usuario->id . '.' . $extension;
+    //         $foto->storeAs('public/fotos', $nombreUnico);
+    //         $usuario->update(['profile_photo_path' => 'storage/fotos/' . $nombreUnico]);
+    //         return response()->json(['mensaje' => 'Foto subida correctamente'], 200);
+    //     }
+
+    //     return response()->json(['error' => 'No se encontró ninguna foto para subir'], 400);
+    // }
+
     public function subirFoto(Request $request, $id)
     {
         // Verificar si el usuario existe
@@ -479,16 +503,25 @@ class UsuarioController extends Controller
             return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
 
+        // Validar que se haya subido un archivo y que sea una imagen
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:3072', // Máximo 3MB
+        ]);
 
         if ($request->hasFile('foto')) {
-            $foto = $request->file('foto')[0]; // Obtener el primer elemento del array
+            $foto = $request->file('foto'); // Obtener el archivo
 
             // Obtener el nombre original y la extensión del archivo
             $nombreFoto = $foto->getClientOriginalName();
             $extension = $foto->getClientOriginalExtension();
             $nombreUnico = 'foto_' . $usuario->id . '.' . $extension;
+
+            // Almacenar la foto en el directorio 'public/fotos'
             $foto->storeAs('public/fotos', $nombreUnico);
+
+            // Actualizar la ruta de la foto en el perfil del usuario
             $usuario->update(['profile_photo_path' => 'storage/fotos/' . $nombreUnico]);
+
             return response()->json(['mensaje' => 'Foto subida correctamente'], 200);
         }
 

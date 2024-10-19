@@ -151,6 +151,17 @@
             border-radius: 50%;
         }
 
+        .container_usuario img {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            width: auto;
+            height: auto;
+            max-width: none;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
         .contenido__credencial {
             padding: 10%;
 

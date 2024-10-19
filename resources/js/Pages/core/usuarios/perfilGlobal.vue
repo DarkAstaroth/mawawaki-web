@@ -115,25 +115,71 @@
                         >
                             <div class="flex">
                                 <div class="">
-                                    <FileUpload
-                                        v-if="!this.store.cargarFoto"
-                                        class=""
-                                        mode="basic"
-                                        name="foto[]"
-                                        :url="`/api/imagen/usuario/${store.usuario.id}`"
-                                        accept="image/*"
-                                        chooseLabel="Subir Foto"
-                                        :maxFileSize="3145728"
-                                        @upload="onUpload"
-                                        :invalid-file-size-message="`la imágen no debe superar los 3 MB`"
-                                        @progress="100"
-                                    />
-                                    <div v-else class="flex flex-grow p-1">
-                                        <ProgressSpinner
-                                            style="width: 30px; height: 30px"
-                                            strokeWidth="5"
+                                    <Button
+                                        type="button"
+                                        @click="showDialog"
+                                        class="w-full"
+                                        severity="primary"
+                                    >
+                                        <div class="flex gap-2">
+                                            <i
+                                                class="text-white fi fi-br-upload"
+                                            ></i>
+                                            <strong>Subir Foto</strong>
+                                        </div>
+                                    </Button>
+
+                                    <Dialog
+                                        v-model:visible="dialogVisible"
+                                        header="Subir Foto"
+                                        :modal="true"
+                                    >
+                                        <template #footer>
+                                            <div class="flex gap-2 justify-end">
+                                                <Button
+                                                    severity="secondary"
+                                                    outlined
+                                                    label="Cancelar"
+                                                    @click="resetDialog"
+                                                />
+                                                <Button
+                                                    label="Guardar"
+                                                    :disabled="
+                                                        !selectedFile ||
+                                                        imageSizeError
+                                                    "
+                                                    @click="uploadImage"
+                                                />
+                                            </div>
+                                        </template>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            name="foto"
+                                            @change="previewImage"
+                                            class="form-control flex-1"
                                         />
-                                    </div>
+                                        <div class="flex justify-center mt-2">
+                                            <div class="container_usuario">
+                                                <img
+                                                    v-if="imagePreview"
+                                                    :src="imagePreview"
+                                                    alt="Vista previa"
+                                                    class="crop"
+                                                    width="150"
+                                                    crossorigin="anonymous"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <Message
+                                            v-if="imageSizeError"
+                                            :closable="false"
+                                            severity="error"
+                                            >La imagen no debe exceder los 3
+                                            MB.</Message
+                                        >
+                                    </Dialog>
                                 </div>
                             </div>
 
@@ -196,6 +242,10 @@ export default {
             asistencias: [],
             esResponsivo: false,
             rolesToIgnore: ["personal", "Asistente"],
+            dialogVisible: false,
+            imagePreview: null,
+            selectedFile: null,
+            imageSizeError: false,
         };
     },
     template: '<qrcode-vue :value="value"></qrcode-vue>',
@@ -211,6 +261,33 @@ export default {
     },
     mounted() {},
     methods: {
+        showDialog() {
+            this.dialogVisible = true;
+        },
+        resetDialog() {
+            this.dialogVisible = false;
+            this.selectedFile = null;
+            this.imagePreview = null;
+            this.imageSizeError = false;
+        },
+        previewImage(event) {
+            const file = event.target.files[0];
+            this.selectedFile = file;
+
+            if (file) {
+                this.imageSizeError = file.size > 3 * 1024 * 1024; // 3 MB
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imagePreview = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                this.imagePreview = null;
+                this.selectedFile = null;
+                this.imageSizeError = false;
+            }
+        },
         mostrarMensaje(tipo, titulo, texto) {
             this.toast.add({
                 severity: tipo,
@@ -222,6 +299,40 @@ export default {
         verificarResponsivo() {
             this.esResponsivo = window.innerWidth < 768;
         },
+        async uploadImage() {
+            const formData = new FormData();
+            formData.append("foto", this.selectedFile);
+
+            try {
+                const response = await fetch(
+                    `/api/imagen/usuario/${this.store.usuario.id}`,
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                );
+
+                if (response.ok) {
+                    this.toast.add({
+                        severity: "success",
+                        summary: "Operación Exitosa",
+                        detail: "Foto subida con éxito",
+                        life: 2000,
+                    });
+                    this.dialogVisible = false;
+                    window.location.reload();
+                } else {
+                    throw new Error("Error al subir la foto");
+                }
+            } catch (error) {
+                this.toast.add({
+                    severity: "error",
+                    summary: "Error",
+                    detail: error.message,
+                    life: 2000,
+                });
+            }
+        },
         async onUpload(event) {
             try {
                 this.store.cargarFoto = true;
@@ -229,11 +340,11 @@ export default {
 
                 if (response.status === 200) {
                     this.store.cargarFoto = false;
-                    this.mostrarMensaje(
-                        "success",
-                        "Operación Exitosa",
-                        "Foto subida con éxito, Recarga la página"
-                    );
+                    Swal.fire({
+                        title: "Éxito!",
+                        text: "La foto se ha actualizado correctamente",
+                        icon: "success",
+                    });
                     window.location.reload();
                 } else {
                     this.store.cargarFoto = false;
